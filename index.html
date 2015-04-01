@@ -108,75 +108,115 @@ h3 {
 
   	<div class="content">
   	
-  	<h3>[R Studio] </h3>
-  	
-  	<pre>
-	library(ordinal)
-	library(dplyr)
-	library(tidyr)
-	library(ggplot2)
-	</pre>
-	
-	<pre>
-	roma_ok <- read.csv("~/roma_ok.csv")
-	View(roma_ok)
-	data <- roma_ok
-	</pre>
-	
-	<pre>
-	fm1 <- clmm2(roma ~ age + ethno, random = country, data = data)
-	data$roma <- as.factor(data$roma)
-	</pre>
-	
-	<pre>
-	fm1 <- clmm2(roma ~ age + ethno, random = country, data = data, Hess = TRUE)
-	summary(fm1)
-	</pre>
-	
-	<pre>
-	fm1 <- clmm2(roma ~ gender + ethno + contact + relig, random = country, data = data, Hess = TRUE)
-	summary(fm1)
-	</pre>
-	
-	<pre>
-	fm1 <- clm(roma ~ gender + ethno + contact + relig + country, data = data, Hess = TRUE, link="probit")
-	summary(fm1)
-	</pre>
-	
-	<pre>
-	fm2 <- clmm(roma ~ gender + ethno + contact + relig + (1 | country), data = data, Hess = TRUE, link="probit")
-	summary(fm2)
-	fixef(fm2)
-	ranef(fm2)
-	</pre>
+  	<h3>[R Studio] : Ordinal regression with cumulative link single and mixed models</h3>
+ 
+<p>Loading Packages. Ordinal provides both clm and clmm functions and their extractors</p>
+
+<pre>
+library(ordinal)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+</pre>
+
+<p>Loading the dataset and identifying it as "data" for further command simplification</p>
+
+<pre>
+roma_ok <- read.csv("~/roma_ok.csv")
+View(roma_ok)
+data <- roma_ok
+</pre>
+
+<p>
+Fitting the first Cumulative Link Model with "age" and "ethno" as independant variables and country as a random effect variable
+First we need to explicitely define "roma" as a factor variable :	
+</p>
+
+<pre>
+data$roma <- as.factor(data$roma)
+</pre>
+
+<p>
+We define a simple model first, with no random effect, using the clm function. 
+Here country is defined as a factor independant variable among others
+</p>
+
+<pre>
+fm1 <- clm(roma ~ gender + ethno + contact + relig + country, data = data, Hess = TRUE, link="probit")
+summary(fm1)
+</pre>
+
+<p>
+To go further, we use a mixed model (i.e. hierarchichal or multilevel)
+The syntaxt sharply follows the popular precedent included in the lme4 package by Douglas Bates.
+This syntaxt is organised around the formula structure, separating the dependant variable with the "~" operator.
+Then the random component is included, here specifying random intercept for each country using the "(1|country)" operator.
+</p>	
+
+<pre>
+fm2 <- clmm(roma ~ gender + ethno + contact + relig + (1 | country), data = data, Hess = TRUE, link="probit")
+summary(fm2)
+fixef(fm2)
+ranef(fm2)
+</pre>
+
+<p>
+"fixef" allows us to extract fixed effects, that is, effects that are common across countries.
+"raned" allows us to extract random effects, that is, effects that are country specific.
+Here we only get a random country intercept, as specified in the formula.
+</p>
 		
-	<pre>
-	fm2 <- clmm(roma ~ gender + ethno + contact + relig  + (1 + contact | country), data = data, weights = pond, Hess = TRUE, link="probit")
-	summary(fm2)
-	ranef(fm2)
-	coefs(fm2)
-	fit2 <- fitted(fm2)
-	coefs4 <- data.frame(coef(summary(fm2)))
-	coefs4$p.z <- 2 * ( 1 - pnorm(abs(coefs4$t.value)))
-	</pre>
+<pre>
+fm2 <- clmm(roma ~ gender + ethno + contact + relig  + (1 + contact | country), data = data, weights = pond, Hess = TRUE, link="probit")
+summary(fm2)
+ranef(fm2)
+</pre>
+
+<p>
+We respecified the model adding the contact variable among both the fixed part and the random part of the formula.
+This gives us a general (fixed) contact effect, and a country specific (random) contact effect.
+The combined contact effect is the fixed + random contact effect.
+</p>
 	
-	<pre>
-	odds <- as.data.frame(exp(coef(fm2)))
-	odds
-	</pre>
+<pres>
+coefs(fm2)
+fit2 <- fitted(fm2)
+coefs4 <- data.frame(coef(summary(fm2)))
+coefs4$p.z <- 2 * ( 1 - pnorm(abs(coefs4$t.value)))
+</pre>
+
+<p>
+Here we (1) display the model coefficients, (2) compute the fitted values according to the model, (3) extract the coefficients form the model, (4) compute the p-value for each coefficient that was just extracted.
+</p>
+
+<pre>
+odds <- as.data.frame(exp(coef(fm2)))
+odds
+</pre>
+
+<p>
+Then we take the exponential of each coefficient to display the odds ratio.
+</p>
 	
-	<pre>
-	fm4t <- clmm(roma ~ gender + ethno + contact + relig + place + (1 + contact | country), data = data, weights = pond, Hess = TRUE, link="probit")
-	fit2 <- fitted(fm2)
-	datafit <- cbind(data, fit2)
-	</pre>
+<pre>
+datafit <- cbind(data, fit2)
+</pre>
+
+<p>
+Finally we merge back the fitted values with the original dataset.
+Then we save the resulting datafile as both a .csv for ease of use with R and as .dta to reuse it with Stata.
+</p>
 	
-	<pre>
-	write.csv(datafit, "romafit.csv")
-	library(foreign)
-	write.dta(datafit, "romafit.dta")
-	savehistory("~/rh.Rhistory")
-  	</pre>
+<pre>
+write.csv(datafit, "romafit.csv")
+library(foreign)
+write.dta(datafit, "romafit.dta")
+savehistory("~/rh.Rhistory")
+</pre>
+
+<p>
+We're done for now !
+</p>
 
     	<h3>[Stata] Typologie et classification</h3>
 
