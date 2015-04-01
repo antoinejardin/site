@@ -1,572 +1,252 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
 <head>
+    <meta charset="utf-8">
 
-<link href='http://fonts.googleapis.com/css?family=Fenix&subset=latin' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css'>
+    <title>Antoine Jardin's Blog</title>
 
+<link href='http://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
 
-
-<title>Antoine Jardin</title>
+</head>
 
 <style>
 
+body {
+    font-family: 'Arvo', serif;
+}
 
-.head {
-	margin-top: 2%;
-	padding-left:25%;
-	padding-right:25%;
+
+ul {
+    list-style-type: none;
+    overflow: hidden;
+}
+
+li {
+    float: left;
+}
+
+a {
+    display: block;
     text-align: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     color: blue;
-    font-family: 'Fenix', serif;
-    font-size: 1.2em;
+    background-color: white;
+    font-family: 'Arvo', serif;
+    font-size: 1.2rem;
+}
+
+a:hover {
+	color:white;
+	background-color: blue;
+}
+
+pre {
+	font-family: 'Anonymous Pro', monospace;
+	margin: auto;
+	white-space: pre-wrap;                 /* CSS3 browsers  */
+	white-space: -moz-pre-wrap !important; /* 1999+ Mozilla  */
+	white-space: -pre-wrap;                /* Opera 4 thru 6 */
+	white-space: -o-pre-wrap;              /* Opera 7 and up */
+	word-wrap: break-word;                 /* IE 5.5+ and up */
+	background-color : azure;
+	color : indigo;
+	padding: 1rem;
+}
+
+p {
+	padding: 1rem;
+
+}
+
+h3 {
+	padding-left: 2rem;
+}
+
+.content {
+		width: 70%;
+		margin: auto;
+		padding-top: 1%;
+		padding-bottom: 2%;
 
 }
 
 .nav {
-	margin-top: 2%;
-	margin-bottom: 4%;
-    color: blue;
-    text-align: center;
-    font-family: 'Fenix', serif;
-    font-size: 1.2em;
-
-}
-
-.content {
-	margin-left:10%;
-    text-align: justify;
-    font-family: 'Fenix', serif;
+		width: 70%;
+		margin: auto;
+		padding-top: 2%;
+		padding-bottom: 1%;
 }
 
 .footer {
-	margin-top:10%;
-	text-align: center;
-    font-family: 'Fenix', serif;
-    font-size: 1em;
-
-}
-
-a {
-    display: block inline;
-}
-
-ul.menu{
-    list-style-type: none;
-}
-
-li.line{
-	display : inline;
-}
-
-
-ul.post{
-    list-style-type: none;
-}
-
-a:hover, a:active {
-    background-color: blue;
-    color: white;
-}
-
-pre{
-	font-family: 'PT Mono', monospace;
-	font-size: 0.9em;
-}
-
-p{
-	color:blue ;
-	font-size: 1.2em;
-	font-family: 'Fenix', serif;
+		margin: auto;
+		margin-bottom: 2%;
+		margin-top: 5%;
+		text-align: center;
+		font-size: 0.8rem;
 }
 
 </style>
 
-</head>
-
 <body>
 
+    <div class="nav">
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Data</a></li>
+        <li><a href="#">Code</a></li>
+		<li><a href="#">Research</a></li>
+		<li><a href="#">Teaching</a><li>
+        <li><a href="#">Papers</a></li>
+        <li><a href="#">Archives</a><li>
+        <li><a href="#">About Me</a></li>
+    </ul>
+	</div>
 
-<div class="head">
-<p>A blog on Political Science and Data Analysis</p>
-</div>
+  	<div class="content">
 
-<div class="nav">
-<a href="about.html">Rss</a>
-<a href="#news">Media</a>
-<a href="#contact">Vita</a>
-<a href="#about">About me</a>
-</div>
+    	<h3>[Stata] Typologie et classification</h3>
 
+    	<p> Un exemple de technique de classification</p>
 
-<div class="content">
-
-<ul class="post">
-<li><a href="#home">01/03/2015 - [Julia] - blablabla</a> </li>
-<li><a href="#home">28/02/2015 - [Julia] - blablabla2</a> </li>
-</ul>
-
-
-<p>Import</p>
-
-<pre>
-import delimited C:\Users\Antoine\Desktop\DEPP\s97.csv
-save "C:\Users\Antoine\Desktop\DEPP\s97.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s98.csv
-save "C:\Users\Antoine\Desktop\DEPP\s98.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s99.csv
-save "C:\Users\Antoine\Desktop\DEPP\s99.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s00.csv
-save "C:\Users\Antoine\Desktop\DEPP\s00.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s01.csv
-save "C:\Users\Antoine\Desktop\DEPP\s01.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s02.csv
-save "C:\Users\Antoine\Desktop\DEPP\s02.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s03.csv
-save "C:\Users\Antoine\Desktop\DEPP\s03.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s04.csv
-save "C:\Users\Antoine\Desktop\DEPP\s04.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s05.csv
-save "C:\Users\Antoine\Desktop\DEPP\s05.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s06.csv
-save "C:\Users\Antoine\Desktop\DEPP\s06.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s07.csv
-save "C:\Users\Antoine\Desktop\DEPP\s07.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s08.csv
-save "C:\Users\Antoine\Desktop\DEPP\s08.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s09.csv
-save "C:\Users\Antoine\Desktop\DEPP\s09.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s10.csv
-save "C:\Users\Antoine\Desktop\DEPP\s10.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s11.csv
-save "C:\Users\Antoine\Desktop\DEPP\s11.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s12.csv
-save "C:\Users\Antoine\Desktop\DEPP\s12.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s13.csv
-save "C:\Users\Antoine\Desktop\DEPP\s13.dta"
-clear
-import delimited C:\Users\Antoine\Desktop\DEPP\s14.csv
-save "C:\Users\Antoine\Desktop\DEPP\s14.dta"
+    	<pre>
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==1997
+predict x_97 y_97 z_97
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==1998
+predict x_98 y_98 z_98
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==1999
+predict x_99 y_99 z_99
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2000
+predict x_00 y_00 z_00
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2001
+predict x_01 y_01 z_01
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2002
+predict x_02 y_02 z_02
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2003
+predict x_03 y_03 z_03
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2004
+predict x_04 y_04 z_04
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2005
+predict x_05 y_05 z_05
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2006
+predict x_06 y_06 z_06
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2007
+predict x_07 y_07 z_07
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2008
+predict x_08 y_08 z_08
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2009
+predict x_09 y_09 z_09
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2010
+predict x_10 y_10 z_10
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2011
+predict x_11 y_11 z_11
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2012
+predict x_12 y_12 z_12
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2013
+predict x_13 y_13 z_13
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==2014
+predict x_14 y_14 z_14
+factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] 
+predict x y z 
 </pre>
 
-<p>Gestion des incohérences de format</p> 
+
+    	<p> On calcule ensuite les k clusters pour les p années étudiées selon les axes x, y et z issues des analyses factorielles</p>
 
 <pre>
-use "C:\Users\Antoine\Desktop\DEPP\s07.dta"
-</pre>
-
-<pre>
-tab franaistranger
+cluster kmeans x_97 y_97 z_97 if session==1997, k(6) measure(L2) start(segments) name(_cl97)
+cluster kmeans x_98 y_98 z_98 if session==1998, k(6) measure(L2) start(segments) name(_cl98)
+cluster kmeans x_99 y_99 z_99 if session==1999, k(6) measure(L2) start(segments) name(_cl99)
+cluster kmeans x_00 y_00 z_00 if session==2000, k(6) measure(L2) start(segments) name(_cl00)
+cluster kmeans x_01 y_01 z_01 if session==2001, k(6) measure(L2) start(segments) name(_cl01)
+cluster kmeans x_02 y_02 z_02 if session==2002, k(6) measure(L2) start(segments) name(_cl02)
+cluster kmeans x_03 y_03 z_03 if session==2003, k(6) measure(L2) start(segments) name(_cl03)
+cluster kmeans x_04 y_04 z_04 if session==2004, k(6) measure(L2) start(segments) name(_cl04)
+cluster kmeans x_05 y_05 z_05 if session==2005, k(6) measure(L2) start(segments) name(_cl05)
+cluster kmeans x_06 y_06 z_06 if session==2006, k(6) measure(L2) start(segments) name(_cl06)
+cluster kmeans x_07 y_07 z_07 if session==2007, k(6) measure(L2) start(segments) name(_cl07)
+cluster kmeans x_08 y_08 z_08 if session==2008, k(6) measure(L2) start(segments) name(_cl08)
+cluster kmeans x_09 y_09 z_09 if session==2009, k(6) measure(L2) start(segments) name(_cl09)
+cluster kmeans x_10 y_10 z_10 if session==2010, k(6) measure(L2) start(segments) name(_cl10)
+cluster kmeans x_11 y_11 z_11 if session==2011, k(6) measure(L2) start(segments) name(_cl11)
+cluster kmeans x_12 y_12 z_12 if session==2012, k(6) measure(L2) start(segments) name(_cl12)
+cluster kmeans x_13 y_13 z_13 if session==2013, k(6) measure(L2) start(segments) name(_cl13)
+cluster kmeans x_14 y_14 z_14 if session==2014, k(6) measure(L2) start(segments) name(_cl14)
+cluster kmeans x y z , k(6) measure(L2) start(segments) name(_cl)
 </pre>
 
 <pre>
-destring franaistranger, replace force
-save "C:\Users\Antoine\Desktop\DEPP\s07.dta", replace
-use "C:\Users\Antoine\Desktop\DEPP\s08.dta"
-destring franaistranger, replace force
-save "C:\Users\Antoine\Desktop\DEPP\s08.dta", replace
-use "C:\Users\Antoine\Desktop\DEPP\s09.dta"
-destring franaistranger, replace force
-save "C:\Users\Antoine\Desktop\DEPP\s09.dta", replace
-use "C:\Users\Antoine\Desktop\DEPP\s10.dta"
-destring franaistranger, replace force
-save "C:\Users\Antoine\Desktop\DEPP\s10.dta", replace
-use "C:\Users\Antoine\Desktop\DEPP\s11.dta"
-destring franaistranger, replace force
-save "C:\Users\Antoine\Desktop\DEPP\s11.dta", replace
-use "C:\Users\Antoine\Desktop\DEPP\s12.dta"
-destring franaistranger, replace force
-save "C:\Users\Antoine\Desktop\DEPP\s12.dta", replace
-use "C:\Users\Antoine\Desktop\DEPP\s13.dta"
-destring franaistranger, replace force
-save "C:\Users\Antoine\Desktop\DEPP\s13.dta", replace
-use "C:\Users\Antoine\Desktop\DEPP\s14.dta"
-destring franaistranger, replace force
-save "C:\Users\Antoine\Desktop\DEPP\s14.dta", replace
-clear
-</pre>
+sc y_14 x_14 if _cl14==1, mc(blue) || sc y_14 x_14 if _cl14==2, mc(ltblue) || sc y_14 x_14 if _cl14==3, mc(lime) || sc y_14 x_14 if _cl14==4, mc(pink) ||sc y_14 x_14 if _cl14==5, mc(red) || sc y_14 x_14 if _cl14==6, mc(black)  
 
-<p>Fusion des fichiers par année</p>
+sc y_97 x_97 if _cl97==1, mc(blue) || sc y_97 x_97 if _cl97==2, mc(ltblue) || sc y_97 x_97 if _cl97==3, mc(lime) || sc y_97 x_97 if _cl97==4, mc(pink) ||sc y_97 x_97 if _cl97==5, mc(red) || sc y_97 x_97 if _cl97==6, mc(black)  
 
-<pre>
-use "C:\Users\Antoine\Desktop\DEPP\s97.dta", clear
+sc y_06 x_06 if _cl06==1, mc(blue) || sc y_06 x_06 if _cl06==2, mc(ltblue) || sc y_06 x_06 if _cl06==3, mc(lime) || sc y_06 x_06 if _cl06==4, mc(pink) ||sc y_06 x_06 if _cl06==5, mc(red) || sc y_06 x_06 if _cl06==6, mc(black)  
+
+sc y_14 x_14 if _cl14==1, mc(blue) || sc y_14 x_14 if _cl14==2, mc(ltblue) || sc y_14 x_14 if _cl14==3, mc(lime) || sc y_14 x_14 if _cl14==4, mc(pink) ||sc y_14 x_14 if _cl14==5, mc(red) || sc y_14 x_14 if _cl14==6, mc(black)  , by(cep2)
+
+sc y_06 x_06 if _cl06==1, mc(blue) || sc y_06 x_06 if _cl06==2, mc(ltblue) || sc y_06 x_06 if _cl06==3, mc(lime) || sc y_06 x_06 if _cl06==4, mc(pink) ||sc y_06 x_06 if _cl06==5, mc(red) || sc y_06 x_06 if _cl06==6, mc(black)  , by(cep2)
 </pre>
 
 <pre>
-append using "C:\Users\Antoine\Desktop\DEPP\s98.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s99.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s00.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s01.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s02.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s03.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s04.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s05.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s06.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s07.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s08.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s09.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s10.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s11.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s12.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s13.dta"
-append using "C:\Users\Antoine\Desktop\DEPP\s14.dta"
-</pre>
-
-<p>Sauvegarde</p>
-
-<pre>
-save "C:\Users\Antoine\Desktop\DEPP\depp.dta"
-</pre>
-
-<p>Renommage des variables</p>
-
-<pre>
-ren originesocialedtaille pcs8
-ren pcs8 pcs24
-ren originesociale8groupes pcs8
-ren franaistranger natio
-ren sriedubaccalauratlibc serie
-ren numrodtablissement numetan
-ren numetan numetab
-ren communeetarrondissement com
-ren secteurdenseignement secteur
-ren etablissementsensible sensible
-ren nombredinscrits inscrits
-ren nombredeprsents presents
-ren nombretotaldadmis admis
-ren nombredadmissansmention nomention
-ren nombredadmismentionab ab
-ren nombredadmismentionb b
-ren nombredadmismentiontb tb
-ren nombredtablissements nbetab
-</pre>
-
-<p>Id Unique Lycée x Session </p>
-
-<pre>
-egen id_etab = concat(numetab session), punct(_)
-</pre>
-
-<p>Compteur des résultats</p>
-
-<pre>
-gen num = 1
+sort session
+bysort session : egen tot_cep = total(cep2)
+twoway line tot_cep session
 </pre>
 
 <pre>
-bysort id_etab : egen  pond_admis = total(admis)
-bysort id_etab : egen  pond_inscrits = total(inscrits)
-bysort id_etab : egen  pond_presents = total(presents)
-bysort id_etab : egen  pond_nomention = total(nomention)
-bysort id_etab : egen  pond_ab = total(ab)
-bysort id_etab : egen  pond_b = total(b)
-bysort id_etab : egen  pond_tb = total(tb)
+tab cep2 _cl97
+tab cep2 _cl98
+tab cep2 _cl99
+tab cep2 _cl98
+tab cep2 _cl00
+tab cep2 _cl01
+tab cep2 _cl02
+tab cep2 _cl03
+tab cep2 _cl04
+tab cep2 _cl05
+tab cep2 _cl06
+tab cep2 _cl07
+tab cep2 _cl08
+tab cep2 _cl09
+tab cep2 _cl10
+tab cep2 _cl11
+tab cep2 _cl12
+tab cep2 _cl13
+tab cep2 _cl14
 </pre>
 
 <pre>
-order pond_inscrits pond_presents, after( num )
-</pre>
+tab cep2 _cl97 , row nof 
+tab cep2 _cl98 , row nof
+tab cep2 _cl99 , row nof
+tab cep2 _cl98 , row nof
+tab cep2 _cl00 , row nof
+tab cep2 _cl01 , row nof
+tab cep2 _cl02 , row nof
+tab cep2 _cl03 , row nof
+tab cep2 _cl04 , row nof
+tab cep2 _cl05 , row nof
+tab cep2 _cl06 , row nof
+tab cep2 _cl07 , row nof
+tab cep2 _cl08 , row nof
+tab cep2 _cl09 , row nof
+tab cep2 _cl10 , row nof
+tab cep2 _cl11 , row nof
+tab cep2 _cl12 , row nof
+tab cep2 _cl13 , row nof
+tab cep2 _cl14 , row nof
+</pre>    	
 
-<p>Taux de réussite et mention</p>
+    </div>
 
-<pre>
-gen psucc = ( pond_admis / pond_inscrits ) * 100
-gen nm_adm = ( pond_nomention / pond_admis ) * 100
-gen ab_adm = ( pond_ab / pond_admis ) * 100
-gen b_adm = ( pond_b / pond_admis ) * 100
-gen tb_adm = ( pond_tb / pond_admis ) * 100
-</pre>
+    <div class="footer">
+    Made in HTML and CSS - Antoine Jardin - 2015
+    <div>
 
-<p>Gestion des valeurs manquantes</p>
-
-<pre>
-replace nm_adm = 0 if nm_adm == .
-replace ab_adm = 0 if ab_adm == .
-replace b_adm = 0 if b_adm == .
-replace tb_adm = 0 if tb_adm == .
-</pre>
-
-<p>Identifiant par mention, par lycée et par session </p>
-
-<pre>
-egen id_etab2 = concat(numetab session serie ), punct(_)
-</pre>
-
-<pre>
-bysort id_etab2 : egen  ser_admis = total(admis)
-bysort id_etab2 : egen  ser_inscrits = total(inscrits)
-bysort id_etab2 : egen  ser_presents = total(presents)
-bysort id_etab2 : egen  ser_nomention = total(nomention)
-bysort id_etab2 : egen  ser_ab = total(ab)
-bysort id_etab2 : egen  ser_b = total(b)
-bysort id_etab2 : egen  ser_tb = total(tb)
-</pre>
-
-<pre>
-gen ser_succ = ( ser_admis / ser_inscrits ) * 100
-gen ser_nm_adm = ( ser_nomention / ser_admis ) * 100
-gen ser_ab_adm = ( ser_ab / ser_admis ) * 100
-gen ser_b_adm = ( ser_b / ser_admis ) * 100
-gen ser_tb_adm = ( ser_tb / ser_admis ) * 100
-</pre>
-
-<pre>
-replace ser_nm_adm = 0 if ser_nm_adm == .
-replace ser_ab_adm = 0 if ser_ab_adm == .
-replace ser_b_adm = 0 if ser_b_adm == .
-replace ser_tb_adm = 0 if ser_tb_adm == .
-</pre>
-
-<p>TODO : PCS</p>
-
-<pre>
-use "C:\Users\Antoine\Desktop\DEPP\depp.dta", clear
-</pre>
-
-<pre>
-bysort id_etab : egen cs1 = total(inscrits) if pcs8 == 1
-bysort id_etab : egen cs2 = total(inscrits) if pcs8 == 2
-bysort id_etab : egen cs3 = total(inscrits) if pcs8 == 3
-bysort id_etab : egen cs4 = total(inscrits) if pcs8 == 4
-bysort id_etab : egen cs5 = total(inscrits) if pcs8 == 5
-bysort id_etab : egen cs6 = total(inscrits) if pcs8 == 6
-bysort id_etab : egen cs7 = total(inscrits) if pcs8 == 7
-bysort id_etab : egen cs8 = total(inscrits) if pcs8 == 8
-bysort id_etab : egen cs9 = total(inscrits) if pcs8 == 9
-</pre>
-
-<p>Cylindrage des données 
-
-<pre>
-egen test = group ( id_etab )
-</pre>
-
-<pre>
-xfill cs1, i(test)
-xfill cs2, i(test)
-xfill cs3, i(test)
-xfill cs4, i(test)
-xfill cs5, i(test)
-xfill cs6, i(test)
-xfill cs7, i(test)
-xfill cs8, i(test)
-xfill cs9, i(test)
-</pre>
-
-<pre>
-replace cs1 = 0 if cs1 == .
-replace cs2 = 0 if cs2 == .
-replace cs3 = 0 if cs3 == .
-replace cs4 = 0 if cs4 == .
-replace cs5 = 0 if cs5 == .
-replace cs6 = 0 if cs6 == .
-replace cs7 = 0 if cs7 == .
-replace cs8 = 0 if cs8 == .
-replace cs9 = 0 if cs9 == .
-</pre>
-
-<p>Boucle pourcentages (CS8)
-
-<pre>
-foreach x of varlist (cs1-cs9) {
-gen p_`x' = (`x' / pond_inscrits) * 100
-}
-</pre>
-
-<p>Controle</p>
-
-<pre>
-egen control_1 = rowtotal (p_cs1-p_cs9)
-</pre>
-
-<pre>
-drop control_1
-</pre>
-
-<p>A partir de cette étape, on peut réaliser un export ###</p>
-<p>On peut aussi reprendre la procédure avec la pcs24  ###</p>
-
-<p>Demo Export ###</p>
-
-<pre>
-save "C:\Users\Antoine\Desktop\DEPP\depp.dta", replace
-</pre>
-
-<pre>
-duplicates drop test, force
-</pre>
-
-<p> On passe ici d'un dataset à 5 millions de lignes à un dataset de 100 000 lignes.</p>
-<p> Une par an, par lycée, par série, par cs à une par an et par lycée.</p>
-
-<p> PCS 24 postes</p>
- 
-<pre>
-bysort id_etab : egen cs10 = total(inscrits) if pcs24 == 10
-bysort id_etab : egen cs20 = total(inscrits) if pcs24 == 20
-bysort id_etab : egen cs21 = total(inscrits) if pcs24 == 21
-bysort id_etab : egen cs22 = total(inscrits) if pcs24 == 22
-bysort id_etab : egen cs23 = total(inscrits) if pcs24 == 23
-bysort id_etab : egen cs30 = total(inscrits) if pcs24 == 30
-bysort id_etab : egen cs31 = total(inscrits) if pcs24 == 31
-bysort id_etab : egen cs33 = total(inscrits) if pcs24 == 33
-bysort id_etab : egen cs34 = total(inscrits) if pcs24 == 34
-bysort id_etab : egen cs35 = total(inscrits) if pcs24 == 35
-bysort id_etab : egen cs37 = total(inscrits) if pcs24 == 37
-bysort id_etab : egen cs38 = total(inscrits) if pcs24 == 38
-bysort id_etab : egen cs40 = total(inscrits) if pcs24 == 40
-bysort id_etab : egen cs42 = total(inscrits) if pcs24 == 42
-bysort id_etab : egen cs43 = total(inscrits) if pcs24 == 43
-bysort id_etab : egen cs44 = total(inscrits) if pcs24 == 44
-bysort id_etab : egen cs45 = total(inscrits) if pcs24 == 45
-bysort id_etab : egen cs46 = total(inscrits) if pcs24 == 46
-bysort id_etab : egen cs47 = total(inscrits) if pcs24 == 47
-bysort id_etab : egen cs48 = total(inscrits) if pcs24 == 48
-bysort id_etab : egen cs50 = total(inscrits) if pcs24 == 50
-bysort id_etab : egen cs52 = total(inscrits) if pcs24 == 52
-bysort id_etab : egen cs53 = total(inscrits) if pcs24 == 53
-bysort id_etab : egen cs54 = total(inscrits) if pcs24 == 54
-bysort id_etab : egen cs55 = total(inscrits) if pcs24 == 55
-bysort id_etab : egen cs56 = total(inscrits) if pcs24 == 56
-bysort id_etab : egen cs60 = total(inscrits) if pcs24 == 60
-bysort id_etab : egen cs61 = total(inscrits) if pcs24 == 61
-bysort id_etab : egen cs66 = total(inscrits) if pcs24 == 66
-bysort id_etab : egen cs69 = total(inscrits) if pcs24 == 69
-bysort id_etab : egen cs70 = total(inscrits) if pcs24 == 70
-bysort id_etab : egen cs71 = total(inscrits) if pcs24 == 71
-bysort id_etab : egen cs72 = total(inscrits) if pcs24 == 72
-bysort id_etab : egen cs73 = total(inscrits) if pcs24 == 73
-bysort id_etab : egen cs76 = total(inscrits) if pcs24 == 76
-bysort id_etab : egen cs80 = total(inscrits) if pcs24 == 80
-bysort id_etab : egen cs81 = total(inscrits) if pcs24 == 81
-bysort id_etab : egen cs82 = total(inscrits) if pcs24 == 82
-bysort id_etab : egen cs99 = total(inscrits) if pcs24 == 99
-</pre>
-
-<pre>
-xfill cs10 , i(test)
-xfill cs20 , i(test)
-xfill cs21 , i(test)
-xfill cs22 , i(test)
-xfill cs23 , i(test)
-xfill cs30 , i(test)
-xfill cs31 , i(test)
-xfill cs33 , i(test)
-xfill cs34 , i(test)
-xfill cs35 , i(test)
-xfill cs37 , i(test)
-xfill cs38 , i(test)
-xfill cs40 , i(test)
-xfill cs42 , i(test)
-xfill cs43 , i(test)
-xfill cs44 , i(test)
-xfill cs45 , i(test)
-xfill cs46 , i(test)
-xfill cs47 , i(test)
-xfill cs48 , i(test)
-xfill cs50 , i(test)
-xfill cs52 , i(test)
-xfill cs53 , i(test)
-xfill cs54 , i(test)
-xfill cs55 , i(test)
-xfill cs56 , i(test)
-xfill cs60 , i(test)
-xfill cs61 , i(test)
-xfill cs66 , i(test)
-xfill cs69 , i(test)
-xfill cs70 , i(test)
-xfill cs71 , i(test)
-xfill cs72 , i(test)
-xfill cs73 , i(test)
-xfill cs76 , i(test)
-xfill cs80 , i(test)
-xfill cs81 , i(test)
-xfill cs82 , i(test)
-xfill cs99 , i(test)
-</pre>
-
-<pre>
-replace cs10=0 if cs10==.
-replace cs20=0 if cs20==.
-replace cs21=0 if cs21==.
-replace cs22=0 if cs22==.
-replace cs23=0 if cs23==.
-replace cs30=0 if cs30==.
-replace cs31=0 if cs31==.
-replace cs33=0 if cs33==.
-replace cs34=0 if cs34==.
-replace cs35=0 if cs35==.
-replace cs37=0 if cs37==.
-replace cs38=0 if cs38==.
-replace cs40=0 if cs40==.
-replace cs42=0 if cs42==.
-replace cs43=0 if cs43==.
-replace cs44=0 if cs44==.
-replace cs45=0 if cs45==.
-replace cs46=0 if cs46==.
-replace cs47=0 if cs47==.
-replace cs48=0 if cs48==.
-replace cs50=0 if cs50==.
-replace cs52=0 if cs52==.
-replace cs53=0 if cs53==.
-replace cs54=0 if cs54==.
-replace cs55=0 if cs55==.
-replace cs56=0 if cs56==.
-replace cs60=0 if cs60==.
-replace cs61=0 if cs61==.
-replace cs66=0 if cs66==.
-replace cs69=0 if cs69==.
-replace cs70=0 if cs70==.
-replace cs71=0 if cs71==.
-replace cs72=0 if cs72==.
-replace cs73=0 if cs73==.
-replace cs76=0 if cs76==.
-replace cs80=0 if cs80==.
-replace cs81=0 if cs81==.
-replace cs82=0 if cs82==.
-replace cs99=0 if cs99==.
-</pre>
-
-<pre>
-foreach x of varlist (cs10-cs99) {
-gen p_`x' = (`x' / pond_inscrits) * 100
-}
-</pre>
-
-<ul class="post">
-<li><a href="#home">01/03/2015 - [Rstudio] - blablabla</a> </li>
-<li><a href="#home">28/02/2015 - [Rstudio] - blablabla2</a> </li>
-</ul>
-
-<ul class="post">
-<li><a href="#home">01/03/2015 - [Stata] - blablabla</a> </li>
-<li><a href="#home">28/02/2015 - [Stata] - blablabla2</a> </li>
-</ul>
-
-</div>
-
-
-<div class="footer">
-
-<p>Made with love in pure html and css</p>
-</div>
 
 </body>
 </html>
+
