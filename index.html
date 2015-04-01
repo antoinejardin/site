@@ -107,6 +107,76 @@ h3 {
 	</div>
 
   	<div class="content">
+  	
+  	<h3>[R Studio] </h3>
+  	
+  	<pre>
+	library(ordinal)
+	library(dplyr)
+	library(tidyr)
+	library(ggplot2)
+	</pre>
+	
+	<pre>
+	roma_ok <- read.csv("~/roma_ok.csv")
+	View(roma_ok)
+	data <- roma_ok
+	</pre>
+	
+	<pre>
+	fm1 <- clmm2(roma ~ age + ethno, random = country, data = data)
+	data$roma <- as.factor(data$roma)
+	</pre>
+	
+	<pre>
+	fm1 <- clmm2(roma ~ age + ethno, random = country, data = data, Hess = TRUE)
+	summary(fm1)
+	</pre>
+	
+	<pre>
+	fm1 <- clmm2(roma ~ gender + ethno + contact + relig, random = country, data = data, Hess = TRUE)
+	summary(fm1)
+	</pre>
+	
+	<pre>
+	fm1 <- clm(roma ~ gender + ethno + contact + relig + country, data = data, Hess = TRUE, link="probit")
+	summary(fm1)
+	</pre>
+	
+	<pre>
+	fm2 <- clmm(roma ~ gender + ethno + contact + relig + (1 | country), data = data, Hess = TRUE, link="probit")
+	summary(fm2)
+	fixef(fm2)
+	ranef(fm2)
+	</pre>
+		
+	<pre>
+	fm2 <- clmm(roma ~ gender + ethno + contact + relig  + (1 + contact | country), data = data, weights = pond, Hess = TRUE, link="probit")
+	summary(fm2)
+	ranef(fm2)
+	coefs(fm2)
+	fit2 <- fitted(fm2)
+	coefs4 <- data.frame(coef(summary(fm2)))
+	coefs4$p.z <- 2 * ( 1 - pnorm(abs(coefs4$t.value)))
+	</pre>
+	
+	<pre>
+	odds <- as.data.frame(exp(coef(fm2)))
+	odds
+	</pre>
+	
+	<pre>
+	fm4t <- clmm(roma ~ gender + ethno + contact + relig + place + (1 + contact | country), data = data, weights = pond, Hess = TRUE, link="probit")
+	fit2 <- fitted(fm2)
+	datafit <- cbind(data, fit2)
+	</pre>
+	
+	<pre>
+	write.csv(datafit, "romafit.csv")
+	library(foreign)
+	write.dta(datafit, "romafit.dta")
+	savehistory("~/rh.Rhistory")
+  	</pre>
 
     	<h3>[Stata] Typologie et classification</h3>
 
