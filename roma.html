@@ -118,34 +118,40 @@ library(dplyr)
 library(foreign)
 library(lme4)
 </pre>
-
+<p></p>
 <pre>
 roma <- read.csv("~/roma.csv")
 </pre>
+<p></p>
 
 <pre>
 rom <- select(roma, -(X.2:X))
 </pre>
+<p></p>
 
 <pre>
 rom$contact <- as.factor(rom$contact)
 </pre>
+<p></p>
 
 <pre>
 fm1 <- clm(contact ~ gender + educ + age + ethno + place + relig + country, data=rom, Hess = TRUE, link="logit")
 
 fm1p <- clm(contact ~ gender + educ + age + ethno + place + relig + country, data=rom, Hess = TRUE, link="logit", weights=pond)
 </pre>
+<p></p>
 
 <pre>
 rom$roma <- as.factor(rom$roma)
 </pre>
+<p></p>
 
 <pre>
 fm2 <- clm(roma ~ gender + educ + age + ethno + place + relig + contact + country, data=rom, Hess = TRUE, link="probit")
 
 fm2p <- clm(roma ~ gender + educ + age + ethno + place + relig + contact + country, data=rom, Hess = TRUE, link="probit", weights=pond)
 </pre>
+<p></p>
 
 <pre>
 summary(fm1)
@@ -154,19 +160,23 @@ summary(fm1p)
 summary(fm2)
 summary(fm2p)
 </pre>
+<p></p>
 
 <pre>
 fm1r <- clmm(contact ~ gender + educ + age + ethno + place + relig + (1 | country), data=rom, Hess = TRUE, link="logit")
 fm1rp <- clmm(contact ~ gender + educ + age + ethno + place + relig + (1 | country), data=rom, Hess = TRUE, link="logit", weights=pond)
 </pre>
+<p></p>
 
 <pre>
 fm2rp <- clmm(roma ~ gender + educ + age + ethno + place + relig + contact + ( 1 | country) , data=rom, Hess = TRUE, link="probit", weights=pond)
 </pre>
+<p></p>
 
 <pre>
 fm3p <- clm(roma ~ contact*country , data=rom, Hess = TRUE, link="probit", weights=pond)
 </pre>
+<p></p>
 
 <pre>
 summary(fm3p)
@@ -179,6 +189,7 @@ summary(fm2p)
 summary(fm1p)
 summary(fm2)
 </pre>
+<p></p>
 
 <pre>
 fm4p <- clmm(roma ~ gender + (1 + contact | country) , data=rom, Hess = TRUE, link="probit", weights=pond)
@@ -186,12 +197,14 @@ fm4p <- clmm(roma ~ gender + (1 + contact | country) , data=rom, Hess = TRUE, li
 summary(fm4p)
 ranef(fm4p)
 </pre>
+<p></p>
 
 <pre>
 doc <- as.data.frame(ranef(fm4p))
 
 View(doc)
 </pre>
+<p></p>
 
 <pre>
 fm5p <- clmm(roma ~ gender + ethno + contact + (1 + contact | country) , data=rom, Hess = TRUE, link="probit", weights=pond)
@@ -200,6 +213,7 @@ fm6p <- clmm(roma ~ gender + ethno + contact + (1 + contact + ethno | country) ,
 
 fm7p <- clmm(roma ~ gender + ethno + (1 + contact | country) , data=rom, Hess = TRUE, link="probit", weights=pond)
 </pre>
+<p></p>
 
 <pre>
 summary(fm7p)
@@ -208,10 +222,12 @@ ranef(fm7p)
 summary(fm6p)
 ranef(fm6p)
 </pre>
+<p></p>
 
 <pre>
 fm8p <- clmm(roma ~ gender + ethno + educ + (1 + contact | country) , data=rom, Hess = TRUE, link="probit", weights=pond)
 </pre>
+<p></p>
 
 <pre>
 summary(fm8p)
@@ -220,6 +236,7 @@ ran8 <- as.data.frame(ranef(fm8p))
 
 rom$f.ethno <- as.factor(rom$ethno)
 </pre>
+<p></p>
 
 <pre>
 summary(fm8p)
@@ -227,15 +244,18 @@ pred8 <- fitted(fm8p)
 res8 <- cbind(pred8, rom)
 head(res8)
 </pre>
+<p></p>
 
 <pre>
 write.csv(res8, file="~/res8.csv")
 write.dta(res8, file="~/res8.dta")
 </pre>
+<p></p>
 
 <pre>
 fm9p <- lmer(roma ~ gender + ethno + educ + (1 + contact | country) , data=rom, weights=pond)
 </pre>
+<p></p>
 
 <pre>
 summary(fm9p)
@@ -244,28 +264,24 @@ pred9 <- fitted(fm9p)
 base9 <- fm9p@frame
 res9 <- cbind(base9, pred9)
 </pre>
+<p></p>
 
 <pre>
 write.dta(res9, file="~/res.dta")
 write.dta(res9, file="~/res9.dta")
 </pre>
+<p></p>
 
 <pre>
 savehistory("~/tommaso_clm.Rhistory")
 </pre>
+<p></p>
 
-    
-    I'm an associate researcher to the Center for European Studies at Sciences Po.
-    I hold a Phd in Polical Science.
-    
-    My research topics are political behavior, social inequalities and urban segregation.
-    I'm specifically interested in Big Data, Database management, Data visualisation and quantitative analysis.
+</div>
 
-    </div>
-
-    <div class="footer">
-    Made in HTML and CSS - Antoine Jardin - 2015
-    <div>
+<div class="footer">
+Made in HTML and CSS - Antoine Jardin - 2015
+<div>
 
 
 </body>
