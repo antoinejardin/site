@@ -1,0 +1,146 @@
+
+<pre>rom3 <- read.csv("~/rom3.csv")</pre>
+
+<pre>library(ordinal)</pre>
+
+<pre>m1_probit <- clmm(r3 ~ gender + ethno + educ + ( 1 + contact | country), data=rom3, Hess = TRUE, link="probit", weights=pond)</pre>
+<pre>m1_logit <- clmm(r3 ~ gender + ethno + educ + ( 1 + contact | country), data=rom3, Hess = TRUE, link="logit", weights=pond)</pre>
+
+<pre>
+summary(m1_probit)</pre>
+
+<pre>
+Cumulative Link Mixed Model fitted with the Laplace approximation
+
+formula: r3 ~ gender + ethno + educ + (1 + contact | country)
+data:    rom3
+
+ link   threshold nobs     logLik    AIC      niter     max.grad cond.H 
+ probit flexible  24314.27 -24536.68 49089.36 901(2707) 3.63e-02 1.6e+04
+
+Random effects:
+ Groups  Name        Variance Std.Dev. Corr   
+ country (Intercept) 0.07531  0.2744          
+         contact     0.13620  0.3691   -0.448 
+Number of groups:  country 29 
+
+Coefficients:
+        Estimate Std. Error z value Pr(>|z|)    
+gender  0.070355   0.015118   4.654 3.26e-06 ***
+ethno  -0.091038   0.003155 -28.859  < 2e-16 ***
+educ   -0.008317   0.001766  -4.710 2.47e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Threshold coefficients:
+                Estimate Std. Error z value
+hostile|neutre   -0.8649     0.1036  -8.347
+neutre|tolerant  -0.3139     0.1035  -3.032
+</pre>
+
+<pre>
+ranef(m1_probit)
+</pre>
+
+<pre>
+$country
+                        (Intercept)      contact
+AT - Austria             0.10499300  0.239288215
+BE - Belgium            -0.22906110  0.389817780
+BG - Bulgaria           -0.25923851  0.557030001
+CY - Cyprus (Republic)   0.01706653  0.076547214
+CZ - Czech Republic     -0.52194103  0.443305991
+DE-E Germany East       -0.27533017  0.715386927
+DE-W - Germany - West    0.03088568  0.247983399
+DK - Denmark            -0.31458469  0.317209375
+EE - Estonia             0.03813131  0.039686924
+ES -Spain               -0.03088698  0.368016443
+FI - Finland             0.35694680 -0.003391095
+FR - France             -0.34522402  0.319467191
+GB-GBN - Great Britain  -0.09174791  0.291710093
+GB-NIR Northern Ireland -0.18093757  0.312604176
+GR - Greece              0.18591311  0.381424169
+HU - Hungary            -0.41740066  0.303217335
+IE - Ireland            -0.22571339  0.297360764
+IT - Italy              -0.32470369  0.490666078
+LT - Lithuania           0.17786795  0.132609595
+LU - Luxembourg         -0.26728269  0.065805310
+LV - Latvia              0.22262318  0.308520219
+MT - Malta              -0.01990732  0.030882103
+NL - The Netherlands    -0.12167738  0.206228718
+PL - Poland              0.21150087  0.248589736
+PT - Portugal           -0.01872795  0.375342628
+RO - Romania             0.26284633  0.321664127
+SE - Sweden              0.09984135 -0.015237535
+SI - Slovenia           -0.02737187  0.202339525
+SK - Slovakia           -0.64217309  0.131416807
+</pre>
+
+<pre>
+summary(m1_logit)
+</pre>
+
+<pre>
+Cumulative Link Mixed Model fitted with the Laplace approximation
+
+formula: r3 ~ gender + ethno + educ + (1 + contact | country)
+data:    rom3
+
+ link  threshold nobs     logLik    AIC      niter     max.grad cond.H 
+ logit flexible  24314.27 -24529.91 49075.81 701(2113) 4.45e-02 1.7e+04
+
+Random effects:
+ Groups  Name        Variance Std.Dev. Corr   
+ country (Intercept) 0.1960   0.4427          
+         contact     0.3734   0.6111   -0.436 
+Number of groups:  country 29 
+
+Coefficients:
+        Estimate Std. Error z value Pr(>|z|)    
+gender  0.114953   0.024648   4.664 3.11e-06 ***
+ethno  -0.149351   0.005179 -28.836  < 2e-16 ***
+educ   -0.013369   0.002887  -4.630 3.65e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Threshold coefficients:
+                Estimate Std. Error z value
+hostile|neutre   -1.4098     0.1698  -8.301
+neutre|tolerant  -0.5117     0.1696  -3.017
+</pre>
+
+<pre>
+ranef(m1_logit)
+
+$country
+                        (Intercept)      contact
+AT - Austria             0.17454826  0.378320151
+BE - Belgium            -0.37161168  0.632501113
+BG - Bulgaria           -0.42644581  0.919710960
+CY - Cyprus (Republic)   0.03390784  0.126832352
+CZ - Czech Republic     -0.81690043  0.699034448
+DE-E Germany East       -0.43497282  1.187773795
+DE-W - Germany - West    0.04684215  0.421899667
+DK - Denmark            -0.51521687  0.535060130
+EE - Estonia             0.06261660  0.067229222
+ES -Spain               -0.04690614  0.599078751
+FI - Finland             0.58582655 -0.005350065
+FR - France             -0.55613323  0.516520355
+GB-GBN - Great Britain  -0.15082492  0.484830094
+GB-NIR Northern Ireland -0.29320280  0.522621805
+GR - Greece              0.31050876  0.639341526
+HU - Hungary            -0.66960727  0.483886851
+IE - Ireland            -0.36665193  0.500850377
+IT - Italy              -0.53497861  0.807388127
+LT - Lithuania           0.28493076  0.233777816
+LU - Luxembourg         -0.43192661  0.099479005
+LV - Latvia              0.36386337  0.524433908
+MT - Malta              -0.02883665  0.050319437
+NL - The Netherlands    -0.19712488  0.351674176
+PL - Poland              0.35176962  0.425803979
+PT - Portugal           -0.02868549  0.613081965
+RO - Romania             0.43790424  0.530722247
+SE - Sweden              0.16593051 -0.016552687
+SI - Slovenia           -0.04172708  0.346749002
+SK - Slovakia           -1.01670016  0.224087747
+</pre>
