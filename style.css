@@ -1,6 +1,6 @@
 
 body {
-    font-family: 'Arvo', serif;
+    font-family: serif;
 }
 
 
@@ -32,7 +32,7 @@ a:hover {
 }
 
 pre {
-	font-family: 'Anonymous Pro', monospace;
+	font-family: monospace;
 	margin: auto;
 	white-space: pre-wrap;                 /* CSS3 browsers  */
 	white-space: -moz-pre-wrap !important; /* 1999+ Mozilla  */
