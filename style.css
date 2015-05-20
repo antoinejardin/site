@@ -1,6 +1,6 @@
 
 body {
-    font-family: serif;
+    font-family: sans-serif;
 }
 
 
@@ -22,8 +22,8 @@ a {
     padding-right: 1rem;
     color: blue;
     background-color: white;
-    font-family: serif;
-    font-size: 1.2rem;
+    font-family: sans-serif;
+    font-size: 1rem;
 }
 
 a:hover {
