@@ -1,6 +1,37 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
 
-*** Changement des noms de fichiers ***
+    <title>Antoine Jardin's Blog</title>
 
+<link href='http://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+
+<body>
+
+    <div class="nav">
+    <ul>
+        <li><a href="http://antoinejardin.github.io/site/">Home</a></li>
+        <li><a href="#">Data</a></li>
+        <li><a href="#">Code</a></li>
+		<li><a href="#">Research</a></li>
+		<li><a href="#">Teaching</a><li>
+        <li><a href="#">Papers</a></li>
+        <li><a href="#">Archives</a><li>
+        <li><a href="http://antoinejardin.github.io/site/about.html">About Me</a></li>
+    </ul>
+	</div>
+
+  	<div class="content">
+  	
+  	
+<h3> Changement des noms de fichiers </h3>
+
+<pre>
 use "/home/me/DYN/121214_DiffEqRech_DynamobV1_versionBrute.dta"
 gen wave = 1
 save "/home/me/DYN/V1.dta"
@@ -29,9 +60,11 @@ use "/home/me/DYN/Dynamob_12_2014_v11052015.dta"
 gen wave = 7
 save "/home/me/DYN/V7.dta"
 clear
+</pre>
 
-*** Création d'un identifiant unique individus * vague ***
+<h3> Création d'un identifiant unique individus * vague </h3>
 
+<pre>
 use "/home/me/DYN/V1.dta"
 egen id = concat(UID_DYNA wave) , punct(_)
 save "/home/me/DYN/V1.dta", replace
@@ -54,8 +87,12 @@ use "/home/me/DYN/V7.dta"
 egen id = concat(UID_DYNA wave) , punct(_)
 save "/home/me/DYN/V7.dta", replace
 
-*** Fusion (append) des fichiers au format long ***
+</pre>
 
+
+<h3>Fusion (append) des fichiers au format long </h3>
+
+<pre>
 use "/home/me/DYN/V1.dta"
 append using "/home/me/DYN/V2.dta", generate(f1)
 append using "/home/me/DYN/V3.dta", generate(f2)
@@ -119,18 +156,27 @@ clear
 use "/home/me/DYN/V1V2V3V4V5V6.dta"
 append using "/home/me/DYN/V7b.dta", generate(f6)
 save "/home/me/DYN/V1V2V3V4V5V6V7.dta"
+</pre>
 
-*** Classement des variables de fusion ***
 
+<h3> Classement des variables de fusion </h3>
+
+<pre>
 order f1 f2 f3 f4 f5 f6, after(EA14_G6D)
 list f1 f2 f3 f4 f5 f6
+</pre>
+
 
 *** Fichier final ***
 
+<pre>
 save "/home/me/DYN/V1V2V3V4V5V6V7.dta", replace
+</pre>
 
-*** Replacement ***
 
+<h3> Replacement </h3>
+
+<pre>
 gen h4 = .
 replace h4 = H4 if H4 != .
 replace h4 = EA14_H4 if EA14_H4 != .
@@ -222,6 +268,9 @@ tab i8r2
 
 save "/home/me/DYN/V1V2V3V4V5V6V7.dta", replace
 
+<h3> Analyses </h3>
+
+<pre>
 logistic i8r2 ib6.cs6##i.wave [iw=zpw]
 logistic gauche ib6.cs6##i.wave [iw=zpw]
 
@@ -298,10 +347,12 @@ margins, at (wave = ( 1 2 4 6 7) age = (1940 (10) 2000) )
 marginsplot, recastci(rarea)
 margins, at (wave = ( 1 2 4 6 7) age = (1940 (10) 2000) )
 marginsplot, recastci(rarea) by(age)
+</pre>
 
-*******
 
+<h3>Suite des modélisations</h3>
 
+<pre>
 use "/home/me/DYN/V1V2V3V4V5V6V7.dta"
 lookfor imm
 logistic gauche i.cs6 i.gndr i.diplo
@@ -359,10 +410,12 @@ margins wave#cs6
 marginsplot, recastci(rarea) recast(line) by(cs6)
 logistic fn i.cs6##i.diplo [iw=zpw] if cs6 > 1
 margins wave#diplo
+</pre>
 
 
-****
+<h3>Fin</h3>
 
+<pre>
 use "/home/me/DYN/V1V2V3V4V5V6V7.dta"
 lookfor pays
 lookfor naissan
@@ -454,3 +507,15 @@ tab wave attfh [iw=zpw], cell nof
 tab wave attfh [iw=zpw], row nof
 recode attfh (1=2 ) (2=1)
 tab wave attfh [iw=zpw], row nof
+</pre>
+
+
+    </div>
+
+    <div class="footer">
+    HTML / CSS - Antoine Jardin - 2015
+    <div>
+
+
+</body>
+</html>
