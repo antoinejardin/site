@@ -53,6 +53,11 @@ h3 {
 	padding-left: 2rem;
 }
 
+h1 {
+	padding-left: 2rem;
+	font-size: 1.2em;
+	color : black;
+}
 .content {
 		width: 800px;
 		margin: auto;
