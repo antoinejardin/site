@@ -1,0 +1,456 @@
+
+*** Changement des noms de fichiers ***
+
+use "/home/me/DYN/121214_DiffEqRech_DynamobV1_versionBrute.dta"
+gen wave = 1
+save "/home/me/DYN/V1.dta"
+clear
+use "/home/me/DYN/EqDynamob_vague2_01042015.dta"
+gen wave = 2
+save "/home/me/DYN/V2.dta"
+clear
+use "/home/me/DYN/Municip_03_2014_version22042015.dta"
+gen wave=3
+save "/home/me/DYN/V3.dta"
+clear
+use "/home/me/DYN/PostMunicip_04_2014_version22042015.dta"
+gen wave = 4
+save "/home/me/DYN/V4.dta"
+clear
+use "/home/me/DYN/Europ_05_2014_version22042015.dta"
+gen wave = 5
+save "/home/me/DYN/V5.dta"
+clear
+use "/home/me/DYN/PostEurop_06_2014_version22042015.dta"
+gen wave = 6
+save "/home/me/DYN/V6.dta"
+clear
+use "/home/me/DYN/Dynamob_12_2014_v11052015.dta"
+gen wave = 7
+save "/home/me/DYN/V7.dta"
+clear
+
+*** Création d'un identifiant unique individus * vague ***
+
+use "/home/me/DYN/V1.dta"
+egen id = concat(UID_DYNA wave) , punct(_)
+save "/home/me/DYN/V1.dta", replace
+use "/home/me/DYN/V2.dta"
+egen id = concat(UID_DYNA wave) , punct(_)
+save "/home/me/DYN/V2.dta", replace
+use "/home/me/DYN/V3.dta"
+egen id = concat(UID_DYNA wave) , punct(_)
+save "/home/me/DYN/V3.dta", replace
+use "/home/me/DYN/V4.dta"
+egen id = concat(UID_DYNA wave) , punct(_)
+save "/home/me/DYN/V4.dta", replace
+use "/home/me/DYN/V5.dta"
+egen id = concat(UID_DYNA wave) , punct(_)
+save "/home/me/DYN/V5.dta", replace
+use "/home/me/DYN/V6.dta"
+egen id = concat(UID_DYNA wave) , punct(_)
+save "/home/me/DYN/V6.dta", replace
+use "/home/me/DYN/V7.dta"
+egen id = concat(UID_DYNA wave) , punct(_)
+save "/home/me/DYN/V7.dta", replace
+
+*** Fusion (append) des fichiers au format long ***
+
+use "/home/me/DYN/V1.dta"
+append using "/home/me/DYN/V2.dta", generate(f1)
+append using "/home/me/DYN/V3.dta", generate(f2)
+save "/home/me/DYN/V1V2.dta"
+clear
+
+use "/home/me/DYN/V3.dta"
+list zae
+tostring zae, replace
+save "/home/me/DYN/V3b.dta"
+clear
+
+use "/home/me/DYN/V1V2.dta"
+append using "/home/me/DYN/V3b.dta", generate(f2)
+
+use "/home/me/DYN/V3b.dta"
+tostring zae, replace
+tostring strate, replace
+save "/home/me/DYN/V3b.dta", replace
+clear
+
+use "/home/me/DYN/V4.dta"
+tostring zae, replace
+tostring strate, replace
+save "/home/me/DYN/V4b.dta"
+clear
+
+use "/home/me/DYN/V1V2V3.dta"
+append using "/home/me/DYN/V4b.dta", generate(f3)
+save "/home/me/DYN/V1V2V3V4.dta"
+clear
+
+use "/home/me/DYN/V5.dta"
+tostring zae, replace
+tostring strate, replace
+save "/home/me/DYN/V5b.dta"
+clear
+
+use "/home/me/DYN/V1V2V3V4.dta"
+append using "/home/me/DYN/V5b.dta", generate(f4)
+save "/home/me/DYN/V1V2V3V4V5.dta"
+clear
+
+use "/home/me/DYN/V6.dta"
+tostring zae, replace
+tostring strate, replace
+save "/home/me/DYN/V6b.dta"
+clear
+
+use "/home/me/DYN/V1V2V3V4V5.dta"
+append using "/home/me/DYN/V6b.dta", generate(f5)
+save "/home/me/DYN/V1V2V3V4V5V6.dta"
+clear
+
+use "/home/me/DYN/V7.dta"
+tostring zae, replace
+tostring strate, replace
+save "/home/me/DYN/V7b.dta"
+clear
+
+use "/home/me/DYN/V1V2V3V4V5V6.dta"
+append using "/home/me/DYN/V7b.dta", generate(f6)
+save "/home/me/DYN/V1V2V3V4V5V6V7.dta"
+
+*** Classement des variables de fusion ***
+
+order f1 f2 f3 f4 f5 f6, after(EA14_G6D)
+list f1 f2 f3 f4 f5 f6
+
+*** Fichier final ***
+
+save "/home/me/DYN/V1V2V3V4V5V6V7.dta", replace
+
+*** Replacement ***
+
+gen h4 = .
+replace h4 = H4 if H4 != .
+replace h4 = EA14_H4 if EA14_H4 != .
+replace h4 = EA13_H4 if EA13_H4 != .
+tab h4
+tab wave h4, row nof
+
+
+lookfor EA13_I8
+tab EA13_I8
+tab DN01_I8
+tab ELIP_AXEGD
+tab ES02_B19
+
+gen i8 = .
+replace i8 = I8 if I8 != .
+replace i8 = EA13_I8 if EA13_I8 != .
+replace i8 = DN01_I8 if DN01_I8 != .
+replace i8 = ELIP_AXEGD if ELIP_AXEGD != .
+replace i8 =  ES02_B19 if  ES02_B19 != .
+tab i8
+recode i8 ( 0=0 "gauche") (10=10 "droite") (11/1000 = .) , gen( i8r )
+tab i8r
+
+
+lookfor leg
+tab ivotleg
+tab ELIP_IVOTLEG
+numlabel _all, add
+tab ivotleg
+tab ELIP_IVOTLEG
+gen ivleg = .
+replace ivleg = ivotleg if ivotleg != .
+replace ivleg =  ELIP_IVOTLEG if  ELIP_IVOTLEG != .
+tab ivleg
+recode ivleg ( 1 2 3 4 5 6 = 1 "gauche") (7 8 9 10 = 2 "droite") (11 12 =  3 "Autre") (13 14 15 = 4 "Non expr") (98 99 = .), gen(ivleg2)
+tab wave ivleg2, row nof
+
+lookfor poid
+gen zpw = .
+replace zpw = ZPOIDS if ZPOIDS != .
+replace zpw = zpoids if zpoids != .
+
+lookfor satispr
+tab satispr
+tab ELIP_SATISPR
+gen satpr = .
+replace satpr = satispr if satispr != .
+replace satpr = ELIP_SATISPR if ELIP_SATISPR != .
+recode satpr (1=1 "T satisfait") (4=4 "T mecontent") (8 9 = .) , gen(satpr_r)
+tab satpr_r
+
+lookfor cs
+tab CS
+lookfor cs6
+recode CS (10/19 = 1 ) (20/29 = 2) (30/39 = 3) (40/49 = 4) (50/59 = 5) (60/69=6) (70/1000 = 9 "autre"), gen(CS6)
+tab EA13_PCS6
+tab EA14_PCS6
+gen cs6 = .
+replace cs6 = CS6 if CS6 != .
+replace cs6 = EA14_PCS6 if EA14_PCS6 != .
+tab cs6
+recode cs6 (9/9999 = 9) 
+tab cs6
+
+lookfor dipl
+tab B18
+tab EA13_B18_REC
+tab EA14_B18_REC
+recode B18 (1/3 = 1) (88/1000 = .), gen(B18r)
+gen b18 = .
+replace b18 = B18r if B18r != .
+replace b18 = EA13_B18_REC if EA13_B18_REC != .
+replace b18 = EA14_B18_REC if EA14_B18_REC != .
+tab b18
+lookfor sex
+tab elip_sexe
+tab SEXE
+tab EA14_SEXE
+lookfor age
+
+tab wave ivleg2 [iw=zpw]
+tab wave ivleg2 [iw=zpw], row nof
+recode ivleg2 (1=1 ) (nonmiss = 0), gen (gauche)
+
+tab i8r
+recode i8r (0/4 = 1 "gauche") (nonmiss = 0) , gen (i8r2)
+tab i8r2
+
+save "/home/me/DYN/V1V2V3V4V5V6V7.dta", replace
+
+logistic i8r2 ib6.cs6##i.wave [iw=zpw]
+logistic gauche ib6.cs6##i.wave [iw=zpw]
+
+margins wave#cs6
+marginsplot, recastci(rarea)
+
+margins wave#cs6
+marginsplot, recastci(rarea) by(cs6)
+
+logistic gauche ib6.cs6##i.wave if cs6 <9 & cs6 > 1 [iw=zpw]
+margins wave#cs6
+
+marginsplot, recastci(rarea) recast(line) by(cs6)
+
+lookfor sex
+gen gndr = .
+tab elip_sexe
+replace gndr = 1 if elip_sexe=="M"
+replace gndr = 2 if elip_sexe=="F"
+tab SEXE
+replace gndr = 1 if SEXE == 1
+replace gndr = 2 if SEXE == 2
+tab EA13_SEXE
+replace gndr = 1 if EA13_SEXE== 1
+replace gndr = 2 if EA13_SEXE== 2
+tab EA14_SEXE
+replace gndr = 1 if EA14_SEXE== 1
+replace gndr = 2 if EA14_SEXE== 2
+tab gndr
+
+
+lookfor naissance
+recode A2A (10000/max =.), gen(age)
+xfill (age) , i(UID_DYNA)
+sc wave wave
+tab age
+
+
+lookfor reli
+tab H1
+tab EA13_H1
+tab EA14_H1
+gen relig = .
+replace relig = H1 if H1 != .
+replace relig = EA13_H1 if EA13_H1 != .
+replace relig = EA14_H1 if EA14_H1 != .
+tab relig
+recode relig ( 1 = 1 "aucune") (2 3 4 = 2 "chretiens") (5=3 "musulman") (6 7 8 = 4 "autre") (nonmiss = .), gen (religion)
+tab religion
+
+
+logistic gauche ib6.cs6##i.wave if cs6 <9 & cs6 > 1 [iw=zpw]
+logistic gauche ib6.cs6##i.wave if cs6 <9 & cs6 > 1 [iw=zpw]
+logistic gauche ib6.cs6##i.wave i.gndr##i.wave i.religion##i.wave c.age##i.wave  ib6.cs6##c.age if cs6 <9 & cs6 > 1 [iw=zpw]
+margins cs6#session#age
+margins cs6#wave#age
+logistic gauche ib6.cs6##i.wave i.gndr##i.wave i.religion##i.wave c.age##i.wave  ib6.cs6##c.age if cs6 <9 & cs6 > 1 [iw=zpw]
+margins age#wave
+melogit gauche i.cs6 i.religion i.gndr age if cs6 <9 & cs6 > 1 [iw=zpw] || wave:
+melogit gauche i.cs6 i.religion i.gndr age if cs6 <9 & cs6 > 1  || wave:
+margins wave
+logistic gauche i.cs6##i.wave i.religion##i.wave i.gndr##i.wave c.age##i.wave if cs6 <9 & cs6 > 1  
+margins age
+margins, at (age = (1940 (5) 2000))
+margins, at (age = (1940 (5) 2000) wave)
+margins, at (age = (1940 (5) 2000) wave = ( 1 2 4 6 7))
+marginsplot
+margins, at (wave = ( 1 2 4 6 7) age = (1940 (5) 2000) )
+marginsplot
+margins, at (age = (1940 (10) 2000) wave = ( 1 2 4 6 7))
+margins, at (wave = ( 1 2 4 6 7) age = (1940 (10) 2000) )
+marginsplot
+margins, at (wave = ( 1 2 4 6 7) age = (1940 (10) 2000) )
+marginsplot, recastci(rarea)
+margins, at (wave = ( 1 2 4 6 7) age = (1940 (10) 2000) )
+marginsplot, recastci(rarea) by(age)
+
+*******
+
+
+use "/home/me/DYN/V1V2V3V4V5V6V7.dta"
+lookfor imm
+logistic gauche i.cs6 i.gndr i.diplo
+tab diplo
+tab b18
+lookfor diplo
+lookfor dipl
+tab B18
+tab b18
+recode b18 ( 1=1 "aucun") (4=4 "CEP") ( 5=5 "BEPC") (6 7=6 "CAP / BEP") (8 9 = 8 "BAC") (10 = 10 "Univ 1") (11=11 "Univ 2") (77/999=.), gen (diplo)
+tab diplo
+logistic gauche i.gndr i.age i.religion i.diplo i.wave
+gen age2 = 2013 - age
+tab age2
+recode age2 ( 18/24 = 1 " 18/24") (25/34= 2 "25/34") (35/44 =3 "35/44") (45/54 = 4 "45/54") (55/64 = 5 "55/64") (65/99= 6 "65 et plus"), gen (agecod)
+tab agecod
+save "/home/me/DYN/V1V2V3V4V5V6V7.dta", replace
+logistic gauche i.gndr i.agecod i.religion i.diplo i.wave
+logistic gauche i.gndr##i.wave i.agecod##i.wave i.religion##i.wave i.diplo##i.wave i.cs6##i.wave
+logistic gauche i.gndr##i.wave i.agecod##i.wave i.religion##i.wave i.diplo##i.wave i.cs6##i.wave [iw=zpw]
+margins cs6#wave
+marginsplot
+margins wave#cs6
+marginsplot
+margins wave#agecod
+marginsplot
+logistic gauche i.agecod##i.wave [iw=zpw]
+margins wave#agecod
+margins wave#agecod
+marginsplot
+margins wave#agecod
+marginsplot, recastci(rarea) recast(line) by(agecod)
+logistic gauche i.religion##i.wave [iw=zpw]
+margins wave#religion
+marginsplot, recastci(rarea) recast(line) by(religion)
+tab i8r
+tab ivleg2
+tab wave ivleg2
+tab ivleg
+tab ivleg2
+tab wave ivleg2
+tab wave ivleg2 [iw=zpw], row nof
+gen fn = .
+replace fn = 1 if ivleg2 == 3
+replace fn = 0 if fn ==.
+logistic fn i.gndr##i.wave i.agecod##i.wave i.religion##i.wave i.diplo##i.wave i.cs6##i.wave [iw=zpw]
+logistic fn i.agecod##i.wave [iw=zpw]
+margins wave#agecod
+marginsplot, recastci(rarea) recast(line) by(agecod)
+logistic fn i.cs6##i.wave [iw=zpw]
+margins wave#cs6
+marginsplot, recastci(rarea) recast(line) by(cs6)
+logistic fn i.cs6##i.wave [iw=zpw] if cs6 > 1
+margins wave#cs6
+marginsplot, recastci(rarea) recast(line) by(cs6)
+logistic fn i.cs6##i.diplo [iw=zpw] if cs6 > 1
+margins wave#diplo
+
+
+****
+
+use "/home/me/DYN/V1V2V3V4V5V6V7.dta"
+lookfor pays
+lookfor naissan
+lookfor A3
+tab A3
+tab A3REC
+ttab A3AREC
+tab A3AREC
+lookfor B22
+lookfor b22
+lookfor (pÃ¨re)
+tab EA14_B22_REC 
+lookfor gouv
+lookfor satis
+tab satispr
+tab ELIP_SATISGVT  
+PE01_SATISGVT 
+tab PE01_SATISGVT 
+tab i8r2
+tab i8r
+logistic gauche i.i8r##i.wave
+margins session#i8r
+margins wave#i8r
+marginsplot
+marginsplot, recastci(rarea)
+marginsplot, recastci(rarea) by(i8r)
+tab i8r2
+logistic i8r2 i.cs6##i.wave if cs6 > 1
+margins wave#cs6
+marginsplot, recastci(rarea) recast(line) by(cs6)
+tab ir82
+tab i8r2
+logistic i8r2 i.cs6##i.wave if cs6 > 1
+margins wave#cs6
+marginsplot, recastci(rarea) recast(line) by(cs6)
+logistic i8r2 i.cs6##i.wave if cs6 > 1 & cs6 <9 [iw=zpw]
+margins wave#cs6
+marginsplot, recastci(rarea) recast(line) by(cs6)
+tab wave i8r2 [iw=zpw], row nof
+tab wave satpr_r [iw=zpw], row nof
+tab wave satpr [iw=zpw], row nof
+tab satpr_r
+recode satpr_r ( 1 2 = 1 "satisfaits") (3 4 = 0 "mecontents") , gen (satisfh)
+logistic satisfh i.cs6##i.wave if cs6 > 1 & cs6 <9 [iw=zpw]
+margins wave#cs6
+marginsplot, recastci(rarea) recast(line) by(cs6)
+logistic satisfh i.diplo##i.wave [iw=zpw]
+margins wave#diplo
+marginsplot, recastci(rarea) recast(line) by(diplo)
+logistic satisfh i.agecod##i.wave [iw=zpw]
+margins wave#agecod
+marginsplot, recastci(rarea) recast(line) by(agecod)
+logistic gauche i.cs6##i.wave if cs6 > 1 & cs6 <9 [iw=zpw]
+margins wave#cs6
+marginsplot, recastci(rarea) recast(line) by(cs6)
+logistic gauche i.diplo##i.wave [iw=zpw]
+margins wave#diplo
+marginsplot, recastci(rarea) recast(line) by(diplo)
+logistic gauche i.agecod##i.wave [iw=zpw]
+margins wave#agecod
+marginsplot, recastci(rarea) recast(line) by(agecod)
+logistic gauche i.i8r##i.wave  [iw=zpw]
+margins wave#i8r
+marginsplot, recastci(rarea) recast(line) by(agecod)
+marginsplot, recastci(rarea) recast(line) by(i8r)
+logistic satisfh i.i8r##i.wave  [iw=zpw]
+margins wave#i8r
+marginsplot, recastci(rarea) recast(line) by(i8r)
+tab satisfh gauche [iw=zpw], row nof 
+bysort wave : tab satisfh gauche [iw=zpw], row nof 
+bysort wave : tab satisfh gauche [iw=zpw], cell nof
+tab satpr_r
+tab satisfh
+numlabel satisfh, add
+tab satisfh
+tab gauche
+gen attfh = .
+replace attfh = 0 if satisfh == 0 & gauche == 0
+replace attfh = 1 if satisfh == 0 & gauche == 1
+replace attfh = 1 if satisfh == 0 & gauche == 1
+replace attfh = 2 if satisfh == 1 & gauche == 0
+replace attfh = 3 if satisfh == 1 & gauche == 3
+replace attfh = 3 if satisfh == 1 & gauche == 1
+tab attfh
+mlogit attfh i.cs6##i.wave [iw=zpw]
+margins wave#cs6
+marginsplot, recastci(rarea) recast(line) by(cs6)
+tab wave attfh [iw=zpw], cell nof
+tab wave attfh [iw=zpw], row nof
+recode attfh (1=2 ) (2=1)
+tab wave attfh [iw=zpw], row nof
