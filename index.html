@@ -138,11 +138,10 @@ savehistory("~/rh.Rhistory")
 We're done for now !
 </p>
 
-    	<h3>[Stata] Typologie et classification</h3>
+<h3>[Stata] Typologie et classification</h3>
+<p> Un exemple de technique de classification</p>
 
-    	<p> Un exemple de technique de classification</p>
-
-    	<pre>
+<pre>
 factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==1997
 predict x_97 y_97 z_97
 factor p_cs2 p_cs3 p_cs4 p_cs5 p_cs6 [w=tot_inscrits] if session==1998
@@ -271,7 +270,7 @@ tab cep2 _cl14 , row nof
 </pre>    	
 
 
-<h1>Nouvelles</h1>
+<h3>Varia</h3>
 
 <pre>
 Setup 
@@ -287,7 +286,7 @@ VLC
 
 
 
-<h1>Notes pour moi même</h1>
+<h3>Varia</h3>
 <pre>
 	
 ** Append Fichiers
@@ -469,7 +468,7 @@ xtmixed vote  p_ldip || time: p_ldip || code: p_ldip
 predict  r_t_r_c_ldip, fitted
 </pre>
 
-<h1> Batch linear regressions</h1>
+<h3> Batch linear regressions</h3>
 <pre>
 use "C:\Users\Antoine\Desktop\DATASET\FR\Cartelec\geocode.dta", clear
 statsby xa=_b[_cons]  xc=_b[p_etr], by(code) saving(ols, replace) : regress to09 p_etr if numpoll>=5 & reg==11
@@ -479,7 +478,7 @@ outsheet using "C:\Users\Antoine\Desktop\data.csv", comma replace
 
 Import - Jonction QGIS
 </pre>
-<h1><a id="220914">Stata - Calcul en masse de régressions indépendantes</h1>
+<h3><a id="220914">Stata - Calcul en masse de régressions indépendantes</a></h3>
 <pre>
 
 ## Cet exemple est inspiré du tutorial suivant : http://data.princeton.edu/pop510/lang2.html ##
@@ -604,7 +603,7 @@ sc xa xb, mlabel(code) mlabsize(tiny) msize(tiny)
 
 </pre>
 
-<h1><a id="210914">Identifier une pente spécifique dans une régression multiniveau</a></h1>
+<h3><a id="210914">Identifier une pente spécifique dans une régression multiniveau</a></h3>
 <pre>
 
 ## On peut chercher à identifier des pentes spécifiques
@@ -618,7 +617,7 @@ sc v1 v2 if dep=="93", mc(black) msize(tiny)|| sc  v1 v2 if code=="93005", mc(bl
 
 </pre>
 
-<h1><a id="190914">19/09/214 - Régression logistique multiniveaux</a></h1>
+<h3><a id="190914">19/09/214 - Régression logistique multiniveaux</a></h3>
 <pre>
 
 # On utilise d'abord une variable indépendante quantitative (résultats plus simples à présenter graphiquement)
@@ -761,7 +760,7 @@ predict mu3, mu
 </pre>
 
 
-<h1><a id="170514">17/09/2014 - Syntaxe propre pour le multiniveau</a></h1>
+<h3><a id="170514">17/09/2014 - Syntaxe propre pour le multiniveau</a></h3>
 
 
 <pre>
@@ -1760,7 +1759,7 @@ graph combine (f1 f2 f3 f4 r1 r2 r3 r4) , xcommon ycommon title(Effet du % d'ouv
 	
 </pre>
 
-<h1><a id="160514_3">16/09/2014 - Le multiniveaux : approche intuitive et modélisation complexe</a></h1>
+<h3><a id="160514_3">16/09/2014 - Le multiniveaux : approche intuitive et modélisation complexe</a></h3>
 
 <pre>
 
@@ -1921,7 +1920,7 @@ predict final, fitted
 	
 </pre>
 
-<h1><a id="160514_2">16/09/2014 - Faire varier les niveaux d'analyse avec xtmixed</a></h1>
+<h3><a id="160514_2">16/09/2014 - Faire varier les niveaux d'analyse avec xtmixed</a></h3>
 
 <pre>
 	
@@ -2058,7 +2057,7 @@ graph combine "C:\Users\Antoine\Desktop\DATASET\FR\Cartelec\MULTINIV\TO09\dfcs6.
 
 </pre>
 
-<h1><a id="160514">16/09/2014 -  Régressions multiniveaux et écologiques</a></h1>
+<h3><a id="160514">16/09/2014 -  Régressions multiniveaux et écologiques</a></h3>
 
 <pre>
 
@@ -2405,7 +2404,7 @@ crace.cto10      1.36e+03   3.52e+03    3.86e-01
 </pre>
 
 
-<h1><a id="150914">15/09/2014 - R - PCA et sélections de variables </a></h1>
+<h3><a id="150914">15/09/2014 - R - PCA et sélections de variables </a></h3>
 
 <pre>
 
@@ -2499,7 +2498,7 @@ rac       0.339   0.658
 
 
 
-<h1><a id="140914">14/09/2014 - Stata - Surface 3D</a></h1>
+<h3><a id="140914">14/09/2014 - Stata - Surface 3D</a></h3>
 
 <pre>
 	
@@ -2513,7 +2512,7 @@ surface x y z
 	
 </pre>
 
-<h1><a id="130914_2">13/09/2014 - R - Analyse en Composantes Principales et composants multiples</a></h1>
+<h3><a id="130914_2">13/09/2014 - R - Analyse en Composantes Principales et composants multiples</a></h3>
 
 <pre>
 	
@@ -2869,7 +2868,7 @@ plotellipses(res.mca, keepvar="all", label="none", cex=0.1, magnify=12, level=0.
 
 
 
-<h1><a id="130914">13/09/2014 - Stata : Analyse des correspondances multiples</a></h1>
+<h3><a id="130914">13/09/2014 - Stata : Analyse des correspondances multiples</a></h3>
 
 <pre>
 
@@ -3040,7 +3039,7 @@ ellip a2 a1, plot (sc a2 a1, msize(vtiny)) by (pays) overlay c(1)
 
 </pre>
 
-<h1><a id="120914">12/09/2014 - Stata : Boucles simples</a></h1>
+<h3><a id="120914">12/09/2014 - Stata : Boucles simples</a></h3>
 <pre>
 
 # boucle pour l'analyse de la composition en IRIS des communes.
@@ -3053,7 +3052,7 @@ gen sc_`x' = (`x' /  totIRIS )* 100
 
 </pre>
 
-<h1><a id="090914">09/09/2014 - Stata et R : visualisation des données réelles et des predictions</a></h1>
+<h3><a id="090914">09/09/2014 - Stata et R : visualisation des données réelles et des predictions</a></h3>
 <pre>
 	
 # Régression sous Stata et visualisation 3D des données et du modèle avec R
@@ -3181,7 +3180,7 @@ scatter3d (x=c$preca, y=c$to09, z=c$etr, fill=FALSE, fit="smooth", point.col="bl
 # La suite plus tard
 </pre>
 
-<h1><a id="070914">07/08/2014 - R - Retour sur les modules Akima et Persp</a></h1>
+<h3><a id="070914">07/08/2014 - R - Retour sur les modules Akima et Persp</a></h3>
 <pre>
 
 # Le module akima est très utile pour créer des analyses de surfaces
@@ -3340,7 +3339,7 @@ A suivre : bipolate sous Stata dès que le module est diffusé sous SSC
 
 </pre>
 
-<h1><a id="060914">Stata et R - Margins et analyse de régression</a></h1>
+<h3><a id="060914">Stata et R - Margins et analyse de régression</a></h3>
 <pre>
 	
 On suppose avoir déja réalisé une régression linéaire avec 3 variables indépendantes quantitatives.
@@ -3428,7 +3427,7 @@ On lit les valeurs théoriques pour chaque combinaison des valeurs des régresse
 
 </pre>
 
-<h1><a id="040914"> Coloration syntaxique en HTML pour R</a></h1>
+<h3><a id="040914"> Coloration syntaxique en HTML pour R</a></h3>
 
 <pre>
 Un outil bien pratique disponible ici : 
@@ -3436,7 +3435,7 @@ Un outil bien pratique disponible ici :
 http://www.inside-r.org/pretty-r
 </pre>
 
-<h1><a id="030914"> Geoda et QGIS : Calculer des indices Bivariate Lisa et exporter les résultats</a></h1>
+<h3><a id="030914"> Geoda et QGIS : Calculer des indices Bivariate Lisa et exporter les résultats</a></h3>
 <pre>
 
 # Geoda et QGIS sont des logiciels de géographie complémentaires.
@@ -3558,7 +3557,7 @@ twoway contour _margin _at2 _at3, ccuts(10 20 30 40 50 60 70 80 90)
 
 </pre>
 
-<h1><a id="060814"> R : Convertir des fichier.dbf en fichier.csv</a></h1>
+<h3><a id="060814"> R : Convertir des fichier.dbf en fichier.csv</a></h3>
 <pre>
 # Les analyses cartographiques demandent d'utiliser des fichiers shapefile.
 # Les données associées aux shapefiles créés par certains logiciels comme GEODA se trouvent stockés dans un fichier dbf.
@@ -3585,7 +3584,7 @@ insheet using "C:\Users\Antoine\Documents\dfd.csv", comma
 </pre>
 
 
-<h1><a id="300714_2"> R : Mapping de surface 3D </a></h1>
+<h3><a id="300714_2"> R : Mapping de surface 3D </a></h3>
 <pre>
 
 # C'est une opération complexe qui demande de bien maitriser la structure des données
@@ -3751,7 +3750,7 @@ rgl.surface(x1,y2, z1, color="lightskyblue")
 
 </pre>
 
-<h1><a id="300714"> R : Librairie Foreign et importation de fichiers</a></h1>
+<h3><a id="300714"> R : Librairie Foreign et importation de fichiers</a></h3>
 <pre>
 
 # On peut toujours exporter les fichiers Stata ou SPSS en CSV puis les ouvrir avec R
@@ -3777,7 +3776,7 @@ d <- read.xport
 # Attention, par défaut, l'objet créé est un data frame !
 </pre>
 
-<h1><a id="290714_2">Stata : Fusion des fichiers découpés sous R</a></h1>
+<h3><a id="290714_2">Stata : Fusion des fichiers découpés sous R</a></h3>
 <pre>
   
 # Conversion des .csv en .dta
@@ -3828,7 +3827,7 @@ save "C:\Users\Antoine\Desktop\INSEE DETAIL ENQUETES\RP19682008_individus_dbase\
 
 </pre>
 
-<h1><a id="290714">R : Convertir un fichier .DBF en .csv - 29/07/2014</a></h1>
+<h3><a id="290714">R : Convertir un fichier .DBF en .csv - 29/07/2014</a></h3>
 <pre>
 # on utilise la librairie "foreign" pour importer le fichier au format base de données
 # Ici le fichier des échantillons détaillés issus des recencements INSEE de 1968 à 2008.
@@ -3875,7 +3874,7 @@ write.csv(c08, file ="08.csv")
 
 </pre>
 
-<h1><a id="140714">R / Contour3D : Cartes et visualisations 3D - 14/07/2014</a></h1>
+<h3><a id="140714">R / Contour3D : Cartes et visualisations 3D - 14/07/2014</a></h3>
 
 <pre>
 # Installation des packages
@@ -3991,7 +3990,7 @@ sm.density(df, panel=TRUE)
 </pre>
 
 
-<h1><a id="110714">Stata : Dictionnary File for Spanish Census MicroData - 11/07/2014</a></h1>
+<h3><a id="110714">Stata : Dictionnary File for Spanish Census MicroData - 11/07/2014</a></h3>
 <pre>
 dictionary using test.dat {
   _column(1) CPRO %2f
@@ -4135,13 +4134,13 @@ dictionary using test.dat {
 }
 </pre>
 
-<h1><a id="100714">Stata : Batch rename - 10/07/2014</a></h1>
+<h3><a id="100714">Stata : Batch rename - 10/07/2014</a></h3>
 
 <pre>
 rename v1-vx act(###), add
 </pre>
 
-<h1><a id="080714">R : Interpolation et projection géographique - 08/07/2014</a></h1>
+<h3><a id="080714">R : Interpolation et projection géographique - 08/07/2014</a></h3>
 
 <pre>
 # Tutoriel basé sur l'excellente page web d'Adam Dennett
@@ -4227,7 +4226,7 @@ plot + layer1 + scale_fill_gradient(low = "#FEEBE2", high = "#7A0177")
 savehistory("C:/Users/Antoine/Desktop/DATASET/code R/cartographic interpolation.Rhistory")
 </pre>
 
-<h1><a id="070714">R : Syntaxe article votpauvr -  07/07/2014</a></h1>
+<h3><a id="070714">R : Syntaxe article votpauvr -  07/07/2014</a></h3>
 
 <pre>
 m07 <- ggplot(data, aes(x=margin, y=to07T1)) + geom_point(shape=1) + geom_smooth(method=lm) + facet_wrap(~nom) + xlab("Indicateur de précarité") + ylab ("Taux de participation en 2007")
@@ -4297,18 +4296,18 @@ grid.arrange(fn7,fn9,fn10)
 savehistory("~/vpauvre_hist.Rhistory")
 </pre>
 
-<h1><a id="070714_2">R / Lattice : Graphique wireframe - 07/07/2014</a></h1>
+<h3><a id="070714_2">R / Lattice : Graphique wireframe - 07/07/2014</a></h3>
 
 
-<h1>R : Les fonctions Melt et Cast - 07/07/2014 </h1>
+<h3>R : Les fonctions Melt et Cast - 07/07/2014 </h3>
 
-<h1>R : Themes GGplot - 07/07/2014 </h1>
+<h3>R : Themes GGplot - 07/07/2014 </h3>
 
 <pre>
 ggplot(data, aes(x=margin, y=to10T1)) + geom_point(shape=1) + geom_smooth(method=lm) + facet_wrap(~nom) + xlab("Indicateur de précarité") + ylab ("Taux de participation en 2010") + theme_bw(base_size=16)
 </pre>
 
-<h1><a id="110714_3">Facetting sous R, suite - 07/07/2014</a></h1>
+<h3><a id="110714_3">Facetting sous R, suite - 07/07/2014</a></h3>
 
 <pre>
 Syntaxe votpauvre
@@ -4331,7 +4330,7 @@ m10 <- ggplot(data, aes(x=margin, y=to10T1)) + geom_point(shape=1) + geom_smooth
 </pre>
 
 
-<h1><a id="060714">Module rCarto : réaliser directement des cartes choroplèthes sans fusion - 06/07/2014</a></h1>
+<h3><a id="060714">Module rCarto : réaliser directement des cartes choroplèthes sans fusion - 06/07/2014</a></h3>
 
 <pre>
 # Module
@@ -4362,7 +4361,7 @@ mapChoropleth(shpFile="c:/Users/Antoine/Desktop/Cartelec/fond0710.shp", shpId="B
 mapChoropleth(shpFile="c:/Users/Antoine/Desktop/Cartelec/fond0710.shp", shpId="BUREAU", df=celec, dfId="bvcom", var="to07", style="quantile", nclass=10, lgdRnd=2, palCol="Greens", title="Taux de participation en 2007", legend="turnout 2009", author = "quantiles", source="Antoine JARDIN")
 </pre>
 
-<h1><a id="040714">Avant le Module rCarto - 04/07/14</a></h1>
+<h3><a id="040714">Avant le Module rCarto - 04/07/14</a></h3>
 
 <pre>
 setwd("C:/Users/Antoine/Desktop/essai")
@@ -4412,7 +4411,7 @@ plot(shape, col=colMap,border="black", lwd=0.1)
 plot(shape, col=colMap,border="black", lwd=0.001)
 </pre>
 
-<h1> <a id="030714">Arrange multiple plots with gridExtra </a></h1>
+<h3> <a id="030714">Arrange multiple plots with gridExtra </a></h3>
 <pre>
 Graphiques
 
@@ -4451,7 +4450,7 @@ to12 <- to12 + ylim(0,100)
 grid.arrange(to02, to04, to07, to09, to12, ncol=5)
 </pre>
 
-<h1> <a id="020714">Facetting, scatterplot et droite des moindres carrés sous R - 02/07/2014</a></h1>
+<h3> <a id="020714">Facetting, scatterplot et droite des moindres carrés sous R - 02/07/2014</a></h3>
 
 <pre>
 # Obtenir la liste des variables du dataset
@@ -4473,7 +4472,7 @@ ggplot(data, aes(x=p12_exd, y=p12_g, size=pop)) + geom_point(shape=1) + geom_smo
 ggplot(data, aes(x=p12_exd, y=p12_g, size=pop)) + geom_point(shape=1) + geom_smooth(method=lm) + facet_wrap(~reg, ncol=4)
 </pre>
 
-<h1> <a id="020714_2">Cartographie sous R - premier essai - 02/07/2014 </a></h1>
+<h3> <a id="020714_2">Cartographie sous R - premier essai - 02/07/2014 </a></h3>
 <pre>
 # Installation des packages
 
@@ -4517,7 +4516,7 @@ plot(fdc, col=colmap)
 # On peut ensuite l'exporter en SVG ou en PNG
 </pre>
 
-<h1><a id="020714"> Configuration Latex pour fichier de thèse et bibliographie - 02/07/2014</a></h1>
+<h3><a id="020714"> Configuration Latex pour fichier de thèse et bibliographie - 02/07/2014</a></h3>
 
 <p> Latex est un éditeur de texte un peu difficile d'accès mais très puissant.
 	Il permet les mises en formes complexes mais aussi de gagner du temps dans la gestion des bibliographiques, des figures et des tableaux.
@@ -4604,7 +4603,7 @@ plot(fdc, col=colmap)
 </pre>
 
 
-<h1> <a id="290614">Scatter plot avec facetting et ajustement linéaire sous R - 29/06/2014</a></h1>
+<h3> <a id="290614">Scatter plot avec facetting et ajustement linéaire sous R - 29/06/2014</a></h3>
 <pre>
 # chargement des données
 
@@ -4648,7 +4647,7 @@ grid.arrange(e12g, e12d, e12fn, ncol=1)
 </pre>
 
 
-<h1><a id="280614"> Tableau de régression en Latex </a></h1>
+<h3><a id="280614"> Tableau de régression en Latex </a></h3>
 <p> Latex permet d'afficher de façon sobre et claire les tableaux de régressions. On peut exporter du code latex depuis Stata (outred, estat) ou R.
 	Mais il est aussi facile de créer des tableaux directement dans le code Latex de son texte. Voici un exemple
 </p>
@@ -4689,7 +4688,7 @@ N	& 1,281	& 1,281	& 1,281 \\
 
 </pre>
 
-<h1><a id="270614"> Introduction à GGplot2 avec Qplot sous R </a></h1>
+<h3><a id="270614"> Introduction à GGplot2 avec Qplot sous R </a></h3>
 <pre>
 
 # Chargement de la librairie
@@ -4746,7 +4745,7 @@ qplot(carat,data=diamonds, facets= cut ~ color, geom="histogram")
 qplot(carat,price,data=diamonds, facets= cut ~ color, geom="point")
 </pre>
 
-<h1> <a id="260614">Régressions écologiques avec R </a></h1>
+<h3> <a id="260614">Régressions écologiques avec R </a></h3>
 
 <p> Dans cet exemple ou utilise le module eiPack de R, qui comporte plusieurs outils d'analyse et de diagnostics pour la recherche sur données agrégées.
 	Ces méthodes découlent des recherches théoriques de Gary King et Ari Rosen, elles reprennent les commandes de l'ancien pack ei. 
@@ -4909,7 +4908,7 @@ Total	100 100	100 100	 100 100 100 100 100 100
 </pre>
 
 
-<h1><a id="260614_2">Créer un Ramdisk (sous Windows)</a></h1>
+<h3><a id="260614_2">Créer un Ramdisk (sous Windows)</a></h3>
 
 <p>
 	La pluspart des personnes pensent que lorsque leur ordinateur est lent, il faut en changer. La pluspart des utilisateurs pensent aussi que le plus important est d'avoir un CPU plus rapide.
@@ -4943,7 +4942,7 @@ Total	100 100	100 100	 100 100 100 100 100 100
 	La prochaine fois : un exemple avec TMPFS sous Linux
 </p>
 
-<h1>Utiliser Archlinux</h1>
+<h3>Utiliser Archlinux</h3>
 
 <p>
 La distribution ArchLinux est l'une des plus intéressantes disponibles. Elle vise au minimalisme et à la simplicité architecturale.
@@ -4995,7 +4994,7 @@ Voici quelques unes de ses caractéristiques
 
 
 
-<h1><a id="170614">Les élections européennes de 2014 replacées dans une perspective de long terme - 17/06/2014</a></h1>
+<h3><a id="170614">Les élections européennes de 2014 replacées dans une perspective de long terme - 17/06/2014</a></h3>
 
 <p>Les dernières élections européennes ont été marquées par la poussée électorale du Front National. Cette évolution des résultats s’inscrits dans la lignée des scores réalisés par l’extrême droite lors de l’élection présidentielle de 2012. Le FN avait alors retrouvé son niveau maximum historique (en voix comme en pourcentage des suffrages exprimés).
 Pour mieux comprendre et percevoir l’évolution électorale des deux dernières années, les résultats des dernières européennes doivent être replacés dans une séquence plus longue qui s’étend du 21 avril 2002 à nos jours.
@@ -5023,7 +5022,7 @@ Les évolutions à venir soulèvent plusieurs questions qui restent ouvertes à 
 Dans un contexte de crise économique profonde, faisant progresser le chômage et la précarité depuis maintenant plus de 6 années, la défiance politique atteint des niveaux sans précédents. Ces éléments, couplés à redéfinition de la stratégie du Front National pourrait modifier la structure du système partisan français. Cependant, les résultats des élections européennes révèlent que cela n’est pas encore le cas.
 </p>
 
-<h1><a id="120614"> Comment le FN tente de gagner sur tous les tableaux - 12/06/2014</a></h1>
+<h3><a id="120614"> Comment le FN tente de gagner sur tous les tableaux - 12/06/2014</a></h3>
 
 <p> L'avocat du Front National, qui était aussi son candidat lors des dernières municipales à Paris, a affirmé aujourd'hui que le journal hebdomadaire de Jean Marie Le Pen ne serait plus diffusé sur le site du parti pour des raisons juridiques. On notera en revanche que M. Wallerand de St Just avait pour collistier Pierre Panet, militant d'extrême droite proche de Dieudonné après avoir été candidat sur les listes antisionistes de 2009 et intervenant au théatre de la Main d'Or.
 M. de St Just ajoute par ailleurs, quoiqu'implicitement, qu'il soutient le contenu des propos de Jean Marie Le Pen. Il déclare notamment au site <a href="http://www.atlantico.fr/decryptage/wallerand-saint-just-entre-jean-marie-et-marine-pen-suis-persuade-que-tout-finira-rentrer-dans-ordre-1609496.html">atlantico</a> <i>" Ce qu'il y a de difficile et de douloureux dans cette affaire, c'est que la présidence du parti a été obligée de prendre cette décision, alors que la phrase incriminée est tout à fait anodine. Mais nous sommes obligés de prendre en considération le poids des censeurs de la liberté d'expression qui évoluent dans notre société. Cela ne veut pas dire pour autant que l'on se plie devant eux, mais nous respectons simplement le besoin de prudence"</i>.
@@ -5040,7 +5039,7 @@ Ainsi le FN bénéficie :
 
 
 
-<h1><a id="110614">Les réactions à l'affaire Jean Marie Le Pen - 11/06/2014</a></h1>
+<h3><a id="110614">Les réactions à l'affaire Jean Marie Le Pen - 11/06/2014</a></h3>
 
 <p>
 Nombreux sont ceux qui appellent Marine Le Pen à condamner son père et président d'honneur du front national.
@@ -5064,7 +5063,7 @@ Ainsi le FN joue sur plusieurs tableaux : stratégie de congrès pour Jean Marie
 </p>
 
 
-<h1><a id="090614">Quelques remarques supplémentaires sur la situation au Front National  - 09/06/2014</a></h1>
+<h3><a id="090614">Quelques remarques supplémentaires sur la situation au Front National  - 09/06/2014</a></h3>
 
 
 <ul>
@@ -5079,7 +5078,7 @@ Ainsi le FN joue sur plusieurs tableaux : stratégie de congrès pour Jean Marie
 </ul>
 
 
-<h1><a id="090614_2">Divisions au coeur de l'extrême droite - 09/06/2014</a></h1>
+<h3><a id="090614_2">Divisions au coeur de l'extrême droite - 09/06/2014</a></h3>
 
 <p>
 	Pour la première fois, Marine le Pen et son entourage semblent engager une confrontation directe avec Jean Marie le Pen. En répondant aux accusations de sa fille, le président d'honneur et membre fondateur du Front National montre qu'une partie du Front National tient à conserver tous les marqueurs de sa ligne idéologique.
@@ -5096,7 +5095,7 @@ Ainsi le FN joue sur plusieurs tableaux : stratégie de congrès pour Jean Marie
 <p>
 
 
-<h1><a id="090614_3">La stratégie de Marine Le Pen à l'épreuve - 09/06/2014</a></h1>
+<h3><a id="090614_3">La stratégie de Marine Le Pen à l'épreuve - 09/06/2014</a></h3>
 
 <p> 
 	Marine Le Pen fait tout son possible pour que le Front National accède au pouvoir. Cette stratégie se décline à toutes les échelles :  locales, européennes, mais aussi nationales.
@@ -5116,7 +5115,7 @@ Ainsi le FN joue sur plusieurs tableaux : stratégie de congrès pour Jean Marie
 </p>
 
 
-<h1><a id="060514">Regards sur la droite - 06/05/2014</a></h1>
+<h3><a id="060514">Regards sur la droite - 06/05/2014</a></h3>
 <p>« Les quartiers populaires portent un réel intérêt à la vie politique, même si celui-ci ne se transcrit pas toujours dans des pratiques institutionnelles telles que le vote. »</p>
 <a href="regd39.pdf">Lien</a>
 
@@ -5478,11 +5477,11 @@ métisse et qui s’hybride, de manière assez profonde et rapide.
 
 <p>Propos recueillis par B.T.</p>
 
-<h1><a id="230414">23 04 2014 - RFI</a></h1>
+<h3><a id="230414">23 04 2014 - RFI</a></h3>
 <p>Le mariage pour tous a-t-il pesé sur les élections municipales ?</p>
 <a href="http://www.rfi.fr/emission/20140423-le-mariage-tous-il-pese-dernieres-elections-municipales/">http://www.rfi.fr/emission/20140423-le-mariage-tous-il-pese-dernieres-elections-municipales/</a>
 	
-<h1><a id="170414">17 04 2014 - Le Monde</a></h1>
+<h3><a id="170414">17 04 2014 - Le Monde</a></h3>
 <p>« La banlieue apparaît plus à droite qu'on avait pu l'imaginer »</p>
 <a href="http://www.lemonde.fr/societe/article/2014/04/17/la-banlieue-apparait-plus-a-droite-qu-on-avait-pu-l-imaginer_4402851_3224.html">http://www.lemonde.fr/societe/article/2014/04/17/la-banlieue-apparait-plus-a-droite-qu-on-avait-pu-l-imaginer_4402851_3224.html </a>
 
@@ -5520,11 +5519,11 @@ Au final, comprendre le régime du vote en banlieue est complexe. Est-on est plu
  
 
 
-<h1><a id="170214">Le Monde - 17/02/2014</a></h1>
+<h3><a id="170214">Le Monde - 17/02/2014</a></h3>
 <p>Aux municipales, le difficile combat de la diversité</p>
 <a href="http://www.lemonde.fr/municipales/article/2014/02/17/aux-municipales-le-difficile-combat-de-la-diversite_4367846_1828682.html">http://www.lemonde.fr/municipales/article/2014/02/17/aux-municipales-le-difficile-combat-de-la-diversite_4367846_1828682.html </a>
 
-<h1><a id="270114">IPSOS - 27/01/2014</a></h1>
+<h3><a id="270114">IPSOS - 27/01/2014</a></h3>
 <p>Défiance, Racisme, Rejet du système : regards croisés sur les Français face au monde extérieur</p>
 <a href="http://www.ipsos.fr/ipsos-public-affairs/actualites/2014-01-27-defiance-racisme-rejet-systeme-regards-croises-sur-francais-face-au-monde-exterieur">http://www.ipsos.fr/ipsos-public-affairs/actualites/2014-01-27-defiance-racisme-rejet-systeme-regards-croises-sur-francais-face-au-monde-exterieur</a>
 
@@ -5558,7 +5557,7 @@ Enfin, dans ce contexte global, plusieurs mouvements sociaux structurés autour 
 <p><span style="font-weight:bold;color:#00a7a7;">M. T.&nbsp;:</span> Les contextes migratoires européens sont extrêmement variés. Les liens historiques et coloniaux, l’ancienneté et l’origine des flux migratoires sont autant de facteurs qui distinguent les pays européens les uns des autres. Les situations économiques et démographies sont également à prendre en considération. Enfin, chaque Etat est traversé par des questions identitaires différentes avec notamment des tentations autonomistes chez plusieurs de nos voisins. Il en résulte que la perception de l’étranger et de l’immigration diverge. Toutefois, les partenaires associatifs européens de France Terre d’Asile sont unanimes : <strong>il est aujourd’hui de plus en plus difficile de défendre les droits des étrangers en Europe</strong>.</p>
 
 
-<h1><a id="270713">Le Journal des Banlieues - 27/07/2013 </a></h1>
+<h3><a id="270713">Le Journal des Banlieues - 27/07/2013 </a></h3>
 <p>« On cherche à faire éclater la notion de diversité »</p>
 <a href="http://www.presseetcite.info/journal-officiel-des-banlieues/societe/cherche-faire-eclater-la-notion-de-diversite"> http://www.presseetcite.info/journal-officiel-des-banlieues/societe/cherche-faire-eclater-la-notion-de-diversite </a>
 
@@ -5593,7 +5592,7 @@ Il y a toujours eu un vote conservateur dans le monde ouvrier. Il existe encore 
  
 <p>Propos recueillis par Erwan Ruty</p>
 
-<h1><a id="180414">Le Bondy Blog - 18/04/2014</a></h1>
+<h3><a id="180414">Le Bondy Blog - 18/04/2014</a></h3>
 <p>« La participation pourrait être plus forte en banlieue »</p>
 <a href="http://www.bondyblog.fr/201204181411/%C2%AB-la-participation-pourrait-etre-plus-forte-en-banlieue-%C2%BB/#.U1U1YFdtWHQ"> http://www.bondyblog.fr/201204181411/%C2%AB-la-participation-pourrait-etre-plus-forte-en-banlieue-%C2%BB/#.U1U1YFdtWHQ </a>
 
@@ -5638,7 +5637,7 @@ Il y a toujours eu un vote conservateur dans le monde ouvrier. Il existe encore 
 
 
 
-<h1><a id="010314">Stata - Utiliser la commande Outreg - 01/03/2014 </a></h1>
+<h3><a id="010314">Stata - Utiliser la commande Outreg - 01/03/2014 </a></h3>
 
 <pre>
 * Installer outreg
@@ -5673,7 +5672,7 @@ logistic blablabla
 outreg using nom_fichier , stats(e_b ) summstat(r2_p \ N)  starlevels(5 1 .1) starloc(1) 
 </pre>
 
-<h1><a id="010214">Stata - Syntaxte pour les graphiques de corrélation incluant une pondération - 01/02/2014</a> </h1>
+<h3><a id="010214">Stata - Syntaxte pour les graphiques de corrélation incluant une pondération - 01/02/2014</a> </h3>
 <pre>
 * Graphique classique
 sc  c2 p12_sarkozy
@@ -5702,7 +5701,7 @@ sc  c2 p12_sarkozy [w=pop], ms(oh) msize(tiny) mc(blue) || sc  c2 p12_sarkozy [w
 sc  c2 p12_sarkozy [w=pop], ms(oh) msize(tiny) mc(blue) || sc  c2 p12_sarkozy [w=pop] if pop >30000 &   p12_fn>15 , msize(zero) mlabel (ville) mlabsize(tiny) mlabc (red) || lfitci  c2 p12_sarkozy [w=pop], fc(none) 
 </pre>
 
-<h1><a id="150114">Stata - Regression ESS fichier cumulé - 15/01/2014</a></h1>
+<h3><a id="150114">Stata - Regression ESS fichier cumulé - 15/01/2014</a></h3>
 
 <pre>
 use C:\Users\Antoine\Desktop\ESS\ESS_1-5.dta 
@@ -5896,7 +5895,7 @@ twoway lpolyci vote_es age ||  lpolyci vote_fr age ||lpolyci vote_uk age
 </pre>
 
 
-<h1><a id="150214">Stata - Utiliser la commande Margins - 15/02/2014</a></h1>
+<h3><a id="150214">Stata - Utiliser la commande Margins - 15/02/2014</a></h3>
 
 <pre>
 ** Note : il faut utiliser Stata 12 minimum pour avoir marginsplot, twoway contour et _marg_save
