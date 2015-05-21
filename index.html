@@ -16,8 +16,8 @@
         <li><a href="http://antoinejardin.github.io/site/">Home</a></li>
         <li><a href="#">Data</a></li>
         <li><a href="#">Code</a></li>
-		<li><a href="#">Research</a></li>
-		<li><a href="#">Teaching</a><li>
+	<li><a href="#">Research</a></li>
+	<li><a href="#">Teaching</a><li>
         <li><a href="#">Papers</a></li>
         <li><a href="#">Archives</a><li>
         <li><a href="http://antoinejardin.github.io/site/about.html">About Me</a></li>
@@ -101,6 +101,15 @@ gen evo_gins = gins14 - gins12
 gen evo_dins = dins14 - dins12
 gen evo_fnins = fnins14 - fnins12
 gen evo_tabs = tabs14 - tabs12
+
+gen evo_gexp2 = gexp12 - gexp14
+gen evo_dexp2 = dexp12 - dexp14
+gen evo_fnexp2 = fnexp12 - fnexp14
+gen evo_gins2 = gins12 - gins14
+gen evo_dins2 = dins12 - dins14
+gen evo_fnins2 = fnins12 - fnins14
+gen evo_tabs2 = tabs12 - tabs14
+
 save "/home/me/p12.dta", replace
 
 list codedep
