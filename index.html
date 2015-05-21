@@ -5,8 +5,6 @@
 
     <title>Antoine Jardin's Blog</title>
 
-<link href='http://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
@@ -28,7 +26,71 @@
 
   	<div class="content">
   	
-  	<h3>[R Studio] : Ordinal regression with cumulative link single and mixed models</h3>
+ <h3>[Stata] Organisation des données au format long </h3>
+ 
+ <pre>
+use "/home/me/r12.dta"
+save "/home/me/e14.dta"
+clear
+use "/home/me/r11.dta"
+save "/home/me/p12.dta"
+clear
+use "/home/me/e14.dta"
+list idt
+egen idt2 = concat(codedep codecom elec) , punct(_)
+save "/home/me/e14.dta", replace
+clear
+use "/home/me/p12.dta"
+tab elec
+egen idt2 = concat(codedep codecom elec) , punct(_)
+save "/home/me/p12.dta", replace
+append using "/home/me/e14.dta"
+tab elec
+list idt
+gen gexp12 = gexp if elec == 2012
+gen dexp12 = dexp if elec == 2012
+gen fnexp12 = fnexp if elec == 2012
+gen gins12 = gins if elec == 2012
+gen dins12 = dins if elec == 2012
+gen fnins12 = fnins if elec == 2012
+gen gexp14 = gexp if elec == 2014
+gen dexp14 = dexp if elec == 2014
+gen fnexp14 = fnexp if elec == 2014
+gen gins14 = gins if elec == 2014
+gen dins14 = dins if elec == 2014
+gen fnins14 = fnins if elec == 2014
+gen tabs = (abstentions /inscrits) * 100
+gen tabs12 = tabs if elec == 2012
+gen tabs14 = tabs if elec == 2014
+encode idt, gen (idtnum)
+xfill gexp12, i(idtnum)
+xfill dexp12, i(idtnum)
+xfill fnexp12, i(idtnum)
+xfill gins12, i(idtnum)
+xfill dins12, i(idtnum)
+xfill fnins12, i(idtnum)
+xfill gexp14, i(idtnum)
+xfill dexp14, i(idtnum)
+xfill fnexp14, i(idtnum)
+xfill gins14, i(idtnum)
+xfill dins14, i(idtnum)
+xfill fnins14, i(idtnum)
+xfill tabs12, i(idtnum)
+xfill tabs14, i(idtnum)
+save "/home/me/p12.dta", replace
+edit
+gen evo_gexp = gexp14 - gexp12
+gen evo_dexp = dexp14 - dexp12
+gen evo_fnexp = fnexp14 - fnexp12
+gen evo_gins = gins14 - gins12
+gen evo_dins = dins14 - dins12
+gen evo_fnins = fnins14 - fnins12
+gen evo_tabs = tabs14 - tabs12
+save "/home/me/p12.dta", replace
+ </pre>
+ 
+ 
+ <h3>[R Studio] : Ordinal regression with cumulative link single and mixed models</h3>
  
 <p>Loading Packages. Ordinal provides both clm and clmm functions and their extractors</p>
 
