@@ -10,6 +10,7 @@ ul {
 
 li {
 	display : inline;
+	border-left : 1 px solid;
 }
 
 a {
