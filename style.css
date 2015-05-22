@@ -63,6 +63,9 @@ h1 {
 		text-align: center;
 		padding-top: 2%;
 		padding-bottom: 1%;
+		top: auto;
+		left: auto;
+		position : relative;
 }
 
 .footer {
