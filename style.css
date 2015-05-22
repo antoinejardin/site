@@ -8,9 +8,6 @@ ul {
     list-style-type: none;
 }
 
-li {
-    float: left;
-}
 
 a {
     font-family: sans-serif;
@@ -63,9 +60,6 @@ h1 {
 		text-align: center;
 		padding-top: 2%;
 		padding-bottom: 1%;
-		top: auto;
-		left: auto;
-		position : relative;
 }
 
 .footer {
