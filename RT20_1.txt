@@ -97,5 +97,38 @@ Faut faire les deux, coupé et non
 Avis du comité d'éthique du CNRS
 
 
+##  Sociologie des variables, modèles de régression
+Abott
+
+1. Net effect thinking (séparation artificielles)
+2. Univocité des facteurs causaux (s'appliquent uniformément en tous points de l'espace social)
+3. Indépendance des individus statistiques
+4. Toutes choses égales par ailleurs (toujours des propriétés qu'on ne peut pas observer)
+5. Réversibilité des processus causaux
+
+
+Critique de la technique
+Critique des usages
+
+1. Un usage mesuré (étudier des effets de structures) - Raisonnement du suicide de Durkheim
+2. Un usage métrologique - hiérarchiser l'importance de différents facteurs causaux
+3. Un usage hyper métrologique - Effets "pur" des mesures de retour à l'emploi
+
+Non pas éliminer mais analyser les effets de structure
+
+
+-> Analyse factorielle standardisée
+Coordonnées des individus
+régression linéaire : axe ~ variables de controle
+On analyse les résidus qui exprime ce qui n'est pas seulement l'effet des variables de controle
+
+On fait une ACP sur les résidus
+projection en variable supplémentaire les variables de gouts cinématographique
+
+Package GDAtools sous R (stmca)
+Mais ca ne bouge quasiment jamais
+standardiser l'espace des gouts culturels ne le déforme pas
+
+Causes probables vs effets purs
 
 
