@@ -99,7 +99,7 @@ img {
 </div>
 <div id="variables" class="section level2">
 <h2>Variables</h2>
-<p>scale : attitudes towards immigration (0-10, 33 values) agea : age (quantitative) pays / cntry : pays essround : vague d’enquête</p>
+<p>scale : attitudes vis à vis de l’immigration (0-10, 33 values) agea : age (quantitatif) pays / cntry : pays essround : vague d’enquête</p>
 </div>
 <div id="avec-stata" class="section level2">
 <h2>Avec Stata</h2>
@@ -287,30 +287,31 @@ agea         -0.0116274 0.00123927 -9.38241</code></pre>
 </div>
 <div id="general-comments-by-bates" class="section level2">
 <h2>General comments by Bates :</h2>
-<p>“Because I was involved in the development of all three packages I will take the liberty of commenting on the philosophy.”&quot;</p>
-<ul>
-<li><p>The purpose of developing nlme was for fitting nonlinear mixed-effects models. Linear mixed-effects models were incorporated mainly as an iterative step in nlme. Numerical methods used are not nearly as sophisticated as those in lme4 and MixedModels.</p></li>
-<li><p>lme4 was developed to provide a use-case for S4 classes and methods. The numerical methods implemented in lme4 are, in my opinion, superior to those in nlme, mainly through the use of the relative covariance factor and the profiled log-likelihood.<br />Using C++, Rcpp and RcppEigen was motivated by trying to provide generality and speed. The end result is confusing (my fault entirely) and fragile.</p></li>
-<li><p>MixedModels was developed because I became interested in the Julia language at the same time that I was disillusioned with at least some aspects of R. As a new language Julia doesn’t have the infrastructure of R (dataframes, formula language, graphics, …) but does have a clean implementation of the parts that are available. The most important aspect of Julia is “one language”. You develop in the same language in which you optimize.</p></li>
-</ul>
+<p><em>“Because I was involved in the development of all three packages I will take the liberty of commenting on the philosophy.”</em></p>
+<ol style="list-style-type: decimal">
+<li><p><em>“The purpose of developing nlme was for fitting nonlinear mixed-effects models. Linear mixed-effects models were incorporated mainly as an iterative step in nlme. Numerical methods used are not nearly as sophisticated as those in lme4 and MixedModels.”</em></p></li>
+<li><p><em>“lme4 was developed to provide a use-case for S4 classes and methods. The numerical methods implemented in lme4 are, in my opinion, superior to those in nlme, mainly through the use of the relative covariance factor and the profiled log-likelihood.<br />Using C++, Rcpp and RcppEigen was motivated by trying to provide generality and speed. The end result is confusing […] and fragile.”</em></p></li>
+<li><p><em>“MixedModels was developed because I became interested in the Julia language at the same time that I was disillusioned with at least some aspects of R. As a new language Julia doesn’t have the infrastructure of R (dataframes, formula language, graphics, …) but does have a clean implementation of the parts that are available. The most important aspect of Julia is”one language“. You develop in the same language in which you optimize.”</em></p></li>
+</ol>
 <p><a href="https://stat.ethz.ch/pipermail/r-sig-mixed-models/2014q4/022791.html" class="uri">https://stat.ethz.ch/pipermail/r-sig-mixed-models/2014q4/022791.html</a></p>
 </div>
-<div id="summary" class="section level2">
-<h2>Summary</h2>
+<div id="resume" class="section level2">
+<h2>Résumé</h2>
 <ol style="list-style-type: decimal">
-<li>Julia remains a work in progress</li>
-<li>It may not still be production ready</li>
-<li>But it allows the estimation of complex models a lot easier than alternatives</li>
+<li>Julia reste un langage en cours de développement rapide</li>
+<li>Il n’est pas pret pour une utilisation quotidienne sur certains aspects</li>
+<li>Mais pour les calculs lourds et complexes, il ouvre des possibilités sans précédent</li>
 </ol>
 </div>
-<div id="solid-arguments-in-favor-of-julia" class="section level2">
-<h2>Solid arguments in favor of Julia</h2>
+<div id="quelques-arguments-en-faveur-de-julia" class="section level2">
+<h2>Quelques arguments en faveur de Julia</h2>
 <ol style="list-style-type: decimal">
-<li>It’s free</li>
-<li>It’s growing</li>
-<li>Important R package developers are working with Julia</li>
-<li>The syntax is inspired by R and rather transparent</li>
-<li>R an Julia can interoperate quite easily (Rcall)</li>
+<li>C’est un langage/logiciel libre (et utilisable pour le secteur privé)</li>
+<li>Le langage se développe rapidement</li>
+<li>De nombreux chercheurs travaillent avec R et passent à Julia</li>
+<li>La syntaxe est voisine de R et de python (relativement transparente)</li>
+<li>Julia permet de réutiliser des programmes et fonctions écrits en C, Fortran, R</li>
+<li>Julia est compatible avec les outils récents de modélisation avancée (Stan.jl)</li>
 </ol>
 </div>
 <div id="pour-aller-plus-loin" class="section level2">
