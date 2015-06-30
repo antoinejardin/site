@@ -69,3 +69,17 @@ Fabriquer de nouvelles hypothèses
 2. Démarche inductive / déductive
 
 Alceste / NVIVO
+
+- On distingue assez facilement l'effet enquêteur
+- On distingue les interjections
+- Etude de l'engagement de l'enquêteur dans l'entretien 
+- D'autres plus cognitives, référentielles
+
+CAQDAS et NVIVO , une autre approche que la statistique textuelle
+Mais c'est très couteux en temps de se pencher de cette façon sur les données
+Encodage manuel des contenus
+On essaye d'encoder l'intégralité de l'entretien
+code vrac pour ce qu'on ne parvient pas à coder
+
+Aller plus loin suppose d'en passer par la lexicographie
+
