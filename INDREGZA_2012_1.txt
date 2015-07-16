@@ -1,0 +1,24 @@
+use "/home/me/Downloads/FD_INDREGZA_2012.dta"
+
+tab REGION
+tab PNAI12 CS1 [iw=IPONDI]
+tab AGED
+
+tab PNAI12 CS1 [iw=IPONDI] if AGED >=18
+tab PNAI12 CS1 [iw=IPONDI] if AGED >=18, row nof
+tab PNAI12 CS1 [iw=IPONDI] if AGED >=18, cell nof
+tab PNAI12 DIPL [iw=IPONDI] if AGED >=18, row nof
+tab PNAI12 DIPL [iw=IPONDI] if AGED >=18 & AGED<=35, row nof
+
+tab SEXE
+
+tab PNAI12 DIPL [iw=IPONDI] if AGED >=18 & AGED<=35 & SEXE==1, row nof
+tab PNAI12 EMPL [iw=IPONDI] if AGED >=18 & AGED<=35 & SEXE==1, row nof
+tab PNAI12 EMPL [iw=IPONDI] if AGED >=18 & AGED<=35 & SEXE==2, row nof
+tab PNAI12 CS2 [iw=IPONDI] if AGED >=18 & AGED<=35 , row nof
+tab CS3  PNAI12 [iw=IPONDI] if AGED >=18 & AGED<=35 , col nof
+
+gen id = 1
+
+save "/home/me/Downloads/FD_INDREGZA_2012.dta", replace
+
