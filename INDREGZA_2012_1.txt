@@ -22,3 +22,63 @@ gen id = 1
 
 save "/home/me/Downloads/FD_INDREGZA_2012.dta", replace
 
+
+use "/home/me/Downloads/FD_INDREGZA_2012.dta"
+
+tab DIPL
+numlabel DIPL, add
+tab DIPL
+recode DIPL (1/7=0) (8/11=1) (nonmiss = .), gen (diplo)
+tab diplo
+tab AGED
+tab AGEREV
+logistic diplo AGEREV
+logistic diplo AGEREV [iw=IPONDI]
+logistic diplo AGEREV i.PNAI12 [iw=IPONDI]
+logistic diplo AGEREV i.PNAI12 [iw=IPONDI] if AGEREV >=18 & AGEREV <=65
+logistic diplo c.AGEREV##i.PNAI12 [iw=IPONDI] if AGEREV >=18 & AGEREV <=65
+logistic diplo c.AGEREV##i.PNAI12 c.AGEREV##i.SEXE [iw=IPONDI] if AGEREV >=18 & AGEREV <=65
+tab AGEREVQ
+numlabel AGEREVQ , add
+
+tab AGEREVQ
+logistic diplo c.AGEREV##i.PNAI12 c.AGEREV##i.SEXE [iw=IPONDI] if AGEREVQ>=5 & AGEREVQ <=14
+logistic diplo i.AGEREVQ##i.PNAI12 i.AGEREVQ##i.SEXE [iw=IPONDI] if AGEREVQ>=5 & AGEREVQ <=14
+
+logistic diplo i.AGEREVQ##i.PNAI12 i.AGEREVQ##i.SEXE [iw=IPONDI] if AGEREVQ>=5 & AGEREVQ <=8
+
+recode DIPL (1/9=0 ) (10/11=1) (nonmiss=.), gen (sup)
+logistic sup i.AGEREVQ##i.PNAI12 i.AGEREVQ##i.SEXE [iw=IPONDI] if AGEREVQ>=5 & AGEREVQ <=8
+gen bac = diplo
+
+logistic bac i.AGEREVQ##i.PNAI12 i.AGEREVQ##i.SEXE [iw=IPONDI] if AGEREVQ>=5 & AGEREVQ <=8
+
+logistic bac i.AGEREVQ##i.PNAI12  [iw=IPONDI] if AGEREVQ>=5 & AGEREVQ <=8
+margins AGEREVQ#PNAI12
+_marg_save, saving (margin1.dta)
+
+save "/home/me/Downloads/FD_INDREGZA_2012.dta", replace
+
+clear
+use margin1.dta
+sc _margin _m1
+sc _m2 _margin
+twoway contour _margin _m1 _m2, interp(none)
+twoway contour _margin _m1 _m2,
+twoway contour _margin _m1 _m2, levels(10)
+twoway contour _margin _m1 _m2, ccuts(0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)
+
+help mosaic
+help spineplot
+spineplot _m1 _m2
+spineplot _margin _m1
+help spineplot
+clear
+
+use "/home/me/Downloads/FD_INDREGZA_2012.dta", replace
+
+logistic bac c.AGEREV##i.PNAI12  [iw=IPONDI] if AGEREVQ>=5 & AGEREVQ <=8
+logistic bac c.AGEREV##i.PNAI12  [iw=IPONDI] if AGEREVQ>=5 & AGEREVQ <=8
+
+export delimited using "/home/me/FD_INDREGZA_2012.csv", replace
+
