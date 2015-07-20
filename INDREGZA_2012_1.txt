@@ -227,5 +227,36 @@ Log likelihood = -6242638.2                       Pseudo R2       =     0.0157
        _cons |   .6176773   .0004726  -629.62   0.000     .6167516    .6186043
 ------------------------------------------------------------------------------
 
+###
+
+
+use "/home/me/Downloads/FD_INDREGZA_2012.dta"
+
+decode AGED, generate(age)
+destring age, generate(age2)
+
+collapse (sum) id [w=IPONDI], by(age2 PNAI12 sup)
+
+logistic sup c.age2##i.PNAI12 [w=id]
+logistic sup c.age2##i.PNAI12 [iw=id]
+
+margins, at (age = (18 (1) 35)  PNAI12 = (1 (1) 12))
+
+marginsplot, recast(line) recastci(rarea)
+
+margins, at (PNAI12 = (1 (1) 12) age = (18 (1) 35)  )
+
+marginsplot, recast(line) recastci(rarea)
+
+logistic sup c.age2##i.PNAI12 [iw=id]
+
+margins, at (PNAI12 = (1 (1) 12) age = (20 (5) 65)  )
+marginsplot, recast(line) recastci(rarea)
+
+margins, at ( age = (20 (5) 65)  PNAI12 = (1 (1) 12)   )
+marginsplot, recast(line) recastci(rarea)
+
+marginsplot, recast(line) recastci(rarea) by(PNAI12)
+
 
 
