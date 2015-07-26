@@ -26,7 +26,388 @@
 
   	<div class="content">
   	
-  	
+ <h3>[R et Rstudio] Trajectory plot après AFM</h3>
+ 
+ <pre>
+ 	
+```{r}
+
+library(ggplot2)
+library(akima)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(car)
+library(ade4)
+library(adegraphics)
+
+
+
+afsp <- read.csv("~/afsp.csv")
+
+afsp$wave <- as.factor(afsp$wave)
+afsp$gndr <- as.factor(afsp$gndr)
+afsp$i9r <- as.factor(afsp$i9r)
+
+levels(afsp$gndr)[levels(afsp$gndr)=="1"] <- "Homme"
+levels(afsp$gndr)[levels(afsp$gndr)=="2"] <- "Femme"
+
+levels(afsp$i9r)[levels(afsp$i9r)=="0"] <- "Gauche"
+levels(afsp$i9r)[levels(afsp$i9r)=="10"] <- "Droite"
+
+afsp2 <- na.omit(afsp)
+afsp2 <- filter(afsp2, wave=="1" | wave=="2" | wave=="4" | wave=="6" | wave=="7")
+
+
+tab1 <- table(afsp2$i9r, afsp2$wave)
+tab1.1 <- prop.table(tab1)
+tab1.2 <- t(tab1.1)
+tab1.3 <- prop.table(tab1,1)
+tab2 <- addmargins(prop.table(tab1, 2),1)
+
+tab2
+
+dft2 <- as.data.frame.table(tab2)
+
+d1 = as.data.frame(prop.table(table(afsp2$wave, afsp2$i9r),1)*100) 
+gg1 <- ggplot(d1, aes(x=Var1,y=Freq, fill=Var2))
+gg1 + geom_bar(stat="identity")  + xlab("vague d'enquête") + ylab("fréquence") + ggtitle("Evolution de l'autopositionnement")
+
+
+fmg <- lm(pgx ~ gndr + diplo+ religion+ age2 + i9r * wave, afsp2, weights=zpw)
+
+summary(fmg)
+
+
+
+fmd <- lm(pdx ~ gndr + diplo + religion + age2 + i9r * wave, afsp2, weights=zpw)
+
+summary(fmd)
+
+
+fmfn <- lm(fn ~ gndr + diplo + religion + age2 + i9r * wave, afsp2, weights=zpw)
+
+summary(fmfn)
+
+fmx <- lm(pgx ~ fn*pdx* wave, afsp2, weights=zpw)
+
+summary(fmx)
+
+
+
+ak2 <- read.csv("~/ak2.csv")
+ak2 <- na.omit(ak2)
+
+aki.2 <- interp(ak2$pgx, ak2$pdx, ak2$fn,
+xo=seq(min(ak2$pgx), max(ak2$pgx), length = 20),
+yo=seq(min(ak2$pdx), max(ak2$pdx), length = 20), duplicate="median")
+
+filled.contour(x = aki.2$x,
+y = aki.2$y,
+z = aki.2$z,
+color.palette =
+colorRampPalette(c("white", "red")),
+xlab = "gauche",
+ylab = "droite",
+main = "Espace politique 2014",
+key.title = title(main = "FN", cex.main = 1))
+
+
+ak21 <- filter(ak2, wave==1)
+ak22 <- filter(ak2, wave==2)
+ak24 <- filter(ak2, wave==4)
+ak26 <- filter(ak2, wave==6)
+ak27 <- filter(ak2, wave==7)
+
+
+akima.li <- interp(ak21$pgx, ak21$pdx, ak21$fn,
+xo=seq(min(ak21$pgx), max(ak21$pgx), length = 100),
+yo=seq(min(ak21$pdx), max(ak21$pdx), length = 100), duplicate="median")
+
+
+filled.contour(x = akima.li$x,
+y = akima.li$y,
+z = akima.li$z,
+color.palette =
+colorRampPalette(c("white", "black")),
+xlab = "gauche",
+ylab = "droite",
+main = "Espace politique 2014 - vague 1",
+key.title = title(main = "FN", cex.main = 1))
+
+
+akima.li <- interp(ak22$pgx, ak22$pdx, ak22$fn,
+xo=seq(min(ak22$pgx), max(ak22$pgx), length = 100),
+yo=seq(min(ak22$pdx), max(ak22$pdx), length = 100), duplicate="median")
+
+
+filled.contour(x = akima.li$x,
+y = akima.li$y,
+z = akima.li$z,
+color.palette =
+colorRampPalette(c("white", "black")),
+xlab = "gauche",
+ylab = "droite",
+main = "Espace politique 2014 - vague 2",
+key.title = title(main = "FN", cex.main = 1))
+
+
+akima.li <- interp(ak24$pgx, ak24$pdx, ak24$fn,
+xo=seq(min(ak24$pgx), max(ak24$pgx), length = 100),
+yo=seq(min(ak24$pdx), max(ak24$pdx), length = 100), duplicate="median")
+
+
+filled.contour(x = akima.li$x,
+y = akima.li$y,
+z = akima.li$z,
+color.palette =
+colorRampPalette(c("white", "black")),
+xlab = "gauche",
+ylab = "droite",
+main = "Espace politique 2014 - vague 4",
+key.title = title(main = "FN", cex.main = 1))
+
+
+akima.li <- interp(ak26$pgx, ak26$pdx, ak26$fn,
+xo=seq(min(ak26$pgx), max(ak26$pgx), length = 100),
+yo=seq(min(ak26$pdx), max(ak26$pdx), length = 100), duplicate="median")
+
+
+filled.contour(x = akima.li$x,
+y = akima.li$y,
+z = akima.li$z,
+color.palette =
+colorRampPalette(c("white", "black")),
+xlab = "gauche",
+ylab = "droite",
+main = "Espace politique 2014 - vague 6",
+key.title = title(main = "FN", cex.main = 1))
+
+
+akima.li <- interp(ak27$pgx, ak27$pdx, ak27$fn,
+xo=seq(min(ak27$pgx), max(ak27$pgx), length = 100),
+yo=seq(min(ak27$pdx), max(ak27$pdx), length = 100), duplicate="median")
+
+
+filled.contour(x = akima.li$x,
+y = akima.li$y,
+z = akima.li$z,
+color.palette =
+colorRampPalette(c("white", "black")),
+xlab = "gauche",
+ylab = "droite",
+main = "Espace politique 2014 - vague 7",
+key.title = title(main = "FN", cex.main = 1))
+
+
+akima.li <- interp(ak2$pgx, ak2$pdx, ak2$fn,
+xo=seq(min(ak2$pgx), max(ak2$pgx), length = 100),
+yo=seq(min(ak2$pdx), max(ak2$pdx), length = 100), duplicate="median")
+
+
+filled.contour(x = akima.li$x,
+y = akima.li$y,
+z = akima.li$z,
+color.palette =
+colorRampPalette(c("white", "blue")),
+xlab = "gauche",
+ylab = "droite",
+main = "Espace politique synthétique",
+key.title = title(main = "FN", cex.main = 1))
+
+
+ak3 <- read.csv("~/ak3.csv")
+ak3 <- na.omit(ak3)
+
+akima.li <- interp(ak3$ypgx, ak3$ypdx, ak3$yfnx,
+xo=seq(min(ak3$ypgx), max(ak3$ypgx), length = 100),
+yo=seq(min(ak3$ypdx), max(ak3$ypdx), length = 100), duplicate="median")
+
+
+ak31 <- filter(ak3, wave==1)
+ak32 <- filter(ak3, wave==2)
+ak34 <- filter(ak3, wave==4)
+ak36 <- filter(ak3, wave==6)
+ak37 <- filter(ak3, wave==7)
+
+
+akima.li <- interp(ak31$ypgx, ak31$ypdx, ak31$yfnx,
+xo=seq(min(ak31$ypgx), max(ak31$ypgx), length = 100),
+yo=seq(min(ak31$ypdx), max(ak31$ypdx), length = 100), duplicate="median")
+
+
+filled.contour(x = akima.li$x,
+y = akima.li$y,
+z = akima.li$z,
+color.palette =
+colorRampPalette(c("white", "blue")),
+xlab = "gauche",
+ylab = "droite",
+main = "Espace politique - vague 1",
+key.title = title(main = "FN", cex.main = 1))
+
+
+akima.li <- interp(ak32$ypgx, ak32$ypdx, ak32$yfnx,
+xo=seq(min(ak32$ypgx), max(ak32$ypgx), length = 100),
+yo=seq(min(ak32$ypdx), max(ak32$ypdx), length = 100), duplicate="median")
+
+
+filled.contour(x = akima.li$x,
+y = akima.li$y,
+z = akima.li$z,
+color.palette =
+colorRampPalette(c("white", "blue")),
+xlab = "gauche",
+ylab = "droite",
+main = "Espace politique - vague 2",
+key.title = title(main = "FN", cex.main = 1))
+
+
+akima.li <- interp(ak34$ypgx, ak34$ypdx, ak34$yfnx,
+xo=seq(min(ak34$ypgx), max(ak34$ypgx), length = 100),
+yo=seq(min(ak34$ypdx), max(ak34$ypdx), length = 100), duplicate="median")
+
+
+filled.contour(x = akima.li$x,
+y = akima.li$y,
+z = akima.li$z,
+color.palette =
+colorRampPalette(c("white", "blue")),
+xlab = "gauche",
+ylab = "droite",
+main = "Espace politique - vague 4",
+key.title = title(main = "FN", cex.main = 1))
+
+
+akima.li <- interp(ak36$ypgx, ak36$ypdx, ak36$yfnx,
+xo=seq(min(ak36$ypgx), max(ak36$ypgx), length = 100),
+yo=seq(min(ak36$ypdx), max(ak36$ypdx), length = 100), duplicate="median")
+
+
+filled.contour(x = akima.li$x,
+y = akima.li$y,
+z = akima.li$z,
+color.palette =
+colorRampPalette(c("white", "blue")),
+xlab = "gauche",
+ylab = "droite",
+main = "Espace politique - vague 6",
+key.title = title(main = "FN", cex.main = 1))
+
+
+akima.li <- interp(ak37$ypgx, ak37$ypdx, ak37$yfnx,
+xo=seq(min(ak37$ypgx), max(ak37$ypgx), length = 100),
+yo=seq(min(ak37$ypdx), max(ak37$ypdx), length = 100), duplicate="median")
+
+
+filled.contour(x = akima.li$x,
+y = akima.li$y,
+z = akima.li$z,
+color.palette =
+colorRampPalette(c("white", "blue")),
+xlab = "gauche",
+ylab = "droite",
+main = "Espace politique - vague 7",
+key.title = title(main = "FN", cex.main = 1))
+
+
+p <- ggplot(ak3, aes(ypgx, ypdx))
+p + geom_point(aes(colour=yfnx,size=yfnx)) + scale_colour_gradient( low="white", high="darkblue")
+
+
+p + geom_point(aes(colour=yfnx,size=yfnx)) + scale_colour_gradient( low="white", high="darkblue") + facet_wrap(~wave, ncol=4) 
+
+
+dat2 <- read.csv("~/Desktop/dat2.csv")
+
+head(dat2)
+colnames(dat2)
+
+dat2 <- dat2[order(dat2$UID_DYNA, dat2$wave),]
+
+s1 <- select(dat2, pgx, pdx)
+s2 <- select(dat2, i9r)
+s2$i9r <- as.factor(s2$i9r)
+
+s.class(s1, s2$i9r, col = rainbow(11))
+
+s1.1 <- select(dat2, ps, ump)
+s.class(s1.1, s2$i9r, col = rainbow(11))
+
+s1.2 <- select(dat2, ps, fn)
+s.class(s1.2, s2$i9r, col = rainbow(11))
+
+s1.3<- select(dat2, ump, fn)
+s.class(s1.3, s2$i9r, col = rainbow(11))
+
+d2w1 <- filter(dat2, wave==1)
+d2w2 <- filter(dat2, wave==2)
+d2w4 <- filter(dat2, wave==4)
+d2w6 <- filter(dat2, wave==6)
+d2w7 <- filter(dat2, wave==7)
+
+d2w1.1 <- select(d2w1, lo:fn)
+d2w2.1 <- select(d2w2, lo:fn)
+d2w4.1 <- select(d2w4, lo:fn)
+d2w6.1 <- select(d2w6, lo:fn)
+d2w7.1 <- select(d2w7, lo:fn)
+
+w1.dudic <- dudi.pca(d2w1.1, scannf= FALSE, center=TRUE)
+w2.dudic <- dudi.pca(d2w2.1, scannf= FALSE, center=TRUE)
+w4.dudic <- dudi.pca(d2w4.1, scannf= FALSE, center=TRUE)
+w6.dudic <- dudi.pca(d2w6.1, scannf= FALSE, center=TRUE)
+w7.dudic <- dudi.pca(d2w7.1, scannf= FALSE, center=TRUE)
+
+kta2 <- ktab.list.dudi(list(w1.dudic, w2.dudic, w4.dudic, w6.dudic, w7.dudic),tabnames = c("1", "2", "4", "6", "7"))
+
+atp2 <- pta(kta2, scannf=FALSE,  nf=2)
+
+summary(atp2)
+
+plot(atp2)
+
+fTli <- atp2$Tli
+block <- rep(1:488, 5)
+
+b2 <- as.factor(block)
+
+s.class(fTli, b2)
+
+afm <- mfa(kta2, scannf=FALSE, nf=2)
+summary(afm)
+plot(afm)
+
+
+kplot(afm)
+
+
+afm2 <- afm$lisup
+s.class(afm2, b2)
+
+s.traject(afm2, b2, plab.cex=0, ppoints.cex=0.2)
+
+s.traject(afm2, b2, col=cm.colors(500), plab.cex=0, ppoints.cex=0.2)
+s.traject(afm2, b2, col=heat.colors(500), plab.cex=0, ppoints.cex=0.2)
+s.traject(afm2, b2, col=terrain.colors(500), plab.cex=0, ppoints.cex=0.2)
+s.traject(afm2, b2, col=topo.colors(500), plab.cex=0, ppoints.cex=0.2)
+
+gx <- cbind(afm2, dat2)
+head(gx)
+
+
+p <- ggplot(gx, aes(Fac1, Fac2))
+
+p + geom_path(aes(colour=i9r))
+p + geom_path(aes(colour=wave))
+p + geom_path(aes(colour=wave)) + facet_wrap(~UID_DYNA)
+p + geom_path(aes(colour=wave)) + facet_wrap(~i9r)
+p + geom_path(aes(colour=wave)) + facet_wrap(~lo)
+p + geom_path(aes(colour=wave)) + facet_wrap(~fn)
+
+```
+ </pre>
+ 
+ 
  <h3>[R et R Studio] Analyse K-tableaux avec ADE 4</h3>
  
  <p><a href="http://antoinejardin.github.io/site/ade4_1.html">Une vignette R sur l'analyse triadique partielle, l'analyse factorielle multiple et l'analyse des co-inerties multiples</a></p>
