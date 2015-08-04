@@ -1385,3 +1385,287 @@ marginsplot, recast(line) recastci(rarea)  by(age)
 regress roma c.educ##i.country c.age##i.country c.ethno##i.country i.contact##i.country i.gender##i.country [iw=w22]
 margins, at  (country = (1 2 3 4 5 6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30)   age = (20 (5) 80))
 
+#############################################################
+Predictive margins from OLS model (number 1)
+#############################################################
+
+use "C:\Users\Antoine\Google Drive\romamin.dta" 
+
+regress roma c.educ##i.country c.age##i.country c.ethno##i.country i.contact##i.country i.gender##i.country [iw=w22]
+
+margins, at  (country = (1 2 3 4 5 6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30)   age = (20 (5) 80))
+marginsplot, recast(line) recastci(rarea)
+
+_marg_save, saving(fc1.dta, replace)
+use fc1.dta, replace
+graph bar _margin , over( _at2 ) stack
+
+twoway line _margin _at3
+twoway line _margin _at3, by( _at2)
+twoway line _margin _at3 || line _ci_lb _at3 || line _ci_ub _at3 , by( _at2)
+twoway line _margin _at3, lc(blue) || line _ci_lb _at3 || line _ci_ub _at3 , lc(blue) by( _at2)
+twoway line _margin _at3, lc(black) || line _ci_lb _at3 , lc(blue) || line _ci_ub _at3 , lc(blue) by( _at2)
+twoway line _margin _at3, lc(black) || line _ci_lb _at3 , lc(blue) lp(dot) || line _ci_ub _at3 , lc(blue) lp(dot) by( _at2)
+twoway line _margin _at3, lc(black) || line _ci_lb _at3 , lc(blue) lp(dash) || line _ci_ub _at3 , lc(blue) lp(dash) by( _at2)
+twoway line _margin _at3, lc(black) || line _ci_lb _at3 , lc(blue) lw(thin) || line _ci_ub _at3 , lc(blue) lw(thin) by( _at2)
+
+use "C:\Users\Antoine\Google Drive\romamin.dta" 
+
+regress roma c.educ##i.country c.age##i.country c.ethno##i.country i.contact##i.country i.gender##i.country [iw=w22]
+margins, at  (country = (1 2 3 4 5 6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30)   ethno = (0 (1) 10))
+
+
+tab country roma
+tab country roma [iw=w22]
+tab country roma [iw=w22], row nof
+tab country ethno [iw=w22], row nof
+tab country ethno [iw=w22], row nof
+
+sc roma ethno, by(country)
+
+regress roma c.educ##i.country c.age##i.country c.ethno##i.country i.contact##i.country i.gender##i.country [iw=w22]
+margins, at  ( age = (20 (10) 80)  ethno = (0 (1) 10))
+
+_marg_save, saving(fc2.dta, replace)
+use fc2.dta, replace
+
+twoway contour _margin _at3 _at4
+twoway contour _margin _at3 _at4, levels(10)
+twoway contour _margin _at3 _at4, levels(100)
+
+use "C:\Users\Antoine\Google Drive\romamin.dta" 
+
+regress roma c.educ##i.country c.age##i.country c.ethno##i.country i.contact##i.country i.gender##i.country [iw=w22]
+margins, at  (country = (1 )   ethno = (0 (1) 10) age = (20 (5) 80))
+
+_marg_save, saving(fcx1.dta, replace)
+use fcx1.dta, replace
+
+twoway contour _margin _at3 _at4
+twoway contour _margin _at3 _at4, ccuts(0 1 2 3 4 5 6 7 8 9 10)
+
+xtile nq = _margin, nq(20)
+tab nq
+twoway contour _margin _at3 nq, ccuts(0 1 2 3 4 5 6 7 8 9 10)
+twoway contour _margin _at3 nq,
+sum _margin, det
+
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.5 5 5.5 6 8 10)
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph1.gph"
+
+use "C:\Users\Antoine\Google Drive\romamin.dta" 
+
+regress roma c.educ##i.country c.age##i.country c.ethno##i.country i.contact##i.country i.gender##i.country [iw=w22]
+margins, at  (country = (2 )   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx2.dta, replace)
+
+margins, at  (country = (3 )   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx3.dta, replace)
+
+margins, at  (country = (4 )   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx4.dta, replace)
+
+margins, at  (country = (5 )   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx5.dta, replace)
+
+margins, at  (country = (6 )   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx6.dta, replace)
+
+margins, at  (country = (6 )   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx6.dta, replace)
+
+margins, at  (country = (7 )   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx7.dta, replace)
+
+margins, at  (country = (8 )   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx8.dta, replace)
+
+margins, at  (country = (9 )   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx9.dta, replace)
+
+margins, at  (country = (10 )   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx10.dta, replace)
+
+margins, at  (country = (11)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx11.dta, replace)
+
+margins, at  (country = (12)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx12.dta, replace)
+
+margins, at  (country = (13)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx13.dta, replace)
+
+margins, at  (country = (14)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx14.dta, replace)
+
+margins, at  (country = (16)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx16.dta, replace)
+
+margins, at  (country = (17)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx17.dta, replace)
+
+margins, at  (country = (18)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx18.dta, replace)
+
+margins, at  (country = (19)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx19.dta, replace)
+
+margins, at  (country = (20)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx20.dta, replace)
+
+margins, at  (country = (21)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx21.dta, replace)
+
+margins, at  (country = (22)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx22.dta, replace)
+
+margins, at  (country = (23)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx23.dta, replace)
+
+margins, at  (country = (24)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx24.dta, replace)
+
+margins, at  (country = (25)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx25.dta, replace)
+
+margins, at  (country = (26)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx26.dta, replace)
+
+margins, at  (country = (27)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx27.dta, replace)
+
+margins, at  (country = (28)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx28.dta, replace)
+
+margins, at  (country = (29)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx29.dta, replace)
+
+margins, at  (country = (30)   ethno = (0 (1) 10) age = (20 (5) 80))
+_marg_save, saving(fcx30.dta, replace)
+
+use fcx2.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph2.gph"
+
+use fcx2.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+
+use fcx3.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph3.gph"
+
+use fcx4.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph4.gph"
+
+use fcx5.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph5.gph"
+
+use fcx6.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph6.gph"
+
+use fcx7.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph7.gph"
+
+use fcx8.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph8.gph"
+
+use fcx9.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph9.gph"
+
+use fcx10.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph10.gph"
+
+use fcx11.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph11.gph"
+
+use fcx12.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph12.gph"
+
+use fcx13.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph13.gph"
+
+use fcx14.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph14.gph"
+
+use fcx16.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph16.gph"
+
+use fcx17.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph17.gph"
+
+use fcx18.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph18.gph"
+
+use fcx19.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph19.gph"
+
+use fcx20.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph20.gph"
+
+use fcx21.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph21.gph"
+
+use fcx22.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph22.gph"
+
+use fcx23.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph23.gph"
+
+use fcx24.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph24.gph"
+
+use fcx25.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph25.gph"
+
+use fcx26.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph26.gph"
+
+use fcx27.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph27.gph"
+
+use fcx28.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph28.gph"
+
+use fcx29.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph29.gph"
+
+use fcx30.dta, replace
+twoway contour _margin _at3 _at4, ccuts(0 2 4 4.2 4.4 4.6 4.8 5 5.2 5.4 5.6 5.8 6 8 10)
+graph save Graph "C:\Users\Antoine\Desktop\interp tom\Graph30.gph"
+
+graph combine  "C:\Users\Antoine\Desktop\interp tom\Graph1.gph" "C:\Users\Antoine\Desktop\interp tom\Graph2.gph" "C:\Users\Antoine\Desktop\interp tom\Graph3.gph" "C:\Users\Antoine\Desktop\interp tom\Graph4.gph" "C:\Users\Antoine\Desktop\interp tom\Graph5.gph" "C:\Users\Antoine\Desktop\interp tom\Graph6.gph" "C:\Users\Antoine\Desktop\interp tom\Graph7.gph" "C:\Users\Antoine\Desktop\interp tom\Graph8.gph" "C:\Users\Antoine\Desktop\interp tom\Graph9.gph" "C:\Users\Antoine\Desktop\interp tom\Graph10.gph" "C:\Users\Antoine\Desktop\interp tom\Graph11.gph" "C:\Users\Antoine\Desktop\interp tom\Graph12.gph" C:\Users\Antoine\Desktop\interp tom\Graph13.gph" "C:\Users\Antoine\Desktop\interp tom\Graph14.gph" "C:\Users\Antoine\Desktop\interp tom\Graph16.gph" "C:\Users\Antoine\Desktop\interp tom\Graph17.gph" "C:\Users\Antoine\Desktop\interp tom\Graph18.gph" "C:\Users\Antoine\Desktop\interp tom\Graph19.gph" "C:\Users\Antoine\Desktop\interp tom\Graph20.gph" "C:\Users\Antoine\Desktop\interp tom\Graph21.gph" "C:\Users\Antoine\Desktop\interp tom\Graph22.gph" "C:\Users\Antoine\Desktop\interp tom\Graph23.gph" "C:\Users\Antoine\Desktop\interp tom\Graph24.gph" "C:\Users\Antoine\Desktop\interp tom\Graph25.gph" "C:\Users\Antoine\Desktop\interp tom\Graph26.gph" "C:\Users\Antoine\Desktop\interp tom\Graph27.gph" "C:\Users\Antoine\Desktop\interp tom\Graph28.gph"  "C:\Users\Antoine\Desktop\interp tom\Graph29.gph" "C:\Users\Antoine\Desktop\interp tom\Graph30.gph"
+graph combine  "C:\Users\Antoine\Desktop\interp tom\Graph1.gph" "C:\Users\Antoine\Desktop\interp tom\Graph2.gph" "C:\Users\Antoine\Desktop\interp tom\Graph3.gph" "C:\Users\Antoine\Desktop\interp tom\Graph4.gph" "C:\Users\Antoine\Desktop\interp tom\Graph5.gph" "C:\Users\Antoine\Desktop\interp tom\Graph6.gph" "C:\Users\Antoine\Desktop\interp tom\Graph7.gph" "C:\Users\Antoine\Desktop\interp tom\Graph8.gph" "C:\Users\Antoine\Desktop\interp tom\Graph9.gph" "C:\Users\Antoine\Desktop\interp tom\Graph10.gph" "C:\Users\Antoine\Desktop\interp tom\Graph11.gph" "C:\Users\Antoine\Desktop\interp tom\Graph12.gph" "C:\Users\Antoine\Desktop\interp tom\Graph13.gph" "C:\Users\Antoine\Desktop\interp tom\Graph14.gph" "C:\Users\Antoine\Desktop\interp tom\Graph16.gph" "C:\Users\Antoine\Desktop\interp tom\Graph17.gph" "C:\Users\Antoine\Desktop\interp tom\Graph18.gph" "C:\Users\Antoine\Desktop\interp tom\Graph19.gph" "C:\Users\Antoine\Desktop\interp tom\Graph20.gph" "C:\Users\Antoine\Desktop\interp tom\Graph21.gph" "C:\Users\Antoine\Desktop\interp tom\Graph22.gph" "C:\Users\Antoine\Desktop\interp tom\Graph23.gph" "C:\Users\Antoine\Desktop\interp tom\Graph24.gph" "C:\Users\Antoine\Desktop\interp tom\Graph25.gph" "C:\Users\Antoine\Desktop\interp tom\Graph26.gph" "C:\Users\Antoine\Desktop\interp tom\Graph27.gph" "C:\Users\Antoine\Desktop\interp tom\Graph28.gph"  "C:\Users\Antoine\Desktop\interp tom\Graph29.gph" "C:\Users\Antoine\Desktop\interp tom\Graph30.gph"
+
+
+use "C:\Users\Antoine\Google Drive\romamin.dta" 
+
+tab country
+
+graph export "C:\Users\Antoine\Desktop\interp tom\comb2.png", as(png) replace
