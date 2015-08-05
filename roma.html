@@ -125,13 +125,13 @@ They represent an intermediate step between Ordinal Models and Mixed Multilevel 
 
 **********************************************************************
 
-   gologit2 is a user-written program that estimates generalized ordered logit models for ordinal dependent variables. The actual values taken on by the dependent variable are irrelevant except that larger values are assumed to
-    correspond to "higher" outcomes. Up to 20 outcomes are allowed. gologit2 is inspired by Vincent Fu's gologit program and is backward compatible with it (and with gologit29) but offers several additional powerful options,
-    including support for factor variables and complex survey data estimation.
+gologit2 is a user-written program that estimates generalized ordered logit models for ordinal dependent variables. The actual values taken on by the dependent variable are irrelevant except that larger values are assumed to
+correspond to "higher" outcomes. Up to 20 outcomes are allowed. gologit2 is inspired by Vincent Fu's gologit program and is backward compatible with it (and with gologit29) but offers several additional powerful options,
+including support for factor variables and complex survey data estimation.
 
-    A major strength of gologit2 is that it can also estimate three special cases of the generalized model: the proportional odds/parallel lines model, the partial proportional odds model, and the logistic regression model. Hence,
-    gologit2 can estimate models that are less restrictive than the proportional odds /parallel lines models estimated by ologit (whose assumptions are often violated) but more parsimonious and interpretable than those estimated by a
-    non-ordinal method, such as multinomial logistic regression (i.e. mlogit). The autofit option greatly simplifies the process of identifying partial proportional odds models that fit the data.
+A major strength of gologit2 is that it can also estimate three special cases of the generalized model: the proportional odds/parallel lines model, the partial proportional odds model, and the logistic regression model. Hence,
+gologit2 can estimate models that are less restrictive than the proportional odds /parallel lines models estimated by ologit (whose assumptions are often violated) but more parsimonious and interpretable than those estimated by a
+non-ordinal method, such as multinomial logistic regression (i.e. mlogit). The autofit option greatly simplifies the process of identifying partial proportional odds models that fit the data.
 
 **********************************************************************
     
@@ -141,13 +141,13 @@ They represent an intermediate step between Ordinal Models and Mixed Multilevel 
 
 **********************************************************************
 
-    link(logit/probit/cloglog/loglog/cauchit) specifies the link function to be used.  The legal values are link(logit), link(probit), link(cloglog), link(loglog), and link(cauchit), which can be abbreviated as link(l), link(p),
-        link(c), link(ll) and link(ca). link(logit) is the default if the option is omitted.
+link(logit/probit/cloglog/loglog/cauchit) specifies the link function to be used.  The legal values are link(logit), link(probit), link(cloglog), link(loglog), and link(cauchit), which can be abbreviated as link(l), link(p),
+link(c), link(ll) and link(ca). link(logit) is the default if the option is omitted.
 
-        The following advice is adapted from Norusis (2005, p. 84):  Probit and logit models are reasonable choices when the changes in the cumulative probabilities are gradual. If there are abrupt changes, other link functions
-        should be used. The log-log link may be a good model when the cumulative probabilities increase from 0 fairly slowly and then rapidly approach 1. If the opposite is true, namely that the cumulative probability for lower
-        scores is high and the approach to 1 is slow, the complementary log-log link may describe the data. The cauchit distribution has tails that are bigger than the normal distribution’s, hence the cauchit link may be useful when
-        you have more extreme values in either direction.
+The following advice is adapted from Norusis (2005, p. 84):  Probit and logit models are reasonable choices when the changes in the cumulative probabilities are gradual. If there are abrupt changes, other link functions
+should be used. The log-log link may be a good model when the cumulative probabilities increase from 0 fairly slowly and then rapidly approach 1. If the opposite is true, namely that the cumulative probability for lower
+scores is high and the approach to 1 is slow, the complementary log-log link may describe the data. The cauchit distribution has tails that are bigger than the normal distribution’s, hence the cauchit link may be useful when
+you have more extreme values in either direction.
 
 **********************************************************************
 
