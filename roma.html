@@ -28,7 +28,48 @@
     <div class="content">
 
 
-<p>Roma modeling<p>
+<p>Choosing a modelling technique</p>
+
+<pre>
+	
+Stata Manual makes the following point : 
+
+************************************
+Remarks on using sampling weights
+
+    Sampling weights are treated differently in multilevel models than they are
+    in standard models such as OLS regression.  In a multilevel model,
+    observation-level weights are not indicative of overall inclusion.
+    Instead, they indicate inclusion conditional on the corresponding cluster
+    being included at the next highest-level of sampling.
+
+    For example, if you include only observation-level weights in a two-level
+    model, mixed will assume sampling with equal probabilities at level two,
+    and this may or may not be what you intended.  If the sampling at level two
+    is weighted, then including only level-one weights can lead to biased
+    results even if weighting at level two has been incorporated into the
+    level-one weight variable.  For example, it is a common practice to
+    multiply conditional weights from multiple levels into one overall weight.
+    By contrast, weighted multilevel analysis requires the component weights
+    from each level of sampling.
+
+    Even if you specify sampling weights at all model levels, the scale of
+    sampling weights at lower levels can affect your estimated parameters in a
+    multilevel model.  That is, not only do the relative sizes of the weights
+    at lower levels matter, the scale of these weights matters also.  To deal
+    with this, mixed has the pwscale() option for rescaling weights in
+    two-level models; see above for more information on pwscale().  Three
+    scaling methods are offered, with each method known to perform well under
+    certain data situations and posited models.
+
+    In general, exercise caution when using sampling weights with mixed; see 
+    Survey data in [ME] mixed for more information.
+************************************
+
+Hence it seems better to only pick OLS models with several interactions
+</pre>
+
+<p>Romaphobia modeling<p>
 
 <pre>
 library(ordinal)
