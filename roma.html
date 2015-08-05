@@ -68,6 +68,48 @@ Remarks on using sampling weights
 
 Hence it seems better to only pick OLS models with several interactions
 
+[#] Ologit and Oprobit Models
+
+1. ologit  roma c.educ##i.country c.age##i.country c.ethno##i.country i.contact##i.country i.gender##i.country [iw=w22]
+2. oprobit roma c.educ##i.country c.age##i.country c.ethno##i.country i.contact##i.country i.gender##i.country [iw=w22]
+
+	[*] Postestimation
+
+1. predict plo1 plo2 plo3 plo4 plo5 plo6 plo7 plo8 plo9 plo10
+2. predict ppro1 ppro2 ppro3 ppro4 ppro5 ppro6 ppro7 ppro8 ppro9 ppro10
+
+--- We compute one predicted probability for each outcomes of the dependant variable : roma scaled in 1/10 ---
+--- ppro(n) are predicted probabilities for the probit model ---
+--- plo(n) are predicted probabilities for the probit model ---
+
+	[*] Predictive Margins
+	
+--- To estimate predictive margins we need to specify the outcome considered ---
+
+margins,  predict(outcome(1)) atmeans
+margins,  predict(outcome(2)) atmeans
+margins,  predict(outcome(3)) atmeans
+margins,  predict(outcome(4)) atmeans
+margins,  predict(outcome(5)) atmeans
+margins,  predict(outcome(6)) atmeans
+margins,  predict(outcome(7)) atmeans
+margins,  predict(outcome(8)) atmeans
+margins,  predict(outcome(9)) atmeans
+margins,  predict(outcome(10)) atmeans
+
+--- Of course we can define other values for each independant variable ---
+
+margins, at (age = (20 (10) 80))  predict(outcome(1))
+margins, at (ethno = (0 (0.5) 10))  predict(outcome(4))
+margins, at (contact = (0 1))  predict(outcome(8))
+
+etc ...
+
+
+
+[#] GOlogit and Goprobit Models
+
+	[*] Other Link Functions
 
 </pre>
 
