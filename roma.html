@@ -134,7 +134,7 @@ gologit2 can estimate models that are less restrictive than the proportional odd
 non-ordinal method, such as multinomial logistic regression (i.e. mlogit). The autofit option greatly simplifies the process of identifying partial proportional odds models that fit the data.
 
 **********************************************************************
-    
+
 	[*] Other Link Functions
 
 [ From Stata Manual ]
@@ -2570,6 +2570,66 @@ Log likelihood = -50502.379                       Pseudo R2       =     0.0638
 
 WARNING! 3799 in-sample cases have an outcome with a predicted probability that is
 less than 0. See the gologit2 help section on Warning Messages for more information.
+
+[*] Predicted probabilities in the GOlogit Model
+
+predict y1 y2 y3 y4 y5 y6 y7 y8 y9 y10
+
+[*] Predictive margins in the GOlogit Model
+
+margins,  predict(outcome(1)) atmeans
+margins,  predict(outcome(2)) atmeans
+margins,  predict(outcome(3)) atmeans
+margins,  predict(outcome(4)) atmeans
+margins,  predict(outcome(5)) atmeans
+margins,  predict(outcome(6)) atmeans
+margins,  predict(outcome(7)) atmeans
+margins,  predict(outcome(8)) atmeans
+margins,  predict(outcome(9)) atmeans
+margins,  predict(outcome(10)) atmeans
+
+[*] visualisation
+
+ologit  roma c.educ##i.country c.age##i.country c.ethno##i.country i.contact##i.country i.gender##i.country [iw=w22], or
+predict ol1 ol2 ol3 ol4 ol5 ol6 ol7 ol8 ol9 ol10
+
+graph matrix ol10 ol9 ol8 ol7 ol6 ol5 ol4 ol3 ol2 ol1 [w=w22], ms(oh) msize(tiny)
+
+graph matrix y10 y9 y8 y7 y6 y5 y4 y3 y2 y1 if y1>0 & y2 >0 & y3>0 &  y4 >0 & y5>0 & y6>0 & y7 >0 & y8 >0 & y9 >0 & y10 >0  [w=w22], ms(oh) msize(tiny)
+
+
+sc  y1 ol1 if y1 >0 [w=w22], ms(oh) name(a, replace)
+sc  y2 ol2 if y2 >0 [w=w22], ms(oh) name(b, replace)
+sc  y3 ol3 if y3 >0 [w=w22], ms(oh) name(c, replace)
+sc  y4 ol4 if y4 >0 [w=w22], ms(oh) name(d, replace)
+sc  y5 ol5 if y5 >0 [w=w22], ms(oh) name(e, replace)
+sc  y6 ol6 if y6 >0 [w=w22], ms(oh) name(f, replace)
+sc  y7 ol7 if y7 >0 [w=w22], ms(oh) name(g, replace)
+sc  y8 ol8 if y8 >0 [w=w22], ms(oh) name(h, replace)
+sc  y9 ol9 if y9 >0 [w=w22], ms(oh) name(i, replace)
+sc y10 ol10 if y10 >0 [w=w22], ms(oh) name(j, replace)
+
+
+graph combine a b c d e f g h i j
+
+graph save Graph "C:\Users\Antoine\Google Drive\modelcomp_roma.gph"
+(file C:\Users\Antoine\Google Drive\modelcomp_roma.gph saved)
+
+graph export "C:\Users\Antoine\Google Drive\modelcomp_roma.png", as(png) replace
+(note: file C:\Users\Antoine\Google Drive\modelcomp_roma.png not found)
+(file C:\Users\Antoine\Google Drive\modelcomp_roma.png written in PNG format)
+
+
+sc  y1 ol1 if y1 >0 [w=w22], ms(oh) by(country) name(ac, replace)
+sc  y2 ol2 if y2 >0 [w=w22], ms(oh) by(country) name(bc, replace)
+sc  y3 ol3 if y3 >0 [w=w22], ms(oh) by(country) name(cc, replace)
+sc  y4 ol4 if y4 >0 [w=w22], ms(oh) by(country) name(dc, replace)
+sc  y5 ol5 if y5 >0 [w=w22], ms(oh) by(country) name(ec, replace)
+sc  y6 ol6 if y6 >0 [w=w22], ms(oh) by(country) name(fc, replace)
+sc  y7 ol7 if y7 >0 [w=w22], ms(oh) by(country) name(gc, replace)
+sc  y8 ol8 if y8 >0 [w=w22], ms(oh) by(country) name(hc, replace)
+sc  y9 ol9 if y9 >0 [w=w22], ms(oh) by(country) name(ic, replace)
+sc y10 ol10 if y10 >0 [w=w22], ms(oh) by(country) name(jc, replace)
 
 
 </pre>
