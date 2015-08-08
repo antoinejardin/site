@@ -3972,10 +3972,24 @@ twoway contour reject zc zethno , ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1
 twoway contour reject zc zethno , ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2)
 
 
+
 ************************************* Simple model ************************************
 
 recode roma (1/4=1) (5=2) (6/10 =3), gen (r3)
+gologit2  r3 c.educ##i.country c.age##i.country c.ethno##i.country i.contact##i.country i.gender##i.country [iw=w22]
+
 predict t1 t2 t3
+
+collapse (mean) t1 t2 t3, by(country ethno contact)
+
+twoway line t1 ethno  || line t2 ethno  || line t3 ethno , by(country contact)
+
+twoway line t1 ethno if contact == 0 , color(blue) || line t1 ethno if contact ==1  , color(blue) lp(dash) by(country)
+graph export "C:\Users\Antoine\Google Drive\ECR.png", as(png) replace
+twoway line t2 ethno if contact == 0 , color(black) || line t2 ethno if contact ==1  , color(black) lp(dash) by(country)
+graph export "C:\Users\Antoine\Google Drive\ECN.png", as(png) replace
+twoway line t3 ethno if contact == 0 , color(red) || line t3 ethno if contact ==1  , color(red) lp(dash) by(country)
+graph export "C:\Users\Antoine\Google Drive\ECA.png", as(png) replace
 
 [collapse]
 </pre>
