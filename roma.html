@@ -3706,6 +3706,98 @@ y10          |
   _subpop_58 |   .1552312   .0016034      .1520885    .1583739
 --------------------------------------------------------------
 
+
+**************  Estimation ************
+
+use "C:\Users\Antoine\Google Drive\romamin.dta", clear
+gologit2  roma c.educ##i.country c.age##i.country c.ethno##i.country i.contact##i.country i.gender##i.country [iw=w22]
+
+predict y1 y2 y3 y4 y5 y6 y7 y8 y9 y10
+
+save "C:\Users\Antoine\Google Drive\romagologit2.dta"
+
+use "C:\Users\Antoine\Google Drive\romagologit2.dta"
+
+logistic contact c.educ##i.country c.age##i.country c.ethno##i.country  i.gender##i.country [iw=w22]
+
+predict c
+replace y1 = 0 if y1 < 0
+replace y2 = 0 if y2 < 0
+replace y3 = 0 if y3 < 0
+replace y4 = 0 if y4 < 0
+replace y5 = 0 if y5 < 0
+replace y6 = 0 if y6 < 0
+replace y7 = 0 if y7 < 0
+replace y8 = 0 if y8 < 0
+replace y9 = 0 if y9 < 0
+replace y10 = 0 if y10 < 0
+
+graph matrix y10 y9 y8 y7 y6 y5 y4 y3 y2 y1
+
+collapse (mean) y1 y2 y3 y4 y5 y6 y7 y8 y9 y10 c, by(country ethno)
+
+gen accept = y6+ y7+ y8+ y9+ y10
+gen reject= y1+ y2+ y3+ y4
+gen neutral = y5
+
+
+sc accept c, by(country) ms(oh) msize(small)
+graph export "C:\Users\Antoine\Google Drive\lkh_accept_contact.png", as(png) replace
+
+sc neutral c, by(country) ms(oh) msize(small)
+graph export "C:\Users\Antoine\Google Drive\lkh_neutral_contact.png", as(png) replace
+
+sc reject c, by(country) ms(oh) color(blue)
+graph export "C:\Users\Antoine\Google Drive\lkh_reject_contact.png", as(png) replace
+
+graph matrix accept reject neutral
+graph matrix accept reject neutral c
+
+sc  c ethno  || sc reject ethno , by(country) ms(oh) color(blue)
+graph export "C:\Users\Antoine\Google Drive\lkh_ethno_reject_contact1.png", as(png) replace
+
+
+twoway contour reject c ethno, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2)
+
+twoway contour reject c ethno if country==1, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(a, replace)
+twoway contour reject c ethno if country==2, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(b, replace)
+twoway contour reject c ethno if country==3, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(c, replace)
+twoway contour reject c ethno if country==4, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(d, replace)
+twoway contour reject c ethno if country==5, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(e, replace)
+twoway contour reject c ethno if country==6, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(f, replace)
+twoway contour reject c ethno if country==7, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(g, replace)
+twoway contour reject c ethno if country==8, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(h, replace)
+twoway contour reject c ethno if country==9, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(i, replace)
+twoway contour reject c ethno if country==10, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(j, replace)
+twoway contour reject c ethno if country==11, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(k, replace)
+twoway contour reject c ethno if country==12, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(l, replace)
+twoway contour reject c ethno if country==13, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(m, replace)
+twoway contour reject c ethno if country==14, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(n, replace)
+twoway contour reject c ethno if country==16, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(o, replace)
+twoway contour reject c ethno if country==17, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(p, replace)
+twoway contour reject c ethno if country==18, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(q, replace)
+twoway contour reject c ethno if country==19, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(r, replace)
+twoway contour reject c ethno if country==20, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(s, replace)
+twoway contour reject c ethno if country==21, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(t, replace)
+twoway contour reject c ethno if country==22, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(s, replace)
+twoway contour reject c ethno if country==20, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(s, replace)
+twoway contour reject c ethno if country==22, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(u, replace)
+twoway contour reject c ethno if country==23, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(v, replace)
+twoway contour reject c ethno if country==24, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(w, replace)
+twoway contour reject c ethno if country==25, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(x, replace)
+twoway contour reject c ethno if country==26, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(y, replace)
+twoway contour reject c ethno if country==27, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(z, replace)
+twoway contour reject c ethno if country==28, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(aa, replace)
+twoway contour reject c ethno if country==29, ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) name(ab, replace)
+
+graph combine a b c d e f g h i j k l m n  o p q r s t u v w x y z aa ab
+
+egen zc = std(c)
+egen zethno = std(ethno)
+
+twoway contour reject zc zethno , ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) interp(none)
+twoway contour reject zc zethno , ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2)
+
 </pre>
 
 <p>Romaphobia modeling<p>
