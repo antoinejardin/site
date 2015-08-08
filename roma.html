@@ -3971,6 +3971,13 @@ egen zethno = std(ethno)
 twoway contour reject zc zethno , ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2) interp(none)
 twoway contour reject zc zethno , ccuts( 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2)
 
+
+************************************* Simple model ************************************
+
+recode roma (1/4=1) (5=2) (6/10 =3), gen (r3)
+predict t1 t2 t3
+
+[collapse]
 </pre>
 
 <p>Romaphobia modeling<p>
