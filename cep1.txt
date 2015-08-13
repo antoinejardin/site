@@ -104,3 +104,8 @@ head(x)
 library(foreign)
 write.dta(x, "tli.dta")
 dir()
+
+[Export Stata]
+
+collapse (mean) CS1 CS2, by( cep2 codedep session)
+line CS1 session if cep==0, color(blue) || line CS1 session if cep==1, color(red) by(codedep)
