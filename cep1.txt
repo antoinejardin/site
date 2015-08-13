@@ -1,0 +1,106 @@
+dcs <- select(lyc,  session, patronyme, id_etab, numetab, tot_inscrits, psucc, tx_btb, p_cs1, p_cs2, p_cs3, p_cs4, p_cs5, p_cs6, p_cs7, p_cs8, p_cs9, cep, cep2, codedep, codecom)
+
+attach(dcs)
+dcs2 <- dcs[order(id_etab),]
+dcs <- dcs2 
+
+d97 <- filter(dcs, session=="1997")
+d98 <- filter(dcs, session=="1998")
+d99 <- filter(dcs, session=="1999")
+d00 <- filter(dcs, session=="2000")
+d01 <- filter(dcs, session=="2001")
+d02 <- filter(dcs, session=="2002")
+d03 <- filter(dcs, session=="2003")
+d04 <- filter(dcs, session=="2004")
+d05 <- filter(dcs, session=="2005")
+d06 <- filter(dcs, session=="2006")
+d07 <- filter(dcs, session=="2007")
+d08 <- filter(dcs, session=="2008")
+d09 <- filter(dcs, session=="2009")
+d10 <- filter(dcs, session=="2010")
+d11 <- filter(dcs, session=="2011")
+d12 <- filter(dcs, session=="2012")
+d13 <- filter(dcs, session=="2013")
+d14 <- filter(dcs, session=="2014")
+
+d97i <- select(d97, p_cs1:p_cs9)
+d98i <- select(d98, p_cs1:p_cs9)
+d99i <- select(d99, p_cs1:p_cs9)
+d00i <- select(d00, p_cs1:p_cs9)
+d01i <- select(d01, p_cs1:p_cs9)
+d02i <- select(d02, p_cs1:p_cs9)
+d03i <- select(d03, p_cs1:p_cs9)
+d04i <- select(d04, p_cs1:p_cs9)
+d05i <- select(d05, p_cs1:p_cs9)
+d06i <- select(d06, p_cs1:p_cs9)
+d07i <- select(d07, p_cs1:p_cs9)
+d08i <- select(d08, p_cs1:p_cs9)
+d09i <- select(d09, p_cs1:p_cs9)
+d10i <- select(d10, p_cs1:p_cs9)
+d11i <- select(d11, p_cs1:p_cs9)
+d12i <- select(d12, p_cs1:p_cs9)
+d13i <- select(d13, p_cs1:p_cs9)
+d14i <- select(d14, p_cs1:p_cs9)
+
+wd97s <- data.frame(scalewt(d97i, wt=d97$tot_inscrits))
+wd98s <- data.frame(scalewt(d98i, wt=d98$tot_inscrits))
+wd99s <- data.frame(scalewt(d99i, wt=d99$tot_inscrits))
+wd00s <- data.frame(scalewt(d00i, wt=d00$tot_inscrits))
+wd01s <- data.frame(scalewt(d01i, wt=d01$tot_inscrits))
+wd02s <- data.frame(scalewt(d02i, wt=d02$tot_inscrits))
+wd03s <- data.frame(scalewt(d03i, wt=d03$tot_inscrits))
+wd04s <- data.frame(scalewt(d04i, wt=d04$tot_inscrits))
+wd05s <- data.frame(scalewt(d05i, wt=d05$tot_inscrits))
+wd06s <- data.frame(scalewt(d06i, wt=d06$tot_inscrits))
+wd07s <- data.frame(scalewt(d07i, wt=d07$tot_inscrits))
+wd08s <- data.frame(scalewt(d08i, wt=d08$tot_inscrits))
+wd09s <- data.frame(scalewt(d09i, wt=d09$tot_inscrits))
+wd10s <- data.frame(scalewt(d10i, wt=d10$tot_inscrits))
+wd11s <- data.frame(scalewt(d11i, wt=d11$tot_inscrits))
+wd12s <- data.frame(scalewt(d12i, wt=d12$tot_inscrits))
+wd13s <- data.frame(scalewt(d13i, wt=d13$tot_inscrits))
+wd14s <- data.frame(scalewt(d14i, wt=d14$tot_inscrits))
+
+
+row.names(wd97s) <- d97$numetab
+row.names(wd98s) <- d98$numetab
+row.names(wd99s) <- d99$numetab
+row.names(wd00s) <- d00$numetab
+row.names(wd01s) <- d01$numetab
+row.names(wd02s) <- d02$numetab
+row.names(wd03s) <- d03$numetab
+row.names(wd04s) <- d04$numetab
+row.names(wd05s) <- d05$numetab
+row.names(wd06s) <- d06$numetab
+row.names(wd07s) <- d07$numetab
+row.names(wd08s) <- d08$numetab
+row.names(wd09s) <- d09$numetab
+row.names(wd10s) <- d10$numetab
+row.names(wd11s) <- d11$numetab
+row.names(wd12s) <- d12$numetab
+row.names(wd13s) <- d13$numetab
+row.names(wd14s) <- d14$numetab
+
+lwds <- list(wd97s, wd98s, wd99s, wd00s, wd01s, wd02s, wd03s, wd04s, wd05s, wd06s,  wd07s, wd08s, wd09s, wd10s, wd11s, wd12s, wd13s, wd14s)
+
+kwds <- ktab.list.df(lwds)
+
+ptads <- pta(kwds, scannf = FALSE, nf=2)
+mcoads <- mcoa(kwds, scannf = FALSE, nf=2)
+mfads <- mfa(kwds, scannf=FALSE, nf=2)
+statisds <- statis(kwds,  scannf = FALSE, nf = 2)
+
+s.class(ptads$Tli, dcs$numetab, col=rainbow(100))
+s.traject(ptads$Tli, dcs$numetab, col=rainbow(100))
+
+dcs2 <- dcs[order(session),]
+head(dcs2)
+
+head(ptads$Tli)
+
+x <- cbind(ptads$Tli, dcs2)
+head(x)
+
+library(foreign)
+write.dta(x, "tli.dta")
+dir()
