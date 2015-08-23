@@ -1,0 +1,75 @@
+use "C:\Users\Antoine\Desktop\SP13\sp13.dta", clear
+clear
+use "C:\Users\Antoine\Desktop\SP10\sp10.dta", clear
+clear
+use "C:\Users\Antoine\Downloads\ZA4950_v2-2-0.dta", clear
+use "C:\Users\Antoine\Downloads\ZA5070_v1-0-0.dta", clear
+clear
+use "C:\Users\Antoine\Downloads\ZA4950_v2-2-0.dta", clear
+tab V2
+tab V7
+tab V20
+tab V22
+tab V24
+tab V25
+tab V27
+tab V28
+tab V30
+tab V31
+tab V35
+tab V33
+tab1 V35 V36 V37 V38 V39 V40 V41
+tab V42
+tab DEGREE
+mca V35 V36 V37 V38 V39 V40 V41
+mcaplot, overlay
+predict a1 a2
+sc a2 a1
+sc a2 a1, by( V5)
+sc a2 a1, by( V5)
+sc a2 a1 , ms(oh) msize(small) by( V5)
+sc a2 a1 , ms(oh) msize(small) by( V5)
+mca V35 V36 V37 V38 V39 V40 V41
+help mca
+screeplot
+mca V35 V36 V37 V38 V39 V40 V41
+help mca
+tab V49
+tab V48
+tab V51
+tab V49
+numlabel _all, add
+tab V51
+tab V49
+recode V49 (1=1 "No religion") (2 = 2 "Catholic") (3 4 9 = 3 "Other christian") (5 = 4 "Jewish") (6=5 "Muslim") ( 7 8 10 11 = 6 "Eastern religion / Other") , gen (religmat)
+recode V51 (1=1 "No religion") (2 = 2 "Catholic") (3 4 9 = 3 "Other christian") (5 = 4 "Jewish") (6=5 "Muslim") ( 7 8 10 11 = 6 "Eastern religion / Other") , gen (religpat)
+tab religmat
+tab religpat
+tab V53
+recode V53 (1=1 "No religion") (2 = 2 "Catholic") (3 4 9 = 3 "Other christian") (5 = 4 "Jewish") (6=5 "Muslim") ( 7 8 10 11 = 6 "Eastern religion / Other") , gen (religraise)
+tab V55
+recode V55 (1=1 "No religion") (2 = 2 "Catholic") (3 4 9 = 3 "Other christian") (5 = 4 "Jewish") (6=5 "Muslim") ( 7 8 10 11 = 6 "Eastern religion / Other") , gen (religpartner)
+tab V33
+tab V34
+lookfor relig
+tab RELIGGRP
+recode RELIGGRP (1=1 "No religion") (2 = 2 "Catholic") (3 4 9 = 3 "Other christian") (5 = 4 "Jewish") (6=5 "Muslim") ( 7 8 10 11 = 6 "Eastern religion / Other") , gen (religego)
+tab religraise religego
+tab religraise religego, row nof
+tab religraise religego, row nof chi2 V
+tab religraise religego if V5==250, row nof chi2 V
+tab religraise religego if V5==250, cell nof chi V
+tab religego religpartner, row nof chi V
+tab religego religpartner if V5==250, row nof chi V
+tab religego religpartner if V5==250 [iw= WEIGHT] , row nof
+save "C:\Users\Antoine\Downloads\ZA4950_v2-2-0.dta", replace
+tab religmat religego [iw= WEIGHT] , row nof
+tab religpat religego [iw= WEIGHT] , row nof
+gen evorel = .
+replace evorel = 1 if religego == religpat
+replace evorel = 1 if religego == religmat
+replace evorel = 2 if religego == 1 & religmat > 1
+replace evorel = 2 if religego == 1 & religmat > 2
+tab evorel
+tab evorel, miss
+save "C:\Users\Antoine\Downloads\ZA4950_v2-2-0.dta", replace
