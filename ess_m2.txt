@@ -1,0 +1,27 @@
+use "/home/me/Downloads/ess_m2.dta"
+recode vote (1=1) (2=0) (3=.), gen (voted)
+encode cntry, gen (pays)
+gen w = pspwght * pweight
+drop if ctzcntr==0
+drop if ctzcntr != 1
+browse
+keep w pays voted eduyrs agea gndr lrscale essround cntry
+browse
+drop if voted==.
+browse
+tab lrscale, miss
+drop if lrscale==.a
+drop if lrscale==.b
+drop if lrscale==.c
+tab lrscale
+browse
+tab gndr, miss
+drop if gndr==.a
+tab essround, miss
+tab cntry, miss
+tab agea, miss
+drop if agea==.a
+tab eduyrs, miss
+drop if eduyrs ==.a
+drop if eduyrs ==.b
+drop if eduyrs ==.c
