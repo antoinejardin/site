@@ -1,0 +1,56 @@
+---
+title: "Untitled"
+author: "Antoine JARDIN"
+date: "3 septembre 2015"
+output: html_document
+---
+
+
+```{r}
+library(KRLS)
+library(dplyr)
+``` 
+
+```{r}
+ess_m2 <- read.csv("~/Downloads/ess_m2.csv")
+
+df <- ess_m2
+
+head(df)
+``` 
+
+
+```{r}
+df2 <- filter(df, essround==6)
+
+head(df2)
+``` 
+
+```{r}
+df3 <- filter(df2, cntry=="FR")
+
+head(df3)
+``` 
+
+
+```{r}
+x <- select(df3, agea)
+y <- select(df3, voted)
+``` 
+
+X : variable indépendante
+Y : variable dépendante
+
+```{r}
+k <- krls (X=x, y=y)
+
+summary(krls)
+
+k2 <- predict(k, newdata=x)
+``` 
+
+```{r}
+plot(k)
+``` 
+
+
