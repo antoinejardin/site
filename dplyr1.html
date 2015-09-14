@@ -43,9 +43,8 @@ img {
 </div>
 
 
-<div id="folder-containing-datasets" class="section level2">
 <h2>Folder containing Datasets</h2>
-<pre class="r"><code>setwd(&quot;C:/Users/Antoine/Downloads/epcvhf10_ki109604_dbase&quot;)</code></pre>
+<pre><code>setwd(&quot;C:/Users/Antoine/Downloads/epcvhf10_ki109604_dbase&quot;)</code></pre>
 </div>
 <div id="library-loading" class="section level2">
 <h2>Library loading</h2>
@@ -81,7 +80,7 @@ df2 &lt;- read.dbf(&quot;epcvhf10_ki1096042.dbf&quot;)</code></pre>
 <div id="df-structure-check" class="section level2">
 <h2>DF Structure Check</h2>
 <pre class="r"><code>head(df1)</code></pre>
-<pre><code>##   AADATE     IDENT NO AAPERIODE AAPOID9604 AAPOID9904  AAPOIDSK AAPOIPERIO
+<pre>##   AADATE     IDENT NO AAPERIODE AAPOID9604 AAPOID9904  AAPOIDSK AAPOIPERIO
 ## 1   1996 116300020 01 1996-1998          0          0  5030.303          0
 ## 2   1996 116300080 01 1996-1998          0          0  4836.683          0
 ## 3   1996 116300090 01 1996-1998          0          0  4851.652          0
@@ -262,7 +261,9 @@ df2 &lt;- read.dbf(&quot;epcvhf10_ki1096042.dbf&quot;)</code></pre>
 ## 3        NA        NA        NA
 ## 4        NA        NA        NA
 ## 5        NA        NA        NA
-## 6        NA        NA        NA</code></pre>
+## 6        NA        NA        NA
+
+</code></pre>
 <pre class="r"><code>head(df2)</code></pre>
 <pre><code>##   AADATE     IDENT NO RETREMU REVI REVMED REVMEDCO REVMEDIR REVS REVTOT
 ## 1   1996 116300020 01    &lt;NA&gt;    2      7        7        7    1     08
