@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Antoine Jardin" />
+
+
+<title>DataFrame join using Dplyr with INSEE data</title>
+
+
+</head>
+
+<body>
+
+<style type="text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div id="header">
+<h1 class="title">DataFrame join using Dplyr with INSEE data</h1>
+<h4 class="author"><em>Antoine Jardin</em></h4>
+<h4 class="date"><em>14 septembre 2015</em></h4>
+</div>
+
+
+<div id="folder-containing-datasets" class="section level2">
+<h2>Folder containing Datasets</h2>
+<pre class="r"><code>setwd(&quot;C:/Users/Antoine/Downloads/epcvhf10_ki109604_dbase&quot;)</code></pre>
+</div>
+<div id="library-loading" class="section level2">
+<h2>Library loading</h2>
+<pre class="r"><code>library(foreign)</code></pre>
+<pre><code>## Warning: package 'foreign' was built under R version 3.2.2</code></pre>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## Warning: package 'dplyr' was built under R version 3.2.2</code></pre>
+<pre><code>## 
+## Attaching package: 'dplyr'
+## 
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(tidyr)
+
+dir()</code></pre>
+<pre><code>##  [1] &quot;df_kish.csv&quot;                    &quot;df_kish.dta&quot;                   
+##  [3] &quot;df_ref.Rmd&quot;                     &quot;df1.dta&quot;                       
+##  [5] &quot;df2.dta&quot;                        &quot;epcvhf10_ki109604_varlist.dbf&quot; 
+##  [7] &quot;epcvhf10_ki109604_varmod.dbf&quot;   &quot;epcvhf10_ki1096041.dbf&quot;        
+##  [9] &quot;epcvhf10_ki1096042.dbf&quot;         &quot;lisezmoi_epcvhf10_ki109604.TXT&quot;
+## [11] &quot;rh_join.Rhistory&quot;</code></pre>
+</div>
+<div id="data-loading" class="section level2">
+<h2>Data Loading</h2>
+<pre class="r"><code>df1 &lt;- read.dbf(&quot;epcvhf10_ki1096041.dbf&quot;)
+df2 &lt;- read.dbf(&quot;epcvhf10_ki1096042.dbf&quot;)</code></pre>
+</div>
+<div id="df-structure-check" class="section level2">
+<h2>DF Structure Check</h2>
+<pre class="r"><code>head(df1)</code></pre>
+<pre><code>##   AADATE     IDENT NO AAPERIODE AAPOID9604 AAPOID9904  AAPOIDSK AAPOIPERIO
+## 1   1996 116300020 01 1996-1998          0          0  5030.303          0
+## 2   1996 116300080 01 1996-1998          0          0  4836.683          0
+## 3   1996 116300090 01 1996-1998          0          0  4851.652          0
+## 4   1996 116300110 01 1996-1998          0          0  5016.421          0
+## 5   1996 116300120 01 1996-1998          0          0  9834.850          0
+## 6   1996 116300130 02 1996-1998          0          0 42825.379          0
+##   ACTAR ACTPA ACTSEC ACTSPO AGDECES AGE AGED AGEDPR AGEPR AGEQ AGSCOFIN
+## 1  &lt;NA&gt;  &lt;NA&gt;      3   &lt;NA&gt;    &lt;NA&gt;  33    4      3    33   07       19
+## 2  &lt;NA&gt;     1   &lt;NA&gt;   &lt;NA&gt;      12  76    8      7    76   16       13
+## 3  &lt;NA&gt;     1   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;  66    7      6    66   14       19
+## 4  &lt;NA&gt;  &lt;NA&gt;      3   &lt;NA&gt;    &lt;NA&gt;  28    3      2    28   06       17
+## 5  &lt;NA&gt;  &lt;NA&gt;      3   &lt;NA&gt;    &lt;NA&gt;  36    4      3    36   08       17
+## 6  &lt;NA&gt;     2   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;  18    2      1    18   04       98
+##   AGSEPAR ALLCHO ALLOC ANAIS ANCESS AUTLANG BRICO BRISTOL CHGTEMP CHODISP
+## 1      08      2     2  1963   7777    &lt;NA&gt;  &lt;NA&gt;       3       1    &lt;NA&gt;
+## 2    &lt;NA&gt;      2     2  1920   7777    &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 3    &lt;NA&gt;      2     2  1930   7777    &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 4    &lt;NA&gt;      1     2  1968   7777    &lt;NA&gt;  &lt;NA&gt;       3       2    &lt;NA&gt;
+## 5      05      1     1  1960   7777    &lt;NA&gt;  &lt;NA&gt;       2       2    &lt;NA&gt;
+## 6    &lt;NA&gt;      2     1  1978   7777    &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+##   CHOMPER1 CHOMPER2 CHORECH CHORECTP CHOREMU CODE COUTU CS DEBEMP DEBETAB
+## 1        3     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    1  &lt;NA&gt; 22   1982    1995
+## 2     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    1  &lt;NA&gt; 46   &lt;NA&gt;    &lt;NA&gt;
+## 3     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    0  &lt;NA&gt; 33   &lt;NA&gt;    &lt;NA&gt;
+## 4        1     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    1  &lt;NA&gt; 35   1986    1994
+## 5        4     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    0  &lt;NA&gt; 35   1979    1995
+## 6     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt; &lt;NA&gt;  &lt;NA&gt; 84   &lt;NA&gt;    &lt;NA&gt;
+##   DECES DENSIUE DEP DEVREV DIEG DIEP DIES DIVI DOMDEB DOMEMP ECR1 ECR2
+## 1  &lt;NA&gt;       A  75   &lt;NA&gt;   15   00   00    2   &lt;NA&gt;   &lt;NA&gt;    1    2
+## 2     2       A  75   &lt;NA&gt;   00   00   00    1   &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt;    2
+## 3     4       A  75   &lt;NA&gt;   02   29   00    1   &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 4  &lt;NA&gt;       A  75   &lt;NA&gt;   00   00   00    1   &lt;NA&gt;   &lt;NA&gt;    1 &lt;NA&gt;
+## 5  &lt;NA&gt;       A  75   &lt;NA&gt;   15   00   00    2   &lt;NA&gt;   &lt;NA&gt;    1 &lt;NA&gt;
+## 6  &lt;NA&gt;       A  75   &lt;NA&gt;   17   00   00    1   &lt;NA&gt;   &lt;NA&gt;    1    1
+##   ECR3 ECR4 ECR5 ECR6 ELECT ELIGAD EQBVIE ETRECR1 ETRECR2 ETRECR3 ETRLIR1
+## 1    1    2    2 &lt;NA&gt;     2      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 2    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     1      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 3 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     1      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 4 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     1      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 5 &lt;NA&gt; &lt;NA&gt;    1 &lt;NA&gt;     1      2      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 6 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     2      2      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+##   ETRLIR2 ETRLIR3 ETRMIS ETRPAR1 ETRPAR2 ETRPAR3 ETRTEL1 ETRTEL2 ETRTEL3
+## 1    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 2    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 3    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 4    &lt;NA&gt;    &lt;NA&gt;      2    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 5    &lt;NA&gt;    &lt;NA&gt;      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 6    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+##   ETUDI ETUREMU FORCOMPL FORDEB FOREMP FORM1 FORM2 FORMCRI1 FORMCRI2
+## 1     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     1  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 2     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     3  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 5     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     3  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 6     7       2     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   FORMDUR FORMOBT FORMP1 FORMP2 FORMPDUR FORMPTYP FORMTYP FRAECR FRALIR
+## 1       3       4      3   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;      02      1      1
+## 2    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 3    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 4    &lt;NA&gt;    &lt;NA&gt;      2   &lt;NA&gt;        3       11    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 5    &lt;NA&gt;    &lt;NA&gt;      3   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 6    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+##   FRAPARL FRATEL FREQA1 FREQA10 FREQA11 FREQA12 FREQA13 FREQA14 FREQA2
+## 1       1      1   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 2    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 3    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 4    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 5    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 6    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+##   FREQA3 FREQA4 FREQA5 FREQA6 FREQA7 FREQA8 FREQA9 FREQAPOL FREQAROT
+## 1   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;      4   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3   &lt;NA&gt;      1   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 5   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   FVUAMI FVUAUT FVUENF FVUM FVUP FVUTIENF FVUVOIS HAB HORAIRE HORCONT
+## 1      S      S      M    J    A     &lt;NA&gt;    &lt;NA&gt;   7       1       4
+## 2      S   &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     &lt;NA&gt;       J   7    &lt;NA&gt;    &lt;NA&gt;
+## 3      M      A   &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   7    &lt;NA&gt;    &lt;NA&gt;
+## 4      S      M   &lt;NA&gt;    S    S     &lt;NA&gt;    &lt;NA&gt;   7       3       1
+## 5      S      S   &lt;NA&gt;    S    A     &lt;NA&gt;       S   7       3       1
+## 6      J      S   &lt;NA&gt;    S    S     &lt;NA&gt;    &lt;NA&gt;   7    &lt;NA&gt;    &lt;NA&gt;
+##   HORDER HORHAB HORTYP INACTPER INVIT LIEN LIR1 LIR2 LIR3 LIR4 LIR5 LIR6
+## 1   &lt;NA&gt;   &lt;NA&gt;      1        2     3    1    1    2    1    2    2 &lt;NA&gt;
+## 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;    1 &lt;NA&gt;    2    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 3   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 4   &lt;NA&gt;   &lt;NA&gt;      1        1     3    1    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 5   &lt;NA&gt;   &lt;NA&gt;      2        3     3    1    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;    1 &lt;NA&gt;
+## 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;    7    1    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+##   LOG LOGDUR LOY MATRI MICRO MICROH NATEMPL NATIO7 NBAS1 NBAS10 NBAS11
+## 1   6   7777   2     1     1      3       5      8    00     00     00
+## 2   3   7777   2     3  &lt;NA&gt;   &lt;NA&gt;       5      1    00     00     00
+## 3   3   7777   2     1  &lt;NA&gt;   &lt;NA&gt;       5      1    00     00     00
+## 4   3   7777   2     1     8   &lt;NA&gt;       5      1    00     00     00
+## 5   1   7777   2     2     1      5       5      1    00     00     00
+## 6   3   7777   2     1  &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;      1    00     00     00
+##   NBAS12 NBAS13 NBAS14 NBAS2 NBAS3 NBAS4 NBAS5 NBAS6 NBAS7 NBAS8 NBAS9
+## 1     00   &lt;NA&gt;     00    00    00    00    00    00    01  &lt;NA&gt;    00
+## 2     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+## 3     00   &lt;NA&gt;     00    00    00    03    00    00    00  &lt;NA&gt;    00
+## 4     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+## 5     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+## 6     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+##   NBASPOLI NBASROTA NBENF NBPERS NBSAL NBSET NBTIENF NIVETUD1 NIVETUD2
+## 1       00       00    01     01  &lt;NA&gt;    08      00       77       17
+## 2       00       00    00     01  &lt;NA&gt;  &lt;NA&gt;      00       77       04
+## 3       00       00    00     01  &lt;NA&gt;  &lt;NA&gt;      00       77       20
+## 4       00       00    00     01  &lt;NA&gt;    06      00       77       17
+## 5       00       00    01     03  &lt;NA&gt;    06      00       77       17
+## 6       00       00    00     02  &lt;NA&gt;  &lt;NA&gt;      00       77     &lt;NA&gt;
+##   NIVIE NOTI1 NOTI2 NOTI3 NOTI4 NOTI5 NOTI6 NSYND NSYNDIC OCCUPA OCCUPAPR
+## 1     3     1     1     1     1     1     2     1       2      1        1
+## 2     1     2     1     1     2     2     2  &lt;NA&gt;    &lt;NA&gt;      5        5
+## 3     3     2     2     2     2     2     2  &lt;NA&gt;    &lt;NA&gt;      5        5
+## 4     3     1     2     2     2     2     2  &lt;NA&gt;    &lt;NA&gt;      1        1
+## 5     3     1     2     2     2     1     2     2    &lt;NA&gt;      1        1
+## 6     1     1     1     2     2     2     2  &lt;NA&gt;    &lt;NA&gt;      3        3
+##   OCCUPB PARL1 PARL2 PARL3 PARL4 PARL5 PARL6 PARLANG PARLETR PART PARTA1
+## 1      7     1     2     1     2     2  &lt;NA&gt;       3       3    2   &lt;NA&gt;
+## 2      7  &lt;NA&gt;     2     2  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;
+## 3      7  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;
+## 4      7     1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt;    1   &lt;NA&gt;
+## 5      7     1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     1  &lt;NA&gt;       1    &lt;NA&gt;    2   &lt;NA&gt;
+## 6      7     1     1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;
+##   PARTA10 PARTA11 PARTA12 PARTA13 PARTA14 PARTA2 PARTA3 PARTA4 PARTA5
+## 1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 2    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 3    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;      1   &lt;NA&gt;
+## 4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 5    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 6    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+##   PARTA6 PARTA7 PARTA8 PARTA9 PARTAPOL PARTAROT PCS42 PCS8 PCSPR1 PCSPR8
+## 1   &lt;NA&gt;      2   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    22    2     02      2
+## 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    75    7     08      7
+## 3   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    74    7     08      7
+## 4   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    35    3     03      3
+## 5   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    35    3     03      3
+## 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    84    8     09      8
+##   PNAIS6 POSIT PRES PRESAK PROCRIT1 PROCRIT2 PROCRIT3 PROCRIT4 PROCRIT5
+## 1      7    09    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 2      7    09    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3      7    08    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4      7    10    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 5      7    10    7      1     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 6      7  &lt;NA&gt;    7      1     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   PROCRIT6 PROFM PROFP PROMO QECH RECHE REL RELAT RELM RELP REMRESUL REP
+## 1     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   4     3    3    4        2  01
+## 2     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   3  &lt;NA&gt;    1    2     &lt;NA&gt;  01
+## 3     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   3  &lt;NA&gt;    2    3     &lt;NA&gt;  01
+## 4     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   1     3    3    1        2  01
+## 5     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   4     2    2    2        2  01
+## 6     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   1  &lt;NA&gt;    2    3     &lt;NA&gt;  02
+##   REPAS REPK RET frehebd2 frehebdo frejoun2 frejouna frejour2 frejoure
+## 1    05 &lt;NA&gt;   2        2     30.4        2     17.3        0        0
+## 2  &lt;NA&gt; &lt;NA&gt;   1        0      0.0        0      0.0        0        0
+## 3  &lt;NA&gt; &lt;NA&gt;   1        2      4.3        2      3.0        0        0
+## 4    05 &lt;NA&gt;   2        0      0.0        0      0.0        0        0
+## 5    05 &lt;NA&gt;   2        0      0.0        2      8.7        0        0
+## 6  &lt;NA&gt; &lt;NA&gt;   2        2      4.3        0      0.0        0        0
+##   freqcin2 freqcine freqexp2 freqexpo freqliv2 freqlivr freqmus2 freqmusi
+## 1        2      2.0        0        0        0        0        0        0
+## 2        1      0.8        0        0        0        0        0        0
+## 3        2      1.0        2        3        0        0        0        0
+## 4        2      4.3        0        0        0        0        0        0
+## 5        2     10.0        2        3        0        0        0        0
+## 6        2      1.0        0        0        0        0        0        0
+##   freqrad2 freqradi freqtel2 freqtele freqthe2 freqthea frespor2 fresport
+## 1        0        0        0        0        0        0        0        0
+## 2        0        0        0        0        0        0        0        0
+## 3        0        0        0        0        0        0        0        0
+## 4        0        0        0        0        0        0        0        0
+## 5        0        0        0        0        0        0        2        2
+## 6        0        0        0        0        0        0        0        0
+##   langroup1 langroup2 langroup3
+## 1        NA        NA        NA
+## 2        NA        NA        NA
+## 3        NA        NA        NA
+## 4        NA        NA        NA
+## 5        NA        NA        NA
+## 6        NA        NA        NA</code></pre>
+<pre class="r"><code>head(df2)</code></pre>
+<pre><code>##   AADATE     IDENT NO RETREMU REVI REVMED REVMEDCO REVMEDIR REVS REVTOT
+## 1   1996 116300020 01    &lt;NA&gt;    2      7        7        7    1     08
+## 2   1996 116300080 01    &lt;NA&gt;    2      7        7        7    2     05
+## 3   1996 116300090 01    &lt;NA&gt;    2      5        7        5    2     09
+## 4   1996 116300110 01    &lt;NA&gt;    2      8        7        8    1     12
+## 5   1996 116300120 01    &lt;NA&gt;    2      8        7        8    1     12
+## 6   1996 116300130 02    &lt;NA&gt;    2      7        7        7    2     05
+##   REVTOTE REVTOTF REVTRA REVTRAE REVTRAF RG RISQEMP RMI SECT SEPAR SEPDEC
+## 1    &lt;NA&gt;    &lt;NA&gt;     08    &lt;NA&gt;    &lt;NA&gt; 11       2   2 &lt;NA&gt;     1   &lt;NA&gt;
+## 2    &lt;NA&gt;    &lt;NA&gt;     05    &lt;NA&gt;    &lt;NA&gt; 11    &lt;NA&gt;   2 &lt;NA&gt;  &lt;NA&gt;      2
+## 3    &lt;NA&gt;    &lt;NA&gt;     09    &lt;NA&gt;    &lt;NA&gt; 11    &lt;NA&gt;   2 &lt;NA&gt;     3   &lt;NA&gt;
+## 4    &lt;NA&gt;    &lt;NA&gt;     12    &lt;NA&gt;    &lt;NA&gt; 11       4   2 &lt;NA&gt;     3   &lt;NA&gt;
+## 5    &lt;NA&gt;    &lt;NA&gt;     11    &lt;NA&gt;    &lt;NA&gt; 11       4   2 &lt;NA&gt;     1   &lt;NA&gt;
+## 6    &lt;NA&gt;    &lt;NA&gt;     00    &lt;NA&gt;    &lt;NA&gt; 11    &lt;NA&gt;   2 &lt;NA&gt;     3   &lt;NA&gt;
+##   SEXE STATUT STRATE STRATE2 SYND SYNDIC   TA TAU99 TEL1 TEL2 TEL3 TEL4
+## 1    1      4      4       4    1      1 &lt;NA&gt;    10    1    2    1    2
+## 2    1      4      4       4 &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt;    10 &lt;NA&gt;    2    2 &lt;NA&gt;
+## 3    2      2      4       4 &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt;    10 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 4    2      4      4       4    2   &lt;NA&gt; &lt;NA&gt;    10    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 5    1      3      4       4    1      2 &lt;NA&gt;    10    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 6    2   &lt;NA&gt;      4       4 &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt;    10    1    1 &lt;NA&gt; &lt;NA&gt;
+##   TEL5 TEL6 TRADAV1 TRADAV2 TRADAV3 TRADIM TRADOM TRAEXE01 TRAEXE02
+## 1    2 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;      3   &lt;NA&gt;        1        1
+## 2 &lt;NA&gt; &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3 &lt;NA&gt; &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4 &lt;NA&gt; &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;      2   &lt;NA&gt;        3        3
+## 5    1 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;      2   &lt;NA&gt;        2        3
+## 6 &lt;NA&gt; &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   TRAEXE03 TRAEXE04 TRAEXE05 TRAEXE06 TRAEXE07 TRAEXE08 TRAEXE09 TRAEXE10
+## 1        1        3        3        3        1        1        3        3
+## 2     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4        3        3        3        3        3        1        3        2
+## 5        3        3        3        3        1        1        3        2
+## 6     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   TRAINF TRALIEU TRAMOIN1 TRAMOIN2 TRAMOIN3 TRANUIT TRAREP TRASAM TRASUP
+## 1      3    &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;       3      1      3      2
+## 2   &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 3   &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 4      3    &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;       2      2      2      4
+## 5      2    &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;       2      2      2      3
+## 6   &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+##   TRDENSI TSALMENS TU99  TYPCOM8 TYPMEN  TYPQUA8 VIECOU VIENF VITIENF VIVM
+## 1       6       06    8 1_DIRECT     11 1_DIRECT      2     1    &lt;NA&gt;    1
+## 2       6     &lt;NA&gt;    8 1_DIRECT     12 1_DIRECT      2  &lt;NA&gt;    &lt;NA&gt;    3
+## 3       6     &lt;NA&gt;    8 1_DIRECT     12 1_DIRECT      2  &lt;NA&gt;    &lt;NA&gt;    3
+## 4       6       08    8 1_DIRECT     10 1_DIRECT      2  &lt;NA&gt;    &lt;NA&gt;    1
+## 5       6       09    8 1_DIRECT     30 1_DIRECT      1     2    &lt;NA&gt;    1
+## 6       6     &lt;NA&gt;    8 1_DIRECT     50 1_DIRECT      2  &lt;NA&gt;    &lt;NA&gt;    1
+##   VIVP VOTEUR VOTLEG VOTMUN VOTPRES VOTREG VUAMI VUAUT VUENF  VUM  VUP
+## 1    1   &lt;NA&gt;   &lt;NA&gt;      5       4   &lt;NA&gt;    03    01    02   01   01
+## 2    3   &lt;NA&gt;   &lt;NA&gt;      1       1   &lt;NA&gt;    03    00  &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 3    3   &lt;NA&gt;   &lt;NA&gt;      1       1   &lt;NA&gt;    07    06  &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 4    1   &lt;NA&gt;   &lt;NA&gt;      5       1   &lt;NA&gt;    02    01  &lt;NA&gt;   03   02
+## 5    1   &lt;NA&gt;   &lt;NA&gt;      5       2   &lt;NA&gt;    01    01  &lt;NA&gt;   01   01
+## 6    1   &lt;NA&gt;   &lt;NA&gt;      0       0   &lt;NA&gt;    01    01  &lt;NA&gt;   01   01
+##   VUTIENF VUVOIS ZAUER99 ZEAT ZECHO99 ZUS ZUS_COM ZUS_UU
+## 1    &lt;NA&gt;     00       1    1       2   2       2      1
+## 2    &lt;NA&gt;     01       1    1       2   2       2      1
+## 3    &lt;NA&gt;     00       1    1       2   2       2      1
+## 4    &lt;NA&gt;     00       1    1       2   2       2      1
+## 5    &lt;NA&gt;     01       1    1       2   2       2      1
+## 6    &lt;NA&gt;     00       1    1       2   2       2      1</code></pre>
+</div>
+<div id="backup" class="section level2">
+<h2>Backup</h2>
+<pre><code>write.dta (df1, &quot;df1.dta&quot;)
+write.dta (df2, &quot;df2.dta&quot;)</code></pre>
+</div>
+<div id="preparing-the-id-variable" class="section level2">
+<h2>Preparing the ID variable</h2>
+<pre class="r"><code>head(df1)</code></pre>
+<pre><code>##   AADATE     IDENT NO AAPERIODE AAPOID9604 AAPOID9904  AAPOIDSK AAPOIPERIO
+## 1   1996 116300020 01 1996-1998          0          0  5030.303          0
+## 2   1996 116300080 01 1996-1998          0          0  4836.683          0
+## 3   1996 116300090 01 1996-1998          0          0  4851.652          0
+## 4   1996 116300110 01 1996-1998          0          0  5016.421          0
+## 5   1996 116300120 01 1996-1998          0          0  9834.850          0
+## 6   1996 116300130 02 1996-1998          0          0 42825.379          0
+##   ACTAR ACTPA ACTSEC ACTSPO AGDECES AGE AGED AGEDPR AGEPR AGEQ AGSCOFIN
+## 1  &lt;NA&gt;  &lt;NA&gt;      3   &lt;NA&gt;    &lt;NA&gt;  33    4      3    33   07       19
+## 2  &lt;NA&gt;     1   &lt;NA&gt;   &lt;NA&gt;      12  76    8      7    76   16       13
+## 3  &lt;NA&gt;     1   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;  66    7      6    66   14       19
+## 4  &lt;NA&gt;  &lt;NA&gt;      3   &lt;NA&gt;    &lt;NA&gt;  28    3      2    28   06       17
+## 5  &lt;NA&gt;  &lt;NA&gt;      3   &lt;NA&gt;    &lt;NA&gt;  36    4      3    36   08       17
+## 6  &lt;NA&gt;     2   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;  18    2      1    18   04       98
+##   AGSEPAR ALLCHO ALLOC ANAIS ANCESS AUTLANG BRICO BRISTOL CHGTEMP CHODISP
+## 1      08      2     2  1963   7777    &lt;NA&gt;  &lt;NA&gt;       3       1    &lt;NA&gt;
+## 2    &lt;NA&gt;      2     2  1920   7777    &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 3    &lt;NA&gt;      2     2  1930   7777    &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 4    &lt;NA&gt;      1     2  1968   7777    &lt;NA&gt;  &lt;NA&gt;       3       2    &lt;NA&gt;
+## 5      05      1     1  1960   7777    &lt;NA&gt;  &lt;NA&gt;       2       2    &lt;NA&gt;
+## 6    &lt;NA&gt;      2     1  1978   7777    &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+##   CHOMPER1 CHOMPER2 CHORECH CHORECTP CHOREMU CODE COUTU CS DEBEMP DEBETAB
+## 1        3     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    1  &lt;NA&gt; 22   1982    1995
+## 2     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    1  &lt;NA&gt; 46   &lt;NA&gt;    &lt;NA&gt;
+## 3     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    0  &lt;NA&gt; 33   &lt;NA&gt;    &lt;NA&gt;
+## 4        1     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    1  &lt;NA&gt; 35   1986    1994
+## 5        4     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    0  &lt;NA&gt; 35   1979    1995
+## 6     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt; &lt;NA&gt;  &lt;NA&gt; 84   &lt;NA&gt;    &lt;NA&gt;
+##   DECES DENSIUE DEP DEVREV DIEG DIEP DIES DIVI DOMDEB DOMEMP ECR1 ECR2
+## 1  &lt;NA&gt;       A  75   &lt;NA&gt;   15   00   00    2   &lt;NA&gt;   &lt;NA&gt;    1    2
+## 2     2       A  75   &lt;NA&gt;   00   00   00    1   &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt;    2
+## 3     4       A  75   &lt;NA&gt;   02   29   00    1   &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 4  &lt;NA&gt;       A  75   &lt;NA&gt;   00   00   00    1   &lt;NA&gt;   &lt;NA&gt;    1 &lt;NA&gt;
+## 5  &lt;NA&gt;       A  75   &lt;NA&gt;   15   00   00    2   &lt;NA&gt;   &lt;NA&gt;    1 &lt;NA&gt;
+## 6  &lt;NA&gt;       A  75   &lt;NA&gt;   17   00   00    1   &lt;NA&gt;   &lt;NA&gt;    1    1
+##   ECR3 ECR4 ECR5 ECR6 ELECT ELIGAD EQBVIE ETRECR1 ETRECR2 ETRECR3 ETRLIR1
+## 1    1    2    2 &lt;NA&gt;     2      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 2    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     1      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 3 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     1      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 4 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     1      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 5 &lt;NA&gt; &lt;NA&gt;    1 &lt;NA&gt;     1      2      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 6 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     2      2      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+##   ETRLIR2 ETRLIR3 ETRMIS ETRPAR1 ETRPAR2 ETRPAR3 ETRTEL1 ETRTEL2 ETRTEL3
+## 1    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 2    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 3    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 4    &lt;NA&gt;    &lt;NA&gt;      2    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 5    &lt;NA&gt;    &lt;NA&gt;      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 6    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+##   ETUDI ETUREMU FORCOMPL FORDEB FOREMP FORM1 FORM2 FORMCRI1 FORMCRI2
+## 1     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     1  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 2     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     3  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 5     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     3  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 6     7       2     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   FORMDUR FORMOBT FORMP1 FORMP2 FORMPDUR FORMPTYP FORMTYP FRAECR FRALIR
+## 1       3       4      3   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;      02      1      1
+## 2    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 3    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 4    &lt;NA&gt;    &lt;NA&gt;      2   &lt;NA&gt;        3       11    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 5    &lt;NA&gt;    &lt;NA&gt;      3   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 6    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+##   FRAPARL FRATEL FREQA1 FREQA10 FREQA11 FREQA12 FREQA13 FREQA14 FREQA2
+## 1       1      1   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 2    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 3    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 4    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 5    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 6    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+##   FREQA3 FREQA4 FREQA5 FREQA6 FREQA7 FREQA8 FREQA9 FREQAPOL FREQAROT
+## 1   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;      4   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3   &lt;NA&gt;      1   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 5   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   FVUAMI FVUAUT FVUENF FVUM FVUP FVUTIENF FVUVOIS HAB HORAIRE HORCONT
+## 1      S      S      M    J    A     &lt;NA&gt;    &lt;NA&gt;   7       1       4
+## 2      S   &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     &lt;NA&gt;       J   7    &lt;NA&gt;    &lt;NA&gt;
+## 3      M      A   &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   7    &lt;NA&gt;    &lt;NA&gt;
+## 4      S      M   &lt;NA&gt;    S    S     &lt;NA&gt;    &lt;NA&gt;   7       3       1
+## 5      S      S   &lt;NA&gt;    S    A     &lt;NA&gt;       S   7       3       1
+## 6      J      S   &lt;NA&gt;    S    S     &lt;NA&gt;    &lt;NA&gt;   7    &lt;NA&gt;    &lt;NA&gt;
+##   HORDER HORHAB HORTYP INACTPER INVIT LIEN LIR1 LIR2 LIR3 LIR4 LIR5 LIR6
+## 1   &lt;NA&gt;   &lt;NA&gt;      1        2     3    1    1    2    1    2    2 &lt;NA&gt;
+## 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;    1 &lt;NA&gt;    2    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 3   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 4   &lt;NA&gt;   &lt;NA&gt;      1        1     3    1    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 5   &lt;NA&gt;   &lt;NA&gt;      2        3     3    1    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;    1 &lt;NA&gt;
+## 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;    7    1    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+##   LOG LOGDUR LOY MATRI MICRO MICROH NATEMPL NATIO7 NBAS1 NBAS10 NBAS11
+## 1   6   7777   2     1     1      3       5      8    00     00     00
+## 2   3   7777   2     3  &lt;NA&gt;   &lt;NA&gt;       5      1    00     00     00
+## 3   3   7777   2     1  &lt;NA&gt;   &lt;NA&gt;       5      1    00     00     00
+## 4   3   7777   2     1     8   &lt;NA&gt;       5      1    00     00     00
+## 5   1   7777   2     2     1      5       5      1    00     00     00
+## 6   3   7777   2     1  &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;      1    00     00     00
+##   NBAS12 NBAS13 NBAS14 NBAS2 NBAS3 NBAS4 NBAS5 NBAS6 NBAS7 NBAS8 NBAS9
+## 1     00   &lt;NA&gt;     00    00    00    00    00    00    01  &lt;NA&gt;    00
+## 2     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+## 3     00   &lt;NA&gt;     00    00    00    03    00    00    00  &lt;NA&gt;    00
+## 4     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+## 5     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+## 6     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+##   NBASPOLI NBASROTA NBENF NBPERS NBSAL NBSET NBTIENF NIVETUD1 NIVETUD2
+## 1       00       00    01     01  &lt;NA&gt;    08      00       77       17
+## 2       00       00    00     01  &lt;NA&gt;  &lt;NA&gt;      00       77       04
+## 3       00       00    00     01  &lt;NA&gt;  &lt;NA&gt;      00       77       20
+## 4       00       00    00     01  &lt;NA&gt;    06      00       77       17
+## 5       00       00    01     03  &lt;NA&gt;    06      00       77       17
+## 6       00       00    00     02  &lt;NA&gt;  &lt;NA&gt;      00       77     &lt;NA&gt;
+##   NIVIE NOTI1 NOTI2 NOTI3 NOTI4 NOTI5 NOTI6 NSYND NSYNDIC OCCUPA OCCUPAPR
+## 1     3     1     1     1     1     1     2     1       2      1        1
+## 2     1     2     1     1     2     2     2  &lt;NA&gt;    &lt;NA&gt;      5        5
+## 3     3     2     2     2     2     2     2  &lt;NA&gt;    &lt;NA&gt;      5        5
+## 4     3     1     2     2     2     2     2  &lt;NA&gt;    &lt;NA&gt;      1        1
+## 5     3     1     2     2     2     1     2     2    &lt;NA&gt;      1        1
+## 6     1     1     1     2     2     2     2  &lt;NA&gt;    &lt;NA&gt;      3        3
+##   OCCUPB PARL1 PARL2 PARL3 PARL4 PARL5 PARL6 PARLANG PARLETR PART PARTA1
+## 1      7     1     2     1     2     2  &lt;NA&gt;       3       3    2   &lt;NA&gt;
+## 2      7  &lt;NA&gt;     2     2  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;
+## 3      7  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;
+## 4      7     1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt;    1   &lt;NA&gt;
+## 5      7     1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     1  &lt;NA&gt;       1    &lt;NA&gt;    2   &lt;NA&gt;
+## 6      7     1     1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;
+##   PARTA10 PARTA11 PARTA12 PARTA13 PARTA14 PARTA2 PARTA3 PARTA4 PARTA5
+## 1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 2    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 3    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;      1   &lt;NA&gt;
+## 4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 5    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 6    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+##   PARTA6 PARTA7 PARTA8 PARTA9 PARTAPOL PARTAROT PCS42 PCS8 PCSPR1 PCSPR8
+## 1   &lt;NA&gt;      2   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    22    2     02      2
+## 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    75    7     08      7
+## 3   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    74    7     08      7
+## 4   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    35    3     03      3
+## 5   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    35    3     03      3
+## 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    84    8     09      8
+##   PNAIS6 POSIT PRES PRESAK PROCRIT1 PROCRIT2 PROCRIT3 PROCRIT4 PROCRIT5
+## 1      7    09    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 2      7    09    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3      7    08    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4      7    10    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 5      7    10    7      1     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 6      7  &lt;NA&gt;    7      1     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   PROCRIT6 PROFM PROFP PROMO QECH RECHE REL RELAT RELM RELP REMRESUL REP
+## 1     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   4     3    3    4        2  01
+## 2     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   3  &lt;NA&gt;    1    2     &lt;NA&gt;  01
+## 3     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   3  &lt;NA&gt;    2    3     &lt;NA&gt;  01
+## 4     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   1     3    3    1        2  01
+## 5     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   4     2    2    2        2  01
+## 6     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   1  &lt;NA&gt;    2    3     &lt;NA&gt;  02
+##   REPAS REPK RET frehebd2 frehebdo frejoun2 frejouna frejour2 frejoure
+## 1    05 &lt;NA&gt;   2        2     30.4        2     17.3        0        0
+## 2  &lt;NA&gt; &lt;NA&gt;   1        0      0.0        0      0.0        0        0
+## 3  &lt;NA&gt; &lt;NA&gt;   1        2      4.3        2      3.0        0        0
+## 4    05 &lt;NA&gt;   2        0      0.0        0      0.0        0        0
+## 5    05 &lt;NA&gt;   2        0      0.0        2      8.7        0        0
+## 6  &lt;NA&gt; &lt;NA&gt;   2        2      4.3        0      0.0        0        0
+##   freqcin2 freqcine freqexp2 freqexpo freqliv2 freqlivr freqmus2 freqmusi
+## 1        2      2.0        0        0        0        0        0        0
+## 2        1      0.8        0        0        0        0        0        0
+## 3        2      1.0        2        3        0        0        0        0
+## 4        2      4.3        0        0        0        0        0        0
+## 5        2     10.0        2        3        0        0        0        0
+## 6        2      1.0        0        0        0        0        0        0
+##   freqrad2 freqradi freqtel2 freqtele freqthe2 freqthea frespor2 fresport
+## 1        0        0        0        0        0        0        0        0
+## 2        0        0        0        0        0        0        0        0
+## 3        0        0        0        0        0        0        0        0
+## 4        0        0        0        0        0        0        0        0
+## 5        0        0        0        0        0        0        2        2
+## 6        0        0        0        0        0        0        0        0
+##   langroup1 langroup2 langroup3
+## 1        NA        NA        NA
+## 2        NA        NA        NA
+## 3        NA        NA        NA
+## 4        NA        NA        NA
+## 5        NA        NA        NA
+## 6        NA        NA        NA</code></pre>
+</div>
+<div id="generating-the-id-variable" class="section level2">
+<h2>Generating the ID variable</h2>
+<pre class="r"><code>df1$id &lt;- paste (df1$AADATE, df1$IDENT, df1$NO, sep = &quot;_&quot;, collapse = NULL)
+df2$id &lt;- paste (df2$AADATE, df2$IDENT, df2$NO, sep = &quot;_&quot;, collapse = NULL)</code></pre>
+</div>
+<div id="check" class="section level2">
+<h2>Check</h2>
+<pre class="r"><code>head(df1)</code></pre>
+<pre><code>##   AADATE     IDENT NO AAPERIODE AAPOID9604 AAPOID9904  AAPOIDSK AAPOIPERIO
+## 1   1996 116300020 01 1996-1998          0          0  5030.303          0
+## 2   1996 116300080 01 1996-1998          0          0  4836.683          0
+## 3   1996 116300090 01 1996-1998          0          0  4851.652          0
+## 4   1996 116300110 01 1996-1998          0          0  5016.421          0
+## 5   1996 116300120 01 1996-1998          0          0  9834.850          0
+## 6   1996 116300130 02 1996-1998          0          0 42825.379          0
+##   ACTAR ACTPA ACTSEC ACTSPO AGDECES AGE AGED AGEDPR AGEPR AGEQ AGSCOFIN
+## 1  &lt;NA&gt;  &lt;NA&gt;      3   &lt;NA&gt;    &lt;NA&gt;  33    4      3    33   07       19
+## 2  &lt;NA&gt;     1   &lt;NA&gt;   &lt;NA&gt;      12  76    8      7    76   16       13
+## 3  &lt;NA&gt;     1   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;  66    7      6    66   14       19
+## 4  &lt;NA&gt;  &lt;NA&gt;      3   &lt;NA&gt;    &lt;NA&gt;  28    3      2    28   06       17
+## 5  &lt;NA&gt;  &lt;NA&gt;      3   &lt;NA&gt;    &lt;NA&gt;  36    4      3    36   08       17
+## 6  &lt;NA&gt;     2   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;  18    2      1    18   04       98
+##   AGSEPAR ALLCHO ALLOC ANAIS ANCESS AUTLANG BRICO BRISTOL CHGTEMP CHODISP
+## 1      08      2     2  1963   7777    &lt;NA&gt;  &lt;NA&gt;       3       1    &lt;NA&gt;
+## 2    &lt;NA&gt;      2     2  1920   7777    &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 3    &lt;NA&gt;      2     2  1930   7777    &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 4    &lt;NA&gt;      1     2  1968   7777    &lt;NA&gt;  &lt;NA&gt;       3       2    &lt;NA&gt;
+## 5      05      1     1  1960   7777    &lt;NA&gt;  &lt;NA&gt;       2       2    &lt;NA&gt;
+## 6    &lt;NA&gt;      2     1  1978   7777    &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+##   CHOMPER1 CHOMPER2 CHORECH CHORECTP CHOREMU CODE COUTU CS DEBEMP DEBETAB
+## 1        3     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    1  &lt;NA&gt; 22   1982    1995
+## 2     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    1  &lt;NA&gt; 46   &lt;NA&gt;    &lt;NA&gt;
+## 3     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    0  &lt;NA&gt; 33   &lt;NA&gt;    &lt;NA&gt;
+## 4        1     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    1  &lt;NA&gt; 35   1986    1994
+## 5        4     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    0  &lt;NA&gt; 35   1979    1995
+## 6     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt; &lt;NA&gt;  &lt;NA&gt; 84   &lt;NA&gt;    &lt;NA&gt;
+##   DECES DENSIUE DEP DEVREV DIEG DIEP DIES DIVI DOMDEB DOMEMP ECR1 ECR2
+## 1  &lt;NA&gt;       A  75   &lt;NA&gt;   15   00   00    2   &lt;NA&gt;   &lt;NA&gt;    1    2
+## 2     2       A  75   &lt;NA&gt;   00   00   00    1   &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt;    2
+## 3     4       A  75   &lt;NA&gt;   02   29   00    1   &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 4  &lt;NA&gt;       A  75   &lt;NA&gt;   00   00   00    1   &lt;NA&gt;   &lt;NA&gt;    1 &lt;NA&gt;
+## 5  &lt;NA&gt;       A  75   &lt;NA&gt;   15   00   00    2   &lt;NA&gt;   &lt;NA&gt;    1 &lt;NA&gt;
+## 6  &lt;NA&gt;       A  75   &lt;NA&gt;   17   00   00    1   &lt;NA&gt;   &lt;NA&gt;    1    1
+##   ECR3 ECR4 ECR5 ECR6 ELECT ELIGAD EQBVIE ETRECR1 ETRECR2 ETRECR3 ETRLIR1
+## 1    1    2    2 &lt;NA&gt;     2      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 2    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     1      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 3 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     1      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 4 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     1      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 5 &lt;NA&gt; &lt;NA&gt;    1 &lt;NA&gt;     1      2      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 6 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     2      2      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+##   ETRLIR2 ETRLIR3 ETRMIS ETRPAR1 ETRPAR2 ETRPAR3 ETRTEL1 ETRTEL2 ETRTEL3
+## 1    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 2    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 3    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 4    &lt;NA&gt;    &lt;NA&gt;      2    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 5    &lt;NA&gt;    &lt;NA&gt;      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 6    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+##   ETUDI ETUREMU FORCOMPL FORDEB FOREMP FORM1 FORM2 FORMCRI1 FORMCRI2
+## 1     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     1  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 2     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     3  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 5     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     3  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 6     7       2     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   FORMDUR FORMOBT FORMP1 FORMP2 FORMPDUR FORMPTYP FORMTYP FRAECR FRALIR
+## 1       3       4      3   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;      02      1      1
+## 2    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 3    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 4    &lt;NA&gt;    &lt;NA&gt;      2   &lt;NA&gt;        3       11    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 5    &lt;NA&gt;    &lt;NA&gt;      3   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 6    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+##   FRAPARL FRATEL FREQA1 FREQA10 FREQA11 FREQA12 FREQA13 FREQA14 FREQA2
+## 1       1      1   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 2    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 3    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 4    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 5    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 6    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+##   FREQA3 FREQA4 FREQA5 FREQA6 FREQA7 FREQA8 FREQA9 FREQAPOL FREQAROT
+## 1   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;      4   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3   &lt;NA&gt;      1   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 5   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   FVUAMI FVUAUT FVUENF FVUM FVUP FVUTIENF FVUVOIS HAB HORAIRE HORCONT
+## 1      S      S      M    J    A     &lt;NA&gt;    &lt;NA&gt;   7       1       4
+## 2      S   &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     &lt;NA&gt;       J   7    &lt;NA&gt;    &lt;NA&gt;
+## 3      M      A   &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   7    &lt;NA&gt;    &lt;NA&gt;
+## 4      S      M   &lt;NA&gt;    S    S     &lt;NA&gt;    &lt;NA&gt;   7       3       1
+## 5      S      S   &lt;NA&gt;    S    A     &lt;NA&gt;       S   7       3       1
+## 6      J      S   &lt;NA&gt;    S    S     &lt;NA&gt;    &lt;NA&gt;   7    &lt;NA&gt;    &lt;NA&gt;
+##   HORDER HORHAB HORTYP INACTPER INVIT LIEN LIR1 LIR2 LIR3 LIR4 LIR5 LIR6
+## 1   &lt;NA&gt;   &lt;NA&gt;      1        2     3    1    1    2    1    2    2 &lt;NA&gt;
+## 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;    1 &lt;NA&gt;    2    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 3   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 4   &lt;NA&gt;   &lt;NA&gt;      1        1     3    1    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 5   &lt;NA&gt;   &lt;NA&gt;      2        3     3    1    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;    1 &lt;NA&gt;
+## 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;    7    1    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+##   LOG LOGDUR LOY MATRI MICRO MICROH NATEMPL NATIO7 NBAS1 NBAS10 NBAS11
+## 1   6   7777   2     1     1      3       5      8    00     00     00
+## 2   3   7777   2     3  &lt;NA&gt;   &lt;NA&gt;       5      1    00     00     00
+## 3   3   7777   2     1  &lt;NA&gt;   &lt;NA&gt;       5      1    00     00     00
+## 4   3   7777   2     1     8   &lt;NA&gt;       5      1    00     00     00
+## 5   1   7777   2     2     1      5       5      1    00     00     00
+## 6   3   7777   2     1  &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;      1    00     00     00
+##   NBAS12 NBAS13 NBAS14 NBAS2 NBAS3 NBAS4 NBAS5 NBAS6 NBAS7 NBAS8 NBAS9
+## 1     00   &lt;NA&gt;     00    00    00    00    00    00    01  &lt;NA&gt;    00
+## 2     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+## 3     00   &lt;NA&gt;     00    00    00    03    00    00    00  &lt;NA&gt;    00
+## 4     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+## 5     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+## 6     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+##   NBASPOLI NBASROTA NBENF NBPERS NBSAL NBSET NBTIENF NIVETUD1 NIVETUD2
+## 1       00       00    01     01  &lt;NA&gt;    08      00       77       17
+## 2       00       00    00     01  &lt;NA&gt;  &lt;NA&gt;      00       77       04
+## 3       00       00    00     01  &lt;NA&gt;  &lt;NA&gt;      00       77       20
+## 4       00       00    00     01  &lt;NA&gt;    06      00       77       17
+## 5       00       00    01     03  &lt;NA&gt;    06      00       77       17
+## 6       00       00    00     02  &lt;NA&gt;  &lt;NA&gt;      00       77     &lt;NA&gt;
+##   NIVIE NOTI1 NOTI2 NOTI3 NOTI4 NOTI5 NOTI6 NSYND NSYNDIC OCCUPA OCCUPAPR
+## 1     3     1     1     1     1     1     2     1       2      1        1
+## 2     1     2     1     1     2     2     2  &lt;NA&gt;    &lt;NA&gt;      5        5
+## 3     3     2     2     2     2     2     2  &lt;NA&gt;    &lt;NA&gt;      5        5
+## 4     3     1     2     2     2     2     2  &lt;NA&gt;    &lt;NA&gt;      1        1
+## 5     3     1     2     2     2     1     2     2    &lt;NA&gt;      1        1
+## 6     1     1     1     2     2     2     2  &lt;NA&gt;    &lt;NA&gt;      3        3
+##   OCCUPB PARL1 PARL2 PARL3 PARL4 PARL5 PARL6 PARLANG PARLETR PART PARTA1
+## 1      7     1     2     1     2     2  &lt;NA&gt;       3       3    2   &lt;NA&gt;
+## 2      7  &lt;NA&gt;     2     2  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;
+## 3      7  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;
+## 4      7     1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt;    1   &lt;NA&gt;
+## 5      7     1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     1  &lt;NA&gt;       1    &lt;NA&gt;    2   &lt;NA&gt;
+## 6      7     1     1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;
+##   PARTA10 PARTA11 PARTA12 PARTA13 PARTA14 PARTA2 PARTA3 PARTA4 PARTA5
+## 1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 2    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 3    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;      1   &lt;NA&gt;
+## 4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 5    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 6    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+##   PARTA6 PARTA7 PARTA8 PARTA9 PARTAPOL PARTAROT PCS42 PCS8 PCSPR1 PCSPR8
+## 1   &lt;NA&gt;      2   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    22    2     02      2
+## 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    75    7     08      7
+## 3   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    74    7     08      7
+## 4   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    35    3     03      3
+## 5   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    35    3     03      3
+## 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    84    8     09      8
+##   PNAIS6 POSIT PRES PRESAK PROCRIT1 PROCRIT2 PROCRIT3 PROCRIT4 PROCRIT5
+## 1      7    09    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 2      7    09    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3      7    08    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4      7    10    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 5      7    10    7      1     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 6      7  &lt;NA&gt;    7      1     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   PROCRIT6 PROFM PROFP PROMO QECH RECHE REL RELAT RELM RELP REMRESUL REP
+## 1     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   4     3    3    4        2  01
+## 2     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   3  &lt;NA&gt;    1    2     &lt;NA&gt;  01
+## 3     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   3  &lt;NA&gt;    2    3     &lt;NA&gt;  01
+## 4     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   1     3    3    1        2  01
+## 5     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   4     2    2    2        2  01
+## 6     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   1  &lt;NA&gt;    2    3     &lt;NA&gt;  02
+##   REPAS REPK RET frehebd2 frehebdo frejoun2 frejouna frejour2 frejoure
+## 1    05 &lt;NA&gt;   2        2     30.4        2     17.3        0        0
+## 2  &lt;NA&gt; &lt;NA&gt;   1        0      0.0        0      0.0        0        0
+## 3  &lt;NA&gt; &lt;NA&gt;   1        2      4.3        2      3.0        0        0
+## 4    05 &lt;NA&gt;   2        0      0.0        0      0.0        0        0
+## 5    05 &lt;NA&gt;   2        0      0.0        2      8.7        0        0
+## 6  &lt;NA&gt; &lt;NA&gt;   2        2      4.3        0      0.0        0        0
+##   freqcin2 freqcine freqexp2 freqexpo freqliv2 freqlivr freqmus2 freqmusi
+## 1        2      2.0        0        0        0        0        0        0
+## 2        1      0.8        0        0        0        0        0        0
+## 3        2      1.0        2        3        0        0        0        0
+## 4        2      4.3        0        0        0        0        0        0
+## 5        2     10.0        2        3        0        0        0        0
+## 6        2      1.0        0        0        0        0        0        0
+##   freqrad2 freqradi freqtel2 freqtele freqthe2 freqthea frespor2 fresport
+## 1        0        0        0        0        0        0        0        0
+## 2        0        0        0        0        0        0        0        0
+## 3        0        0        0        0        0        0        0        0
+## 4        0        0        0        0        0        0        0        0
+## 5        0        0        0        0        0        0        2        2
+## 6        0        0        0        0        0        0        0        0
+##   langroup1 langroup2 langroup3                id
+## 1        NA        NA        NA 1996_116300020_01
+## 2        NA        NA        NA 1996_116300080_01
+## 3        NA        NA        NA 1996_116300090_01
+## 4        NA        NA        NA 1996_116300110_01
+## 5        NA        NA        NA 1996_116300120_01
+## 6        NA        NA        NA 1996_116300130_02</code></pre>
+</div>
+<div id="inner-join-using-dplyr" class="section level2">
+<h2>Inner join using DPLYR</h2>
+<pre class="r"><code>df &lt;- inner_join(df1, df2)</code></pre>
+<pre><code>## Joining by: c(&quot;AADATE&quot;, &quot;IDENT&quot;, &quot;NO&quot;, &quot;id&quot;)</code></pre>
+</div>
+<div id="check-for-integrity" class="section level2">
+<h2>Check for integrity</h2>
+<pre class="r"><code>head(df)</code></pre>
+<pre><code>##   AADATE     IDENT NO AAPERIODE AAPOID9604 AAPOID9904  AAPOIDSK AAPOIPERIO
+## 1   1996 116300020 01 1996-1998          0          0  5030.303          0
+## 2   1996 116300080 01 1996-1998          0          0  4836.683          0
+## 3   1996 116300090 01 1996-1998          0          0  4851.652          0
+## 4   1996 116300110 01 1996-1998          0          0  5016.421          0
+## 5   1996 116300120 01 1996-1998          0          0  9834.850          0
+## 6   1996 116300130 02 1996-1998          0          0 42825.379          0
+##   ACTAR ACTPA ACTSEC ACTSPO AGDECES AGE AGED AGEDPR AGEPR AGEQ AGSCOFIN
+## 1  &lt;NA&gt;  &lt;NA&gt;      3   &lt;NA&gt;    &lt;NA&gt;  33    4      3    33   07       19
+## 2  &lt;NA&gt;     1   &lt;NA&gt;   &lt;NA&gt;      12  76    8      7    76   16       13
+## 3  &lt;NA&gt;     1   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;  66    7      6    66   14       19
+## 4  &lt;NA&gt;  &lt;NA&gt;      3   &lt;NA&gt;    &lt;NA&gt;  28    3      2    28   06       17
+## 5  &lt;NA&gt;  &lt;NA&gt;      3   &lt;NA&gt;    &lt;NA&gt;  36    4      3    36   08       17
+## 6  &lt;NA&gt;     2   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;  18    2      1    18   04       98
+##   AGSEPAR ALLCHO ALLOC ANAIS ANCESS AUTLANG BRICO BRISTOL CHGTEMP CHODISP
+## 1      08      2     2  1963   7777    &lt;NA&gt;  &lt;NA&gt;       3       1    &lt;NA&gt;
+## 2    &lt;NA&gt;      2     2  1920   7777    &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 3    &lt;NA&gt;      2     2  1930   7777    &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 4    &lt;NA&gt;      1     2  1968   7777    &lt;NA&gt;  &lt;NA&gt;       3       2    &lt;NA&gt;
+## 5      05      1     1  1960   7777    &lt;NA&gt;  &lt;NA&gt;       2       2    &lt;NA&gt;
+## 6    &lt;NA&gt;      2     1  1978   7777    &lt;NA&gt;  &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+##   CHOMPER1 CHOMPER2 CHORECH CHORECTP CHOREMU CODE COUTU CS DEBEMP DEBETAB
+## 1        3     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    1  &lt;NA&gt; 22   1982    1995
+## 2     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    1  &lt;NA&gt; 46   &lt;NA&gt;    &lt;NA&gt;
+## 3     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    0  &lt;NA&gt; 33   &lt;NA&gt;    &lt;NA&gt;
+## 4        1     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    1  &lt;NA&gt; 35   1986    1994
+## 5        4     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;    0  &lt;NA&gt; 35   1979    1995
+## 6     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt; &lt;NA&gt;  &lt;NA&gt; 84   &lt;NA&gt;    &lt;NA&gt;
+##   DECES DENSIUE DEP DEVREV DIEG DIEP DIES DIVI DOMDEB DOMEMP ECR1 ECR2
+## 1  &lt;NA&gt;       A  75   &lt;NA&gt;   15   00   00    2   &lt;NA&gt;   &lt;NA&gt;    1    2
+## 2     2       A  75   &lt;NA&gt;   00   00   00    1   &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt;    2
+## 3     4       A  75   &lt;NA&gt;   02   29   00    1   &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 4  &lt;NA&gt;       A  75   &lt;NA&gt;   00   00   00    1   &lt;NA&gt;   &lt;NA&gt;    1 &lt;NA&gt;
+## 5  &lt;NA&gt;       A  75   &lt;NA&gt;   15   00   00    2   &lt;NA&gt;   &lt;NA&gt;    1 &lt;NA&gt;
+## 6  &lt;NA&gt;       A  75   &lt;NA&gt;   17   00   00    1   &lt;NA&gt;   &lt;NA&gt;    1    1
+##   ECR3 ECR4 ECR5 ECR6 ELECT ELIGAD EQBVIE ETRECR1 ETRECR2 ETRECR3 ETRLIR1
+## 1    1    2    2 &lt;NA&gt;     2      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 2    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     1      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 3 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     1      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 4 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     1      1      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 5 &lt;NA&gt; &lt;NA&gt;    1 &lt;NA&gt;     1      2      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 6 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     2      2      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+##   ETRLIR2 ETRLIR3 ETRMIS ETRPAR1 ETRPAR2 ETRPAR3 ETRTEL1 ETRTEL2 ETRTEL3
+## 1    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 2    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 3    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 4    &lt;NA&gt;    &lt;NA&gt;      2    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 5    &lt;NA&gt;    &lt;NA&gt;      4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+## 6    &lt;NA&gt;    &lt;NA&gt;      1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;
+##   ETUDI ETUREMU FORCOMPL FORDEB FOREMP FORM1 FORM2 FORMCRI1 FORMCRI2
+## 1     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     1  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 2     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     3  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 5     7    &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     3  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 6     7       2     &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   FORMDUR FORMOBT FORMP1 FORMP2 FORMPDUR FORMPTYP FORMTYP FRAECR FRALIR
+## 1       3       4      3   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;      02      1      1
+## 2    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 3    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 4    &lt;NA&gt;    &lt;NA&gt;      2   &lt;NA&gt;        3       11    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 5    &lt;NA&gt;    &lt;NA&gt;      3   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 6    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+##   FRAPARL FRATEL FREQA1 FREQA10 FREQA11 FREQA12 FREQA13 FREQA14 FREQA2
+## 1       1      1   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 2    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 3    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 4    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 5    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 6    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+##   FREQA3 FREQA4 FREQA5 FREQA6 FREQA7 FREQA8 FREQA9 FREQAPOL FREQAROT
+## 1   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;      4   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3   &lt;NA&gt;      1   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 5   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   FVUAMI FVUAUT FVUENF FVUM FVUP FVUTIENF FVUVOIS HAB HORAIRE HORCONT
+## 1      S      S      M    J    A     &lt;NA&gt;    &lt;NA&gt;   7       1       4
+## 2      S   &lt;NA&gt;   &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     &lt;NA&gt;       J   7    &lt;NA&gt;    &lt;NA&gt;
+## 3      M      A   &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;     &lt;NA&gt;    &lt;NA&gt;   7    &lt;NA&gt;    &lt;NA&gt;
+## 4      S      M   &lt;NA&gt;    S    S     &lt;NA&gt;    &lt;NA&gt;   7       3       1
+## 5      S      S   &lt;NA&gt;    S    A     &lt;NA&gt;       S   7       3       1
+## 6      J      S   &lt;NA&gt;    S    S     &lt;NA&gt;    &lt;NA&gt;   7    &lt;NA&gt;    &lt;NA&gt;
+##   HORDER HORHAB HORTYP INACTPER INVIT LIEN LIR1 LIR2 LIR3 LIR4 LIR5 LIR6
+## 1   &lt;NA&gt;   &lt;NA&gt;      1        2     3    1    1    2    1    2    2 &lt;NA&gt;
+## 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;    1 &lt;NA&gt;    2    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 3   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 4   &lt;NA&gt;   &lt;NA&gt;      1        1     3    1    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+## 5   &lt;NA&gt;   &lt;NA&gt;      2        3     3    1    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;    1 &lt;NA&gt;
+## 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;    7    1    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;
+##   LOG LOGDUR LOY MATRI MICRO MICROH NATEMPL NATIO7 NBAS1 NBAS10 NBAS11
+## 1   6   7777   2     1     1      3       5      8    00     00     00
+## 2   3   7777   2     3  &lt;NA&gt;   &lt;NA&gt;       5      1    00     00     00
+## 3   3   7777   2     1  &lt;NA&gt;   &lt;NA&gt;       5      1    00     00     00
+## 4   3   7777   2     1     8   &lt;NA&gt;       5      1    00     00     00
+## 5   1   7777   2     2     1      5       5      1    00     00     00
+## 6   3   7777   2     1  &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;      1    00     00     00
+##   NBAS12 NBAS13 NBAS14 NBAS2 NBAS3 NBAS4 NBAS5 NBAS6 NBAS7 NBAS8 NBAS9
+## 1     00   &lt;NA&gt;     00    00    00    00    00    00    01  &lt;NA&gt;    00
+## 2     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+## 3     00   &lt;NA&gt;     00    00    00    03    00    00    00  &lt;NA&gt;    00
+## 4     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+## 5     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+## 6     00   &lt;NA&gt;     00    00    00    00    00    00    00  &lt;NA&gt;    00
+##   NBASPOLI NBASROTA NBENF NBPERS NBSAL NBSET NBTIENF NIVETUD1 NIVETUD2
+## 1       00       00    01     01  &lt;NA&gt;    08      00       77       17
+## 2       00       00    00     01  &lt;NA&gt;  &lt;NA&gt;      00       77       04
+## 3       00       00    00     01  &lt;NA&gt;  &lt;NA&gt;      00       77       20
+## 4       00       00    00     01  &lt;NA&gt;    06      00       77       17
+## 5       00       00    01     03  &lt;NA&gt;    06      00       77       17
+## 6       00       00    00     02  &lt;NA&gt;  &lt;NA&gt;      00       77     &lt;NA&gt;
+##   NIVIE NOTI1 NOTI2 NOTI3 NOTI4 NOTI5 NOTI6 NSYND NSYNDIC OCCUPA OCCUPAPR
+## 1     3     1     1     1     1     1     2     1       2      1        1
+## 2     1     2     1     1     2     2     2  &lt;NA&gt;    &lt;NA&gt;      5        5
+## 3     3     2     2     2     2     2     2  &lt;NA&gt;    &lt;NA&gt;      5        5
+## 4     3     1     2     2     2     2     2  &lt;NA&gt;    &lt;NA&gt;      1        1
+## 5     3     1     2     2     2     1     2     2    &lt;NA&gt;      1        1
+## 6     1     1     1     2     2     2     2  &lt;NA&gt;    &lt;NA&gt;      3        3
+##   OCCUPB PARL1 PARL2 PARL3 PARL4 PARL5 PARL6 PARLANG PARLETR PART PARTA1
+## 1      7     1     2     1     2     2  &lt;NA&gt;       3       3    2   &lt;NA&gt;
+## 2      7  &lt;NA&gt;     2     2  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;
+## 3      7  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;
+## 4      7     1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt;    1   &lt;NA&gt;
+## 5      7     1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     1  &lt;NA&gt;       1    &lt;NA&gt;    2   &lt;NA&gt;
+## 6      7     1     1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;       1    &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;
+##   PARTA10 PARTA11 PARTA12 PARTA13 PARTA14 PARTA2 PARTA3 PARTA4 PARTA5
+## 1    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 2    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 3    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;      1   &lt;NA&gt;
+## 4    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 5    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+## 6    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+##   PARTA6 PARTA7 PARTA8 PARTA9 PARTAPOL PARTAROT PCS42 PCS8 PCSPR1 PCSPR8
+## 1   &lt;NA&gt;      2   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    22    2     02      2
+## 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    75    7     08      7
+## 3   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    74    7     08      7
+## 4   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    35    3     03      3
+## 5   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    35    3     03      3
+## 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;    84    8     09      8
+##   PNAIS6 POSIT PRES PRESAK PROCRIT1 PROCRIT2 PROCRIT3 PROCRIT4 PROCRIT5
+## 1      7    09    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 2      7    09    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3      7    08    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4      7    10    7      7     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 5      7    10    7      1     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 6      7  &lt;NA&gt;    7      1     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   PROCRIT6 PROFM PROFP PROMO QECH RECHE REL RELAT RELM RELP REMRESUL REP
+## 1     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   4     3    3    4        2  01
+## 2     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   3  &lt;NA&gt;    1    2     &lt;NA&gt;  01
+## 3     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   3  &lt;NA&gt;    2    3     &lt;NA&gt;  01
+## 4     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   1     3    3    1        2  01
+## 5     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   4     2    2    2        2  01
+## 6     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;   63     2   1  &lt;NA&gt;    2    3     &lt;NA&gt;  02
+##   REPAS REPK RET frehebd2 frehebdo frejoun2 frejouna frejour2 frejoure
+## 1    05 &lt;NA&gt;   2        2     30.4        2     17.3        0        0
+## 2  &lt;NA&gt; &lt;NA&gt;   1        0      0.0        0      0.0        0        0
+## 3  &lt;NA&gt; &lt;NA&gt;   1        2      4.3        2      3.0        0        0
+## 4    05 &lt;NA&gt;   2        0      0.0        0      0.0        0        0
+## 5    05 &lt;NA&gt;   2        0      0.0        2      8.7        0        0
+## 6  &lt;NA&gt; &lt;NA&gt;   2        2      4.3        0      0.0        0        0
+##   freqcin2 freqcine freqexp2 freqexpo freqliv2 freqlivr freqmus2 freqmusi
+## 1        2      2.0        0        0        0        0        0        0
+## 2        1      0.8        0        0        0        0        0        0
+## 3        2      1.0        2        3        0        0        0        0
+## 4        2      4.3        0        0        0        0        0        0
+## 5        2     10.0        2        3        0        0        0        0
+## 6        2      1.0        0        0        0        0        0        0
+##   freqrad2 freqradi freqtel2 freqtele freqthe2 freqthea frespor2 fresport
+## 1        0        0        0        0        0        0        0        0
+## 2        0        0        0        0        0        0        0        0
+## 3        0        0        0        0        0        0        0        0
+## 4        0        0        0        0        0        0        0        0
+## 5        0        0        0        0        0        0        2        2
+## 6        0        0        0        0        0        0        0        0
+##   langroup1 langroup2 langroup3                id RETREMU REVI REVMED
+## 1        NA        NA        NA 1996_116300020_01    &lt;NA&gt;    2      7
+## 2        NA        NA        NA 1996_116300080_01    &lt;NA&gt;    2      7
+## 3        NA        NA        NA 1996_116300090_01    &lt;NA&gt;    2      5
+## 4        NA        NA        NA 1996_116300110_01    &lt;NA&gt;    2      8
+## 5        NA        NA        NA 1996_116300120_01    &lt;NA&gt;    2      8
+## 6        NA        NA        NA 1996_116300130_02    &lt;NA&gt;    2      7
+##   REVMEDCO REVMEDIR REVS REVTOT REVTOTE REVTOTF REVTRA REVTRAE REVTRAF RG
+## 1        7        7    1     08    &lt;NA&gt;    &lt;NA&gt;     08    &lt;NA&gt;    &lt;NA&gt; 11
+## 2        7        7    2     05    &lt;NA&gt;    &lt;NA&gt;     05    &lt;NA&gt;    &lt;NA&gt; 11
+## 3        7        5    2     09    &lt;NA&gt;    &lt;NA&gt;     09    &lt;NA&gt;    &lt;NA&gt; 11
+## 4        7        8    1     12    &lt;NA&gt;    &lt;NA&gt;     12    &lt;NA&gt;    &lt;NA&gt; 11
+## 5        7        8    1     12    &lt;NA&gt;    &lt;NA&gt;     11    &lt;NA&gt;    &lt;NA&gt; 11
+## 6        7        7    2     05    &lt;NA&gt;    &lt;NA&gt;     00    &lt;NA&gt;    &lt;NA&gt; 11
+##   RISQEMP RMI SECT SEPAR SEPDEC SEXE STATUT STRATE STRATE2 SYND SYNDIC
+## 1       2   2 &lt;NA&gt;     1   &lt;NA&gt;    1      4      4       4    1      1
+## 2    &lt;NA&gt;   2 &lt;NA&gt;  &lt;NA&gt;      2    1      4      4       4 &lt;NA&gt;   &lt;NA&gt;
+## 3    &lt;NA&gt;   2 &lt;NA&gt;     3   &lt;NA&gt;    2      2      4       4 &lt;NA&gt;   &lt;NA&gt;
+## 4       4   2 &lt;NA&gt;     3   &lt;NA&gt;    2      4      4       4    2   &lt;NA&gt;
+## 5       4   2 &lt;NA&gt;     1   &lt;NA&gt;    1      3      4       4    1      2
+## 6    &lt;NA&gt;   2 &lt;NA&gt;     3   &lt;NA&gt;    2   &lt;NA&gt;      4       4 &lt;NA&gt;   &lt;NA&gt;
+##     TA TAU99 TEL1 TEL2 TEL3 TEL4 TEL5 TEL6 TRADAV1 TRADAV2 TRADAV3 TRADIM
+## 1 &lt;NA&gt;    10    1    2    1    2    2 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;      3
+## 2 &lt;NA&gt;    10 &lt;NA&gt;    2    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 3 &lt;NA&gt;    10 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+## 4 &lt;NA&gt;    10    2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;      2
+## 5 &lt;NA&gt;    10    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;    1 &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;      2
+## 6 &lt;NA&gt;    10    1    1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;
+##   TRADOM TRAEXE01 TRAEXE02 TRAEXE03 TRAEXE04 TRAEXE05 TRAEXE06 TRAEXE07
+## 1   &lt;NA&gt;        1        1        1        3        3        3        1
+## 2   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4   &lt;NA&gt;        3        3        3        3        3        3        3
+## 5   &lt;NA&gt;        2        3        3        3        3        3        1
+## 6   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   TRAEXE08 TRAEXE09 TRAEXE10 TRAINF TRALIEU TRAMOIN1 TRAMOIN2 TRAMOIN3
+## 1        1        3        3      3    &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 2     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 3     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 4        1        3        2      3    &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 5        1        3        2      2    &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+## 6     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;
+##   TRANUIT TRAREP TRASAM TRASUP TRDENSI TSALMENS TU99  TYPCOM8 TYPMEN
+## 1       3      1      3      2       6       06    8 1_DIRECT     11
+## 2    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;       6     &lt;NA&gt;    8 1_DIRECT     12
+## 3    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;       6     &lt;NA&gt;    8 1_DIRECT     12
+## 4       2      2      2      4       6       08    8 1_DIRECT     10
+## 5       2      2      2      3       6       09    8 1_DIRECT     30
+## 6    &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;       6     &lt;NA&gt;    8 1_DIRECT     50
+##    TYPQUA8 VIECOU VIENF VITIENF VIVM VIVP VOTEUR VOTLEG VOTMUN VOTPRES
+## 1 1_DIRECT      2     1    &lt;NA&gt;    1    1   &lt;NA&gt;   &lt;NA&gt;      5       4
+## 2 1_DIRECT      2  &lt;NA&gt;    &lt;NA&gt;    3    3   &lt;NA&gt;   &lt;NA&gt;      1       1
+## 3 1_DIRECT      2  &lt;NA&gt;    &lt;NA&gt;    3    3   &lt;NA&gt;   &lt;NA&gt;      1       1
+## 4 1_DIRECT      2  &lt;NA&gt;    &lt;NA&gt;    1    1   &lt;NA&gt;   &lt;NA&gt;      5       1
+## 5 1_DIRECT      1     2    &lt;NA&gt;    1    1   &lt;NA&gt;   &lt;NA&gt;      5       2
+## 6 1_DIRECT      2  &lt;NA&gt;    &lt;NA&gt;    1    1   &lt;NA&gt;   &lt;NA&gt;      0       0
+##   VOTREG VUAMI VUAUT VUENF  VUM  VUP VUTIENF VUVOIS ZAUER99 ZEAT ZECHO99
+## 1   &lt;NA&gt;    03    01    02   01   01    &lt;NA&gt;     00       1    1       2
+## 2   &lt;NA&gt;    03    00  &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;    &lt;NA&gt;     01       1    1       2
+## 3   &lt;NA&gt;    07    06  &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;    &lt;NA&gt;     00       1    1       2
+## 4   &lt;NA&gt;    02    01  &lt;NA&gt;   03   02    &lt;NA&gt;     00       1    1       2
+## 5   &lt;NA&gt;    01    01  &lt;NA&gt;   01   01    &lt;NA&gt;     01       1    1       2
+## 6   &lt;NA&gt;    01    01  &lt;NA&gt;   01   01    &lt;NA&gt;     00       1    1       2
+##   ZUS ZUS_COM ZUS_UU
+## 1   2       2      1
+## 2   2       2      1
+## 3   2       2      1
+## 4   2       2      1
+## 5   2       2      1
+## 6   2       2      1</code></pre>
+<pre class="r"><code>head(df$id)</code></pre>
+<pre><code>## [1] &quot;1996_116300020_01&quot; &quot;1996_116300080_01&quot; &quot;1996_116300090_01&quot;
+## [4] &quot;1996_116300110_01&quot; &quot;1996_116300120_01&quot; &quot;1996_116300130_02&quot;</code></pre>
+</div>
+<div id="export" class="section level2">
+<h2>Export</h2>
+<pre><code>write.dta(df, &quot;df_kish.dta&quot;)
+write.csv(df, &quot;df_kish.csv&quot;)</code></pre>
+</div>
+
+
+</div>
+
+
+</body>
+</html>
