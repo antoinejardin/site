@@ -1,0 +1,71 @@
+
+data07 <- read.csv("~/Documents/base_cartelec_2007_2010/data07.csv")
+View(data07)
+
+rm(df)
+
+df <- data07
+
+detach(df)
+attach(df)
+
+df$abs07T1 <- ABS07T1/INS07T1
+df$vot07T1 <- VOT07T1/INS07T1
+df$blc07T1 <- BLC07T1/INS07T1
+df$exp07T1 <- EXP07T1/INS07T1
+
+df$bay_ins07T1 <- BAY07T1/INS07T1
+df$bes_ins07T1 <- BES07T1/INS07T1
+df$bov_ins07T1 <- BOV07T1/INS07T1
+df$buf_ins07T1 <- BUF07T1/INS07T1
+df$dev_ins07T1 <- DEV07T1/INS07T1
+df$lag_ins07T1 <- LAG07T1/INS07T1
+df$lep_ins07T1 <- LEP07T1/INS07T1
+df$nih_ins07T1 <- NIH07T1/INS07T1
+df$roy_ins07T1 <- ROY07T1/INS07T1
+df$sar_ins07T1 <- SAR07T1/INS07T1
+df$sch_ins07T1 <- SCH07T1/INS07T1
+df$voy_ins07T1 <- VOY07T1/INS07T1
+
+df$bay_vot07T1 <- BAY07T1/VOT07T1
+df$bes_vot07T1 <- BES07T1/VOT07T1
+df$bov_vot07T1 <- BOV07T1/VOT07T1
+df$buf_vot07T1 <- BUF07T1/VOT07T1
+df$dev_vot07T1 <- DEV07T1/VOT07T1
+df$lag_vot07T1 <- LAG07T1/VOT07T1
+df$lep_vot07T1 <- LEP07T1/VOT07T1
+df$nih_vot07T1 <- NIH07T1/VOT07T1
+df$roy_vot07T1 <- ROY07T1/VOT07T1
+df$sar_vot07T1 <- SAR07T1/VOT07T1
+df$sch_vot07T1 <- SCH07T1/VOT07T1
+df$voy_vot07T1 <- VOY07T1/VOT07T1
+
+df$bay_exp07T1 <- BAY07T1/EXP07T1
+df$bes_exp07T1 <- BES07T1/EXP07T1
+df$bov_exp07T1 <- BOV07T1/EXP07T1
+df$buf_exp07T1 <- BUF07T1/EXP07T1
+df$dev_exp07T1 <- DEV07T1/EXP07T1
+df$lag_exp07T1 <- LAG07T1/EXP07T1
+df$lep_exp07T1 <- LEP07T1/EXP07T1
+df$nih_exp07T1 <- NIH07T1/EXP07T1
+df$roy_exp07T1 <- ROY07T1/EXP07T1
+df$sar_exp07T1 <- SAR07T1/EXP07T1
+df$sch_exp07T1 <- SCH07T1/EXP07T1
+df$voy_exp07T1 <- VOY07T1/EXP07T1
+
+df$abs07T2 <- ABS07T2/INS07T2
+df$vot07T2 <- VOT07T2/INS07T2
+df$blc07T2 <- BLC07T2/INS07T2
+df$exp07T2 <- EXP07T2/INS07T2
+
+
+df$roy_ins07T2 <- ROY07T2/INS07T2
+df$sar_ins07T2 <- SAR07T2/INS07T2
+
+df$roy_vot07T2 <- ROY07T2/VOT07T2
+df$sar_vot07T2 <- SAR07T2/VOT07T2
+
+df$roy_exp07T2 <- ROY07T2/EXP07T2
+df$sar_exp07T2 <- SAR07T2/EXP07T2
+
+write.csv(df, "data07_ok.csv")
