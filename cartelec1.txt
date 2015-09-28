@@ -1,0 +1,70 @@
+[Recodage des données sociales]
+
+insee07 <- read.csv("~/Documents/base_cartelec_2007_2010/insee07.csv")
+View(insee07)
+colnames(insee07)
+
+attach(insee07)
+
+insee07$totpop <- POP0017 + POP1824 + POP2539 + POP4054 + POP5564 + POP6579 + POP80P
+insee07$totnatio <- POP_FR + POP_ETR
+insee07$totcs <- CS1 + CS2 + CS3 + CS4 + CS5 + CS6 
+insee07$totstat <- CDI + CDD + INTERIM + EMPAID + APPR + INDEP + EMPLOY + AIDFAM 
+insee07$totdip <- NDIPL0 + CEP + BEPC + CAPBEP + BAC + BACP2 + SUP 
+insee07$totlog <- PROPRIO + LOCNONHLM + LOCHLM + GRATUIT 
+
+df <- insee07
+
+attach(df)
+
+df$age1 <- POP0017/totpop
+df$age2 <- POP1824/totpop
+df$age3 <- POP2539/totpop
+df$age4 <- POP4054/totpop
+df$age5 <- POP5564/totpop
+df$age6 <- POP6579/totpop
+df$age7 <- POP80P/totpop
+
+df$fr <- POP_FR/totnatio
+df$etr <- POP_ETR/totnatio
+
+df$chom <- CHOM1564/POP1564
+df$inact <- INACT1564/POP1564
+df$etud <- ETUD1564/POP1564
+df$retr <- RETR1564/POP1564
+
+df$pcs1 <- CS1/totcs
+df$pcs2 <- CS2/totcs
+df$pcs3 <- CS3/totcs
+df$pcs4 <- CS4/totcs
+df$pcs5 <- CS5/totcs
+df$pcs6 <- CS6/totcs
+
+df$cdi <- CDI/totstat
+df$cdd <- CDD/totstat
+df$interim <- INTERIM/totstat
+df$empaid <- EMPAID/totstat
+df$appr <- APPR/totstat
+df$indep <- INDEP/totstat
+df$employ <- EMPLOY/totstat
+df$aidfam <- AIDFAM/totstat
+
+df$ndiplo <- NDIPL0/totdip
+df$cep <- CEP/totdip
+df$bepc <- BEPC/totdip
+df$capbep  <- CAPBEP/totdip
+df$bac  <- BAC/totdip
+df$bacp2  <- BACP2/totdip
+df$sup  <- SUP/totdip
+
+df$proprio <- PROPRIO/totlog
+df$locnonhlm <- LOCNONHLM/totlog
+df$lochlm <- LOCHLM/totlog
+df$gratuit <- GRATUIT/totlog
+
+df$totem <- ANEM0002 + ANEM0204 + ANEM0509 + ANEM10P
+
+df$anem02 <- ANEM0002/df$totem
+df$anem04 <- ANEM0204/df$totem
+df$anem09 <- ANEM0509/df$totem
+df$anem10p <- ANEM10P/df$totem
