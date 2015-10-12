@@ -1,0 +1,157 @@
+************** [Syntaxe Dynamob] *************
+
+[TODO : insérer ELIP_ préfix en V1 avant fusion]
+
+**************
+* [Fichier V1]
+**************
+
+
+use "/home/me/Téléchargements/redonnesdynamob/121214_DiffEqRech_DynamobV1_versionBrute.dta"
+
+** Lowercase to Uppercase for V1
+
+foreach v of varlist _all{
+rename `v' `= upper("`v'")' 
+}
+
+** Generate wave variable
+
+gen wave = 1
+
+** Generate real unique id variable (UID_DYNA x Wave)
+
+egen idt = concat(UID_DYNA wave), punct(_) decode
+
+** Save
+
+save "/home/me/dyna/V1.dta"
+
+* file /home/me/dyna/V1.dta saved
+
+** Clear
+
+clear
+
+
+**************
+* [Fichier V2]
+**************
+
+use "/home/me/Téléchargements/redonnesdynamob/EqDynamob_vague2_01042015.dta"
+
+gen wave = 2
+
+** Generate real unique id variable (UID_DYNA x Wave)
+
+egen idt = concat(UID_DYNA wave), punct(_) decode
+
+** Save
+
+save "/home/me/dyna/V2.dta"
+
+clear
+
+**************
+* [Fichier V3]
+**************
+
+use "/home/me/Téléchargements/redonnesdynamob/Municip_03_2014_version22042015.dta"
+
+gen wave = 3
+
+** Generate real unique id variable (UID_DYNA x Wave)
+
+egen idt = concat(UID_DYNA wave), punct(_) decode
+
+** Save
+
+save "/home/me/dyna/V3.dta"
+
+**************
+* [Fichier V4]
+**************
+
+use "/home/me/Téléchargements/redonnesdynamob/PostMunicip_04_2014_version22042015.dta"
+
+gen wave = 4
+
+** Generate real unique id variable (UID_DYNA x Wave)
+
+egen idt = concat(UID_DYNA wave), punct(_) decode
+
+** Save
+
+save "/home/me/dyna/V4.dta"
+
+clear
+
+**************
+* [Fichier V5]
+**************
+
+use "/home/me/Téléchargements/redonnesdynamob/Europ_05_2014_version22042015.dta"
+
+gen wave = 5
+
+** Generate real unique id variable (UID_DYNA x Wave)
+
+egen idt = concat(UID_DYNA wave), punct(_) decode
+
+** Save
+
+save "/home/me/dyna/V5.dta"
+
+clear
+
+**************
+* [Fichier V6]
+**************
+
+use "/home/me/Téléchargements/redonnesdynamob/PostEurop_06_2014_version22042015.dta"
+
+gen wave = 6
+
+** Generate real unique id variable (UID_DYNA x Wave)
+
+egen idt = concat(UID_DYNA wave), punct(_) decode
+
+** Save
+
+save "/home/me/dyna/V6.dta"
+
+clear
+
+**************
+* [Fichier V7]
+**************
+
+use "/home/me/Téléchargements/redonnesdynamob/Dynamob_12_2014_v11052015.dta"
+
+gen wave = 7
+
+** Generate real unique id variable (UID_DYNA x Wave)
+
+egen idt = concat(UID_DYNA wave), punct(_) decode
+
+** Save
+
+save "/home/me/dyna/V7.dta"
+
+clear
+
+
+************* [Fusion *************
+
+use "/home/me/dyna/V1.dta"
+
+append using "/home/me/dyna/V2.dta", generate(app_v2) force
+append using "/home/me/dyna/V3.dta", generate(app_v3) force
+append using "/home/me/dyna/V4.dta", generate(app_v4) force
+append using "/home/me/dyna/V5.dta", generate(app_v5) force
+append using "/home/me/dyna/V6.dta", generate(app_v6) force
+append using "/home/me/dyna/V7.dta", generate(app_v7) force
+
+save "/home/me/dyna/V1V7.dta"
+
+clear
