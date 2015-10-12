@@ -1,12 +1,14 @@
 ************** [Syntaxe Dynamob] *************
 
-[TODO : insérer ELIP_ préfix en V1 avant fusion]
+* [TODO : insérer ELIP_ préfix en V1 avant fusion] => Done
+* [TODO : Uniformiser les variables sociodémo] => redemander les variables car elles ne sont pas codées de façon uniforme
+* [TODO : Uniformiser les pondérations] => compliqué ici 
 
 **************
 * [Fichier V1]
 **************
 
-use "/home/me/Téléchargements/redonnesdynamob/121214_DiffEqRech_DynamobV1_versionBrute.dta"
+use "/home/me/Telechargements/redonnesdynamob/121214_DiffEqRech_DynamobV1_versionBrute.dta"
 
 ** Lowercase to Uppercase for V1
 
@@ -16,7 +18,7 @@ rename `v' `= upper("`v'")'
 
 ** Préfix
 
-foreach x of varlist (MIP1-DIS3ACCO) {
+foreach x of varlist (MIP1-OWNRI_AUTRE) {
 ren `x' ELIP_`x'
 }
 
@@ -34,7 +36,7 @@ egen idt = concat(UID_DYNA wave), punct(_) decode
 
 ** Save
 
-save "/home/me/dyna/V1.dta"
+save "/home/me/dyna/V1.dta",replace
 
 * file /home/me/dyna/V1.dta saved
 
@@ -47,7 +49,7 @@ clear
 * [Fichier V2]
 **************
 
-use "/home/me/Téléchargements/redonnesdynamob/EqDynamob_vague2_01042015.dta"
+use "/home/me/Telechargements/redonnesdynamob/EqDynamob_vague2_01042015.dta"
 
 gen wave = 2
 
@@ -57,7 +59,7 @@ egen idt = concat(UID_DYNA wave), punct(_) decode
 
 ** Save
 
-save "/home/me/dyna/V2.dta"
+save "/home/me/dyna/V2.dta", replace
 
 clear
 
@@ -65,7 +67,7 @@ clear
 * [Fichier V3]
 **************
 
-use "/home/me/Téléchargements/redonnesdynamob/Municip_03_2014_version22042015.dta"
+use "/home/me/Telechargements/redonnesdynamob/Municip_03_2014_version22042015.dta"
 
 gen wave = 3
 
@@ -75,13 +77,13 @@ egen idt = concat(UID_DYNA wave), punct(_) decode
 
 ** Save
 
-save "/home/me/dyna/V3.dta"
+save "/home/me/dyna/V3.dta", replace
 
 **************
 * [Fichier V4]
 **************
 
-use "/home/me/Téléchargements/redonnesdynamob/PostMunicip_04_2014_version22042015.dta"
+use "/home/me/Telechargements/redonnesdynamob/PostMunicip_04_2014_version22042015.dta"
 
 gen wave = 4
 
@@ -91,7 +93,7 @@ egen idt = concat(UID_DYNA wave), punct(_) decode
 
 ** Save
 
-save "/home/me/dyna/V4.dta"
+save "/home/me/dyna/V4.dta", replace
 
 clear
 
@@ -99,7 +101,7 @@ clear
 * [Fichier V5]
 **************
 
-use "/home/me/Téléchargements/redonnesdynamob/Europ_05_2014_version22042015.dta"
+use "/home/me/Telechargements/redonnesdynamob/Europ_05_2014_version22042015.dta"
 
 gen wave = 5
 
@@ -109,7 +111,7 @@ egen idt = concat(UID_DYNA wave), punct(_) decode
 
 ** Save
 
-save "/home/me/dyna/V5.dta"
+save "/home/me/dyna/V5.dta", replace
 
 clear
 
@@ -117,7 +119,7 @@ clear
 * [Fichier V6]
 **************
 
-use "/home/me/Téléchargements/redonnesdynamob/PostEurop_06_2014_version22042015.dta"
+use "/home/me/Telechargements/redonnesdynamob/PostEurop_06_2014_version22042015.dta"
 
 gen wave = 6
 
@@ -127,7 +129,7 @@ egen idt = concat(UID_DYNA wave), punct(_) decode
 
 ** Save
 
-save "/home/me/dyna/V6.dta"
+save "/home/me/dyna/V6.dta", replace
 
 clear
 
@@ -135,7 +137,7 @@ clear
 * [Fichier V7]
 **************
 
-use "/home/me/Téléchargements/redonnesdynamob/Dynamob_12_2014_v11052015.dta"
+use "/home/me/Telechargements/redonnesdynamob/Dynamob_12_2014_v11052015.dta"
 
 gen wave = 7
 
@@ -145,12 +147,12 @@ egen idt = concat(UID_DYNA wave), punct(_) decode
 
 ** Save
 
-save "/home/me/dyna/V7.dta"
+save "/home/me/dyna/V7.dta", replace
 
 clear
 
 
-************* [Fusion *************
+************* [Fusion] *************
 
 use "/home/me/dyna/V1.dta"
 
@@ -161,6 +163,15 @@ append using "/home/me/dyna/V5.dta", generate(app_v5) force
 append using "/home/me/dyna/V6.dta", generate(app_v6) force
 append using "/home/me/dyna/V7.dta", generate(app_v7) force
 
-save "/home/me/dyna/V1V7.dta"
+save "/home/me/dyna/V1V7.dta", replace
+
+************* [Vérification] *************
+
+tab ELIP_MIP1
+tab ELIP_ACTU1
+
+tab wave ELIP_INTPOL, miss
+tab wave ELIP_SATISPR, miss
+tab wave ELIP_IVOTLEG, miss
 
 clear
