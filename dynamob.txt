@@ -6,13 +6,22 @@
 * [Fichier V1]
 **************
 
-
 use "/home/me/Téléchargements/redonnesdynamob/121214_DiffEqRech_DynamobV1_versionBrute.dta"
 
 ** Lowercase to Uppercase for V1
 
 foreach v of varlist _all{
 rename `v' `= upper("`v'")' 
+}
+
+** Préfix
+
+foreach x of varlist (MIP1-DIS3ACCO) {
+ren `x' ELIP_`x'
+}
+
+foreach x of varlist (PPPARTI-DIS3ACCO) {
+ren `x' ELIP_`x'
 }
 
 ** Generate wave variable
